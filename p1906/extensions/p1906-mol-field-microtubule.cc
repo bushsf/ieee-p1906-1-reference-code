@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- *  Copyright © 2014 by IEEE.
+ *  Copyright ï¿½ 2015 by IEEE.
  *
  *  This source file is an essential part of IEEE Std 1906.1,
  *  Recommended Practice for Nanoscale and Molecular
@@ -20,29 +20,28 @@
  *  IEEE harmless from any damages or liability arising out of
  *  the use thereof.
  *
- * Author: Giuseppe Piro - Telematics Lab Research Group
- *                         Politecnico di Bari
- *                         giuseppe.piro@poliba.it
- *                         telematics.poliba.it/piro
+ * Author: Steve Bush - GE Global Research
+ *                      bushsf@research.ge.com
+ *                      http://www.amazon.com/author/stephenbush
  */
 
 #include "ns3/log.h"
 
-#include "p1906-mol-field.h"
+#include "p1906-mol-field-microtubule.h"
 #include "ns3/p1906-field.h"
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("P1906MOLField");
+NS_LOG_COMPONENT_DEFINE ("P1906MOL_MicrotubulesField");
 
-TypeId P1906MOLField::GetTypeId (void)
+TypeId P1906MOL_MicrotubulesField::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::P1906MOLField")
+  static TypeId tid = TypeId ("ns3::P1906MOL_MicrotubulesField")
     .SetParent<P1906Field> ();
   return tid;
 }
 
-P1906MOLField::P1906MOLField ()
+P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField ()
 {
   /** This class implements persistence length as described in:
 	  Bush, S. F., & Goel, S. (2013). Persistence Length as a Metric for Modeling and 
@@ -222,7 +221,7 @@ P1906MOLField::P1906MOLField ()
 
 //! compute and return the active network programmability metric at pt
 //! \todo use vector field and divergence to compute this value
-void P1906MOLField::activeNetworkProgrammability(gsl_matrix * vf, gsl_vector * pt)
+void P1906MOL_MicrotubulesField::activeNetworkProgrammability(gsl_matrix * vf, gsl_vector * pt)
 {
   //! sum the vector input and output to point pt
   //! may add a radius argument to define a sphere for determining flux through the surface of the sphere
@@ -230,7 +229,7 @@ void P1906MOLField::activeNetworkProgrammability(gsl_matrix * vf, gsl_vector * p
 }
 
 //! display the vector field in Mathematica format for VectorPlot3D in file fname
-void P1906MOLField::vectorFieldPlotMma(gsl_matrix * vf, const char *fname)
+void P1906MOL_MicrotubulesField::vectorFieldPlotMma(gsl_matrix * vf, const char *fname)
 {
   FILE * pFile;
 
@@ -258,7 +257,7 @@ void P1906MOLField::vectorFieldPlotMma(gsl_matrix * vf, const char *fname)
 }
 
 //! write the vector field in Mathematica format using regular spacing between samples in file fname
-void P1906MOLField::vectorFieldMeshMma(gsl_matrix * vf, const char *fname)
+void P1906MOL_MicrotubulesField::vectorFieldMeshMma(gsl_matrix * vf, const char *fname)
 {
   FILE * pFile;
 
@@ -286,7 +285,7 @@ void P1906MOLField::vectorFieldMeshMma(gsl_matrix * vf, const char *fname)
 }
 
 //! return vector field vf based upon tubes in tubeMatrix
-void P1906MOLField::tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matrix * vf)
+void P1906MOL_MicrotubulesField::tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matrix * vf)
 {
   gsl_matrix * v = gsl_matrix_alloc (tubeMatrix->size1, 3);
   gsl_matrix * pt = gsl_matrix_alloc (tubeMatrix->size1, 3);
@@ -312,25 +311,25 @@ void P1906MOLField::tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matrix * vf)
 }
 
 //! return simulation time
-double P1906MOLField::propagationDelay(struct simtime_t * t)
+double P1906MOL_MicrotubulesField::propagationDelay(struct simtime_t * t)
 {
   return t->time;
 }
 
 //! initialize simulation time
-void P1906MOLField::initTime(struct simtime_t * t)
+void P1906MOL_MicrotubulesField::initTime(struct simtime_t * t)
 {
   t->time = 0;
 }
 
 //! update simulation time
-void P1906MOLField::updateTime(struct simtime_t * t, double event_time)
+void P1906MOL_MicrotubulesField::updateTime(struct simtime_t * t, double event_time)
 {
   t->time += event_time;
 }
 
 //! print tube characteristics to standard output
-void P1906MOLField::displayTubeChars(struct tubeCharacteristcs_t * ts)
+void P1906MOL_MicrotubulesField::displayTubeChars(struct tubeCharacteristcs_t * ts)
 {
   printf ("volume = %f\n", ts->volume);
   printf ("mean_tube_length = %f\n", ts->mean_tube_length);
@@ -342,52 +341,52 @@ void P1906MOLField::displayTubeChars(struct tubeCharacteristcs_t * ts)
 }
 
 //! set the volume in which tube centers exist
-void P1906MOLField::setTubeVolume(struct tubeCharacteristcs_t * ts, double volume)
+void P1906MOL_MicrotubulesField::setTubeVolume(struct tubeCharacteristcs_t * ts, double volume)
 {
   ts->volume = volume;
 }
 
 //! set the mean tube length
-void P1906MOLField::setTubeLength(struct tubeCharacteristcs_t * ts, double mean_tube_length)
+void P1906MOL_MicrotubulesField::setTubeLength(struct tubeCharacteristcs_t * ts, double mean_tube_length)
 {
   ts->mean_tube_length = mean_tube_length;
   ts->segLength = ts->mean_tube_length / 5;
 }
 
 //! set the mean angle between segments of the tube
-void P1906MOLField::setTubeIntraAngle(struct tubeCharacteristcs_t * ts, double mean_intra_tube_angle)
+void P1906MOL_MicrotubulesField::setTubeIntraAngle(struct tubeCharacteristcs_t * ts, double mean_intra_tube_angle)
 {
   ts->mean_intra_tube_angle = mean_intra_tube_angle;
 }
 
 //! set the mean angle between tubes
-void P1906MOLField::setTubeInterAngle(struct tubeCharacteristcs_t * ts, double mean_inter_tube_angle)
+void P1906MOL_MicrotubulesField::setTubeInterAngle(struct tubeCharacteristcs_t * ts, double mean_inter_tube_angle)
 {
   ts->mean_inter_tube_angle = mean_inter_tube_angle;
 }
 
 //! this is really the segment density
-void P1906MOLField::setTubeDensity(struct tubeCharacteristcs_t * ts, double mean_tube_density)
+void P1906MOL_MicrotubulesField::setTubeDensity(struct tubeCharacteristcs_t * ts, double mean_tube_density)
 {
   ts->mean_tube_density = mean_tube_density;
   ts->numSegments = ts->mean_tube_density * ts->volume;
 }
 
 //! set the persistence length of each tube
-void P1906MOLField::setTubePersistenceLength(struct tubeCharacteristcs_t * ts, double persistenceLength)
+void P1906MOL_MicrotubulesField::setTubePersistenceLength(struct tubeCharacteristcs_t * ts, double persistenceLength)
 {
   ts->persistenceLength = persistenceLength;
 }
 
 //! set the number of segments per tube
-void P1906MOLField::setTubeSegments(struct tubeCharacteristcs_t * ts, size_t segPerTube)
+void P1906MOL_MicrotubulesField::setTubeSegments(struct tubeCharacteristcs_t * ts, size_t segPerTube)
 {
   ts->segPerTube = segPerTube;
   ts->numTubes = floor(ts->numSegments / ts->segPerTube);
 }
 
 //! plot persistence length versus structural entropy
-void P1906MOLField::perstenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_vector * persistenceLengths)
+void P1906MOL_MicrotubulesField::perstenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_vector * persistenceLengths)
 {
   char plot_filename[256];
   gsl_matrix * tubeMatrix = gsl_matrix_alloc (ts->numTubes * ts->segPerTube, 6);
@@ -409,7 +408,7 @@ void P1906MOLField::perstenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl
 }
 
 //! return the index of the nearest tube in tubeMatrix within a given radius from pt otherwise return -1
-int P1906MOLField::findNearestTube(gsl_vector *pt, gsl_matrix *tubeMatrix, double radius)
+int P1906MOL_MicrotubulesField::findNearestTube(gsl_vector *pt, gsl_matrix *tubeMatrix, double radius)
 {
   double shortestDistance = GSL_POSINF;
   double d = 0;
@@ -432,7 +431,7 @@ int P1906MOLField::findNearestTube(gsl_vector *pt, gsl_matrix *tubeMatrix, doubl
 }
 
 //! return the distance between two point pt1 and point pt2
-double P1906MOLField::distanceP(gsl_vector *pt1, gsl_vector *pt2)
+double P1906MOL_MicrotubulesField::distanceP(gsl_vector *pt1, gsl_vector *pt2)
 {
   gsl_vector * d = gsl_vector_alloc (3);
   
@@ -447,7 +446,7 @@ double P1906MOLField::distanceP(gsl_vector *pt1, gsl_vector *pt2)
 //! return the shortest distance between point pt and the line or point segment_or_point
 //! if segment_or_point is a vector of length 3, then it is a point
 //! if segment_or_point is a vector of length 6, then it is a line segment described by two end points
-double P1906MOLField::distance(gsl_vector *pt, gsl_vector *segment_or_point)
+double P1906MOL_MicrotubulesField::distance(gsl_vector *pt, gsl_vector *segment_or_point)
 {
   gsl_vector * td = gsl_vector_alloc (3);
   gsl_vector * segment = gsl_vector_alloc (6);
@@ -514,7 +513,7 @@ double P1906MOLField::distance(gsl_vector *pt, gsl_vector *segment_or_point)
 
 //! the vector cross product is normal to the input vectors and has magnitude equivalent to the volume of a parallelogram formed by the input vectors
 //! u and v are the input vectors and product is the output vector
-void P1906MOLField::cross_product(const gsl_vector *u, const gsl_vector *v, gsl_vector *product)
+void P1906MOL_MicrotubulesField::cross_product(const gsl_vector *u, const gsl_vector *v, gsl_vector *product)
 {
         double p1 = gsl_vector_get(u, 1)*gsl_vector_get(v, 2)
                 - gsl_vector_get(u, 2)*gsl_vector_get(v, 1);
@@ -531,7 +530,7 @@ void P1906MOLField::cross_product(const gsl_vector *u, const gsl_vector *v, gsl_
 }
 
 //! \todo verify that motorWalk is working properly
-void P1906MOLField::motorWalk(gsl_rng * r, gsl_vector * startPt, gsl_matrix *pts, size_t * numPts, gsl_matrix * tubeMatrix, size_t segPerTube, struct simtime_t * t)
+void P1906MOL_MicrotubulesField::motorWalk(gsl_rng * r, gsl_vector * startPt, gsl_matrix *pts, size_t * numPts, gsl_matrix * tubeMatrix, size_t segPerTube, struct simtime_t * t)
 {
   /** See "Movements of Molecular Motors," Reinhard Lipowsky
 	movement speed: ~1 um / sec
@@ -582,7 +581,7 @@ void P1906MOLField::motorWalk(gsl_rng * r, gsl_vector * startPt, gsl_matrix *pts
 }
 
 //! return true if point pt lies on segment, false otherwise
-bool P1906MOLField::isPointOverlap(gsl_vector * pt, gsl_vector * segment)
+bool P1906MOL_MicrotubulesField::isPointOverlap(gsl_vector * pt, gsl_vector * segment)
 {
 	bool overlap = false;
 	/**
@@ -638,7 +637,7 @@ bool P1906MOLField::isPointOverlap(gsl_vector * pt, gsl_vector * segment)
 //!   startPt - where the motor began its random walk
 //!   timePeriod - length of each step of the walk
 //!   returns the index of the contact segment in tubeMatrix
-int P1906MOLField::float2Tube(gsl_rng * r, gsl_vector * startPt, gsl_matrix * pts, size_t * npts, gsl_matrix * tubeMatrix, double timePeriod, struct simtime_t * t)
+int P1906MOL_MicrotubulesField::float2Tube(gsl_rng * r, gsl_vector * startPt, gsl_matrix * pts, size_t * npts, gsl_matrix * tubeMatrix, double timePeriod, struct simtime_t * t)
 {
   gsl_vector * currentPos = gsl_vector_alloc (3);
   gsl_vector * newPos = gsl_vector_alloc (3);
@@ -679,7 +678,7 @@ int P1906MOLField::float2Tube(gsl_rng * r, gsl_vector * startPt, gsl_matrix * pt
 }
 
 //! implements a motor floating via Brownian motion for time steps with step lengths of timePeriod
-int P1906MOLField::freeFloat(gsl_rng * r, gsl_vector * startPt, gsl_matrix * pts, int time, double timePeriod, struct simtime_t * t)
+int P1906MOL_MicrotubulesField::freeFloat(gsl_rng * r, gsl_vector * startPt, gsl_matrix * pts, int time, double timePeriod, struct simtime_t * t)
 {
   gsl_vector * currentPos = gsl_vector_alloc (3);
   gsl_vector * newPos = gsl_vector_alloc (3);
@@ -704,7 +703,7 @@ int P1906MOLField::freeFloat(gsl_rng * r, gsl_vector * startPt, gsl_matrix * pts
 
 //! generate a set of tubes comprised of a total of numSegments in volume with segPerTube segments of segLength 
 //! and persistenceLength and return in tubeMatrix
-void P1906MOLField::genTubes(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_matrix * tubeMatrix)
+void P1906MOL_MicrotubulesField::genTubes(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_matrix * tubeMatrix)
 {
   //! \todo get actual tube graph properties from biologist
   gsl_vector * startPt = gsl_vector_alloc (3);
@@ -740,7 +739,7 @@ void P1906MOLField::genTubes(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_
 }
 
 //! set point pt with x, y, and z coordinates
-void P1906MOLField::point(gsl_vector * pt, double x, double y, double z)
+void P1906MOL_MicrotubulesField::point(gsl_vector * pt, double x, double y, double z)
 {
   gsl_vector_set (pt, 0, x);
   gsl_vector_set (pt, 1, y);
@@ -748,7 +747,7 @@ void P1906MOLField::point(gsl_vector * pt, double x, double y, double z)
 }
 
 //! set line with end points pt1 and pt2
-void P1906MOLField::line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2)
+void P1906MOL_MicrotubulesField::line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2)
 {
   for (int i = 0; i < 3; i++)
     gsl_vector_set (line, i, gsl_vector_get (pt1, i));
@@ -758,14 +757,14 @@ void P1906MOLField::line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2)
 }
 
 //! return the segment in location mp from tubeMatrix
-void P1906MOLField::line(gsl_vector * segment, gsl_matrix * tubeMatrix, int mp)
+void P1906MOL_MicrotubulesField::line(gsl_vector * segment, gsl_matrix * tubeMatrix, int mp)
 {
   for (size_t i = 0; i < 6; i++)
     gsl_vector_set (segment, i, gsl_matrix_get(tubeMatrix, mp, i));
 }
 
 //! set the segment at location mp in the line matrix with pt1 and pt2
-void P1906MOLField::line(gsl_matrix * line, int mp, gsl_vector * pt1, gsl_vector * pt2)
+void P1906MOL_MicrotubulesField::line(gsl_matrix * line, int mp, gsl_vector * pt1, gsl_vector * pt2)
 {
   for (int i = 0; i < 3; i++)
     gsl_matrix_set (line, mp, i, gsl_vector_get (pt1, i));
@@ -775,7 +774,7 @@ void P1906MOLField::line(gsl_matrix * line, int mp, gsl_vector * pt1, gsl_vector
 }
 
 //! print the tube segments in segMatrix
-void P1906MOLField::displayTube(gsl_matrix *segMatrix)
+void P1906MOL_MicrotubulesField::displayTube(gsl_matrix *segMatrix)
 {
   for (size_t i = 0; i < segMatrix->size1; i++)
   {
@@ -788,7 +787,7 @@ void P1906MOLField::displayTube(gsl_matrix *segMatrix)
 }
 
 //! print the points in pts
-void P1906MOLField::displayPoints(gsl_matrix *pts)
+void P1906MOL_MicrotubulesField::displayPoints(gsl_matrix *pts)
 {
   size_t numPts = pts->size1;
   
@@ -800,7 +799,7 @@ void P1906MOLField::displayPoints(gsl_matrix *pts)
 }
 
 //! print the points (vertices) in pts in Mathematica format into file fname and include edges between the vertices
-void P1906MOLField::connectedPoints2Mma(gsl_matrix *pts, size_t numPts, const char* fname)
+void P1906MOL_MicrotubulesField::connectedPoints2Mma(gsl_matrix *pts, size_t numPts, const char* fname)
 {
   FILE * pFile;
 
@@ -838,7 +837,7 @@ void P1906MOLField::connectedPoints2Mma(gsl_matrix *pts, size_t numPts, const ch
 }
 
 //! print the first numPts points pts in Mathematica format in file fname
-void P1906MOLField::points2Mma(gsl_matrix *pts, size_t numPts, const char* fname)
+void P1906MOL_MicrotubulesField::points2Mma(gsl_matrix *pts, size_t numPts, const char* fname)
 {
   FILE * pFile;
 
@@ -859,7 +858,7 @@ void P1906MOLField::points2Mma(gsl_matrix *pts, size_t numPts, const char* fname
 }
 
 //! print a plot of x,y values in vals in Mathematica format into file fname
-void P1906MOLField::plot2Mma(gsl_matrix *vals, const char* fname, const char* xlabel, const char* ylabel)
+void P1906MOL_MicrotubulesField::plot2Mma(gsl_matrix *vals, const char* fname, const char* xlabel, const char* ylabel)
 {
   FILE * pFile;
   size_t numVals = vals->size1;
@@ -884,7 +883,7 @@ void P1906MOLField::plot2Mma(gsl_matrix *vals, const char* fname, const char* xl
 }
 
 //! print the point pt
-void P1906MOLField::displayPoint(gsl_vector *pt)
+void P1906MOL_MicrotubulesField::displayPoint(gsl_vector *pt)
 {
   printf ("Point: %g %g %g\n", 
 	gsl_vector_get(pt, 0), 
@@ -893,7 +892,7 @@ void P1906MOLField::displayPoint(gsl_vector *pt)
 }
 
 //! print the first numPts points pts
-void P1906MOLField::displayPoints(gsl_matrix *pts, size_t numPts)
+void P1906MOL_MicrotubulesField::displayPoints(gsl_matrix *pts, size_t numPts)
 {
   for (size_t i = 0; i < numPts; i++)
     printf ("Point: %g %g %g\n", 
@@ -903,7 +902,7 @@ void P1906MOLField::displayPoints(gsl_matrix *pts, size_t numPts)
 }
 
 //! print the position pts
-void P1906MOLField::displayPos(gsl_vector *pt)
+void P1906MOL_MicrotubulesField::displayPos(gsl_vector *pt)
 {
   printf ("Position: %g %g %g\n", 
     gsl_vector_get(pt, 0), 
@@ -912,7 +911,7 @@ void P1906MOLField::displayPos(gsl_vector *pt)
 }
 
 //! a unit test of the findClosestPoint function
-bool P1906MOLField::unitTestfindClosestPoint()
+bool P1906MOL_MicrotubulesField::unitTestfindClosestPoint()
 {
   bool pass = false;
   gsl_vector * pt = gsl_vector_alloc (3);
@@ -963,7 +962,7 @@ bool P1906MOLField::unitTestfindClosestPoint()
 }
 
 //! a unit test for getOverlap
-bool P1906MOLField::unitTestgetOverlap()
+bool P1906MOL_MicrotubulesField::unitTestgetOverlap()
 {
   //! \todo create unit tests
   bool passTests = false;
@@ -1001,7 +1000,7 @@ bool P1906MOLField::unitTestgetOverlap()
 }
 
 //! return all overlapping points in tubeMatrix in the list of points pts
-size_t P1906MOLField::getAllOverlaps3D(gsl_matrix *tubeMatrix, gsl_matrix *pts)
+size_t P1906MOL_MicrotubulesField::getAllOverlaps3D(gsl_matrix *tubeMatrix, gsl_matrix *pts)
 {
   size_t numSegments = tubeMatrix->size1;
   gsl_vector *segment = gsl_vector_alloc (6);
@@ -1035,7 +1034,7 @@ size_t P1906MOLField::getAllOverlaps3D(gsl_matrix *tubeMatrix, gsl_matrix *pts)
 }
 
 //! return the number of overlapping points in pts and the index of the tubeMatrix segments overlapped in tubeSegments
-int P1906MOLField::getOverlap3D(gsl_vector *segment, gsl_matrix *tubeMatrix, gsl_matrix *pts, gsl_vector *tubeSegments)
+int P1906MOL_MicrotubulesField::getOverlap3D(gsl_vector *segment, gsl_matrix *tubeMatrix, gsl_matrix *pts, gsl_vector *tubeSegments)
 {
   /** 
     all points defined by x, y, z values
@@ -1153,7 +1152,7 @@ int P1906MOLField::getOverlap3D(gsl_vector *segment, gsl_matrix *tubeMatrix, gsl
 }
 
 //! return newPos based upon Brownian motion from currentPos over timePeriod
-int P1906MOLField::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod)
+int P1906MOL_MicrotubulesField::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod)
 {
   //! the new position is Gaussian with variance proportional to time taken: W_t - W_s ~ N(0, t - s)
   double sigma = timePeriod; /* sigma should be proportional to time */
@@ -1170,7 +1169,7 @@ int P1906MOLField::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vect
 //! write the vector field in MATLAB format using regular spacing between samples in the file fname
 //! The result of this file is loaded into Mathematica and the vector field is reconstructed from the samples via interpolation
 //! Then the vector field operators are applied - see bushsf@research.ge.com for results
-void P1906MOLField::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *fname)
+void P1906MOL_MicrotubulesField::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *fname)
 {
   FILE * pFile;
 
@@ -1279,7 +1278,7 @@ void P1906MOLField::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *fname)
 }
 
 //! return the location of the vector from vf that is closest to the point pt in result
-void P1906MOLField::findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector *result)
+void P1906MOL_MicrotubulesField::findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector *result)
 {
   //! the current closest point
   gsl_vector * cpt = gsl_vector_alloc (3);
@@ -1362,7 +1361,7 @@ void P1906MOLField::findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vecto
 }
 
 //! write a list of vectors into file fname in MATLAB loadable format
-void P1906MOLField::vectorFieldPlotMATLAB(gsl_matrix * vf, const char *fname)
+void P1906MOL_MicrotubulesField::vectorFieldPlotMATLAB(gsl_matrix * vf, const char *fname)
 {
   FILE * pFile;
 
@@ -1383,7 +1382,7 @@ void P1906MOLField::vectorFieldPlotMATLAB(gsl_matrix * vf, const char *fname)
 }
 
 //! print all tubes in tubeMatrix into a Mathematica file fname with segments per tube of segPerTube
-void P1906MOLField::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPerTube, const char* fname)
+void P1906MOL_MicrotubulesField::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPerTube, const char* fname)
 {
   /** save tubes to file in the form of 
     GraphPlot3D[{1 -> 2, 1 -> 4, 1 -> 5, 2 -> 3, 2 -> 6, 3 -> 4, 3 -> 7, 4 -> 8, 5 -> 6, 5 -> 8, 6 -> 7, 7 -> 8}, 
@@ -1444,7 +1443,7 @@ void P1906MOLField::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPerTube, const c
 }
 
 //! create and return a microtubule of given persistence length in segMatrix and its structural entropy in se
-int P1906MOLField::genTube(struct tubeCharacteristcs_t * ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)
+int P1906MOL_MicrotubulesField::genTube(struct tubeCharacteristcs_t * ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)
 {
   /**
     for 3D consider generating two angles per tube: \theta and \psi in spherical coordinates, length is already specified 
@@ -1508,7 +1507,7 @@ int P1906MOLField::genTube(struct tubeCharacteristcs_t * ts, gsl_rng *r, gsl_mat
 }
 
 //! generate angles for a structure with the given persistence length and segment length and return the angles in setAngle
-double P1906MOLField::genPersistenceLength(gsl_rng *r, gsl_matrix *segAngle, double segLength, double persistenceLength)
+double P1906MOL_MicrotubulesField::genPersistenceLength(gsl_rng *r, gsl_matrix *segAngle, double segLength, double persistenceLength)
 {
   /** 
     the angle distribution is Gaussian with zero mean and variance \f$\sigma^2 = \sqrt(2 \Delta s / l_p)\f$,
@@ -1551,7 +1550,7 @@ double P1906MOLField::genPersistenceLength(gsl_rng *r, gsl_matrix *segAngle, dou
 
 //! compute the persistence length of a set of segments
 //! \todo never implemented; may not be needed
-double P1906MOLField::getPersistenceLength(gsl_matrix *segMatrix)
+double P1906MOL_MicrotubulesField::getPersistenceLength(gsl_matrix *segMatrix)
 {
   //! segMatrix rows are x_start x_end y_start y_end (may not need numSegments)
   
@@ -1561,7 +1560,7 @@ double P1906MOLField::getPersistenceLength(gsl_matrix *segMatrix)
 }
 
 //! return the information entropy of a tube segment defined by its list of angles in segAngle
-double P1906MOLField::sEntropy(gsl_matrix *segAngle)
+double P1906MOL_MicrotubulesField::sEntropy(gsl_matrix *segAngle)
 {
   //! \f$ H(x) = - sum( P(x) \log P(x) ) \f$
   //! bin the values in order to find P(x)
@@ -1601,7 +1600,7 @@ double P1906MOLField::sEntropy(gsl_matrix *segAngle)
   return H;
 }
 
-P1906MOLField::~P1906MOLField ()
+P1906MOL_MicrotubulesField::~P1906MOL_MicrotubulesField ()
 {
   NS_LOG_FUNCTION (this);
 }

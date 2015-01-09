@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- *  Copyright © 2014 by IEEE.
+ *  Copyright ï¿½ 2015 by IEEE.
  *
  *  This source file is an essential part of IEEE Std 1906.1,
  *  Recommended Practice for Nanoscale and Molecular
@@ -20,15 +20,14 @@
  *  IEEE harmless from any damages or liability arising out of
  *  the use thereof.
  *
- * Author: Giuseppe Piro - Telematics Lab Research Group
- *                         Politecnico di Bari
- *                         giuseppe.piro@poliba.it
- *                         telematics.poliba.it/piro
+ * Author: Steve Bush - GE Global Research
+ *                      bushsf@research.ge.com
+ *                      http://www.amazon.com/author/stephenbush
  */
 
 
-#ifndef P1906_MOL_FIELD
-#define P1906_MOL_FIELD
+#ifndef P1906_MOL_FIELD_MICROTUBULES
+#define P1906_MOL_FIELD_MICROTUBULES
 
 #include "ns3/object.h"
 #include "ns3/nstime.h"
@@ -72,7 +71,7 @@ namespace ns3 {
  *  All random number are derived from gsl_rng *.
  */
 
-class P1906MOLField : public P1906Field
+class P1906MOL_MicrotubulesField : public P1906Field
 {
 public:
   static TypeId GetTypeId (void);
@@ -238,11 +237,11 @@ public:
   //! write a list of tubes into file fname in Mathematica format
   void tubes2Mma(gsl_matrix *tubeMatrix, size_t segPerTube, const char* fname);
   
-  P1906MOLField ();
-  virtual ~P1906MOLField ();
+  P1906MOL_MicrotubulesField ();
+  virtual ~P1906MOL_MicrotubulesField ();
 
 };
 
 }
 
-#endif /* P1906_MOL_FIELD */
+#endif /* P1906_MOL_FIELD_MICROTUBULES */
