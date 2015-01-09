@@ -1,0 +1,16 @@
+\form#0:$A = \int_S \int_t \Delta f(t) dt dS$
+\form#1:$|\vec{pt} - \vec{pt1}| \times |\vec{pt} - \vec{pt2}| / |\vec{pt2} - \vec{pt1}|$
+\form#2:$\sigma^2 = \sqrt(2 \Delta s / l_p)$
+\form#3:$l_p$
+\form#4:$\Delta$
+\form#5:$K = L_p k_BT$
+\form#6:$E = 1/2 k x^2$
+\form#7:$E = 1/2 K L (dt/ds)^2$
+\form#8:$dt/ds$
+\form#9:$R$
+\form#10:$dt/ds = 1/R$
+\form#11:$E = 1/2 K L/R^2 = 1/2 L_p L/R^2 k_BT$
+\form#12:$E_{bend} = 1/2 * (50 nm)*(6800 nm)/(42 nm)2 k_BT ~ 10^2 k_BT$
+\form#13:$1/R^2$
+\form#14:$~10^3 k_BT$
+\form#15:$ H(x) = - sum( P(x) \log P(x) ) $

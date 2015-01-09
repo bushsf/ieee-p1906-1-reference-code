@@ -1,0 +1,4 @@
+<map id="ns3::P1906Motion" name="ns3::P1906Motion">
+<area shape="rect" id="node3" href="$classns3_1_1_p1906_e_m_motion.html" title="Base class implementing the Motion component of the P1906 framework, dedicated to the EM example..." alt="" coords="5,155,152,181"/>
+<area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l_motion.html" title="Base class implementing the Motion component of the P1906 framework, dedicated to the MOLECULAR Examp..." alt="" coords="176,155,331,181"/>
+</map>
