@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['displaypoint',['displayPoint',['../classns3_1_1_p1906_m_o_l_field.html#a4c6a11a0407668edd7bd8f83e815e45a',1,'ns3::P1906MOLField']]],
-  ['displaypoints',['displayPoints',['../classns3_1_1_p1906_m_o_l_field.html#a3f6d1abc1fa612ef1293b1965bfe295e',1,'ns3::P1906MOLField::displayPoints(gsl_matrix *pts)'],['../classns3_1_1_p1906_m_o_l_field.html#a0ea7c3f3e3e672106ffd658b826e674d',1,'ns3::P1906MOLField::displayPoints(gsl_matrix *pts, size_t numPts)']]],
-  ['displaypos',['displayPos',['../classns3_1_1_p1906_m_o_l_field.html#a08e60a9216a889d41fd4a33332133de3',1,'ns3::P1906MOLField']]],
-  ['displaytube',['displayTube',['../classns3_1_1_p1906_m_o_l_field.html#a762276198cd803d747d608ab4de3b541',1,'ns3::P1906MOLField']]],
-  ['displaytubechars',['displayTubeChars',['../classns3_1_1_p1906_m_o_l_field.html#acd2d6b5ebb27c098aa95b40e12560408',1,'ns3::P1906MOLField']]],
-  ['distance',['distance',['../classns3_1_1_p1906_m_o_l_field.html#a2435ae0b6d6e182ed102c9586884615f',1,'ns3::P1906MOLField']]],
-  ['distancep',['distanceP',['../classns3_1_1_p1906_m_o_l_field.html#a59c75a562e1b96d19b8d99e8096c33be',1,'ns3::P1906MOLField']]]
+  ['delay_5fspectrum',['Delay_Spectrum',['../classns3_1_1_p1906_m_o_l___metrics.html#a0426c16c3f1863636ac7cc0699dbd077',1,'ns3::P1906MOL_Metrics']]],
+  ['diffusive_5fflux',['Diffusive_Flux',['../classns3_1_1_p1906_m_o_l___metrics.html#a8104f31d32df26039602c4777f8ed415',1,'ns3::P1906MOL_Metrics']]],
+  ['displaypoint',['displayPoint',['../classns3_1_1_p1906_m_o_l___extended_field.html#a9962acc73819ef3b630de13da1391002',1,'ns3::P1906MOL_ExtendedField']]],
+  ['displaypoints',['displayPoints',['../classns3_1_1_p1906_m_o_l___extended_field.html#aac5cbd7c73e6505ca99842afd79ed27c',1,'ns3::P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts)'],['../classns3_1_1_p1906_m_o_l___extended_field.html#a26e28d7fc2bdb2cef5dc0873025b7a30',1,'ns3::P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts, size_t numPts)']]],
+  ['displaypos',['displayPos',['../classns3_1_1_p1906_m_o_l___extended_motion.html#aafaa6473d76ef475ea76957c49ee38aa',1,'ns3::P1906MOL_ExtendedMotion::displayPos()'],['../classns3_1_1_p1906_m_o_l___pos.html#a9d8d6f2b1980e87de5c98bd2f9e001c7',1,'ns3::P1906MOL_Pos::displayPos()']]],
+  ['displaytube',['displayTube',['../classns3_1_1_p1906_m_o_l___tube.html#ae65d02b96fe63b1be3b7760d5a5a6d2b',1,'ns3::P1906MOL_Tube']]],
+  ['displaytubechars',['displayTubeChars',['../classns3_1_1_p1906_m_o_l___extended_field.html#a3de54074d2f432fceeb110dfc1a11f69',1,'ns3::P1906MOL_ExtendedField']]],
+  ['distance',['distance',['../classns3_1_1_p1906_m_o_l___extended_field.html#a3029a534e6659343303339eeeaf4d880',1,'ns3::P1906MOL_ExtendedField']]]
 ];

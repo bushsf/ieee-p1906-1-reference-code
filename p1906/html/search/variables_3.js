@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['se',['se',['../structns3_1_1_p1906_m_o_l_field_1_1tube_characteristcs__t.html#a098aad8084a475dd16d8416dc19e51fe',1,'ns3::P1906MOLField::tubeCharacteristcs_t']]],
-  ['seglength',['segLength',['../structns3_1_1_p1906_m_o_l_field_1_1tube_characteristcs__t.html#ae13294183339a6f6f2a53670d2b18481',1,'ns3::P1906MOLField::tubeCharacteristcs_t']]],
-  ['segpertube',['segPerTube',['../structns3_1_1_p1906_m_o_l_field_1_1tube_characteristcs__t.html#a6aa217484b76a035d4f2df26a80dd569',1,'ns3::P1906MOLField::tubeCharacteristcs_t']]]
+  ['se',['se',['../structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html#aa40540c6dbc32ea8392772f9bab900a3',1,'ns3::P1906MOL_ExtendedField::tubeCharacteristcs_t']]],
+  ['seglength',['segLength',['../structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html#a527d2ba30dd4ad7a3facaa48251c9b1e',1,'ns3::P1906MOL_ExtendedField::tubeCharacteristcs_t']]],
+  ['segpertube',['segPerTube',['../structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html#ae0c9b5f46ff59fd84a6318976fa9df49',1,'ns3::P1906MOL_ExtendedField::tubeCharacteristcs_t']]]
 ];

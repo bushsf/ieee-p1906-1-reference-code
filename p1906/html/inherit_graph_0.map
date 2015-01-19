@@ -1,26 +1,35 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node2" href="$classns3_1_1_p1906_communication_interface.html" title="Base class implementing a communication interface, which is a container of the transmitter and the re..." alt="" coords="121,78,348,105"/>
-<area shape="rect" id="node5" href="$classns3_1_1_p1906_field.html" title="Base class implementing the Field component of the P1906 framework. " alt="" coords="177,187,293,214"/>
-<area shape="rect" id="node8" href="$classns3_1_1_p1906_message_carrier.html" title="Base class implementing the Message Carrier component of the P1906 framework. " alt="" coords="145,289,324,315"/>
-<area shape="rect" id="node11" href="$classns3_1_1_p1906_motion.html" title="Base class implementing the Force component of the P1906 framework. " alt="" coords="171,390,298,417"/>
-<area shape="rect" id="node14" href="$classns3_1_1_p1906_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="155,441,314,467"/>
-<area shape="rect" id="node17" href="$classns3_1_1_p1906_receiver_communication_interface.html" title="Base class implementing a the Receiver entity of the P1906 framework. " alt="" coords="121,543,348,584"/>
-<area shape="rect" id="node20" href="$classns3_1_1_p1906_specificity.html" title="Base class implementing the Specificity component of the P1906 framework. " alt="" coords="161,674,309,701"/>
-<area shape="rect" id="node23" href="$classns3_1_1_p1906_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework. " alt="" coords="113,776,356,817"/>
+<area shape="rect" id="node5" href="$classns3_1_1_p1906_field.html" title="Base class implementing the Field component of the P1906 framework. " alt="" coords="177,162,293,189"/>
+<area shape="rect" id="node11" href="$classns3_1_1_p1906_message_carrier.html" title="Base class implementing the Message Carrier component of the P1906 framework. " alt="" coords="145,213,324,239"/>
+<area shape="rect" id="node15" href="$classns3_1_1_p1906_m_o_l___mathematica_helper.html" title="Base class implementing data to be exported to Mathematica. " alt="" coords="135,264,334,305"/>
+<area shape="rect" id="node16" href="$classns3_1_1_p1906_m_o_l___m_a_t_l_a_b_helper.html" title="Base class implementing data to be exported to MATLAB. " alt="" coords="129,330,341,357"/>
+<area shape="rect" id="node17" href="$classns3_1_1_p1906_m_o_l___metrics.html" title="Base class implementing P1906 metrics. " alt="" coords="151,381,318,407"/>
+<area shape="rect" id="node18" href="$classns3_1_1_p1906_m_o_l___pos.html" title="Class implementing a generic nanotube structure. " alt="" coords="161,431,308,458"/>
+<area shape="rect" id="node19" href="$classns3_1_1_p1906_motion.html" title="Base class implementing the Force component of the P1906 framework. " alt="" coords="171,482,298,509"/>
+<area shape="rect" id="node23" href="$classns3_1_1_p1906_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="155,533,314,559"/>
+<area shape="rect" id="node26" href="$classns3_1_1_p1906_receiver_communication_interface.html" title="Base class implementing a the Receiver entity of the P1906 framework. " alt="" coords="121,584,348,625"/>
+<area shape="rect" id="node29" href="$classns3_1_1_p1906_specificity.html" title="Base class implementing the Specificity component of the P1906 framework. " alt="" coords="161,715,309,742"/>
+<area shape="rect" id="node32" href="$classns3_1_1_p1906_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework. " alt="" coords="113,817,356,859"/>
 <area shape="rect" id="node3" href="$classns3_1_1_p1906_e_m_communication_interface.html" title="Base class implementing a communication interface, which is a container of the transmitter and the re..." alt="" coords="436,5,635,47"/>
 <area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l_communication_interface.html" title="Base class implementing a communication interface, which is a container of the transmitter and the re..." alt="" coords="432,71,639,112"/>
 <area shape="rect" id="node6" href="$classns3_1_1_p1906_e_m_field.html" title="Base class implementing the Field component of the P1906 framework, dedicated to the EM example..." alt="" coords="467,137,603,163"/>
 <area shape="rect" id="node7" href="$classns3_1_1_p1906_m_o_l_field.html" title="Base class implementing the Field component of the P1906 framework, dedicated to the MOLECULAR Exampl..." alt="" coords="463,187,607,214"/>
-<area shape="rect" id="node9" href="$classns3_1_1_p1906_e_m_message_carrier.html" title="ns3::P1906EMMessageCarrier" alt="" coords="436,238,635,265"/>
-<area shape="rect" id="node10" href="$classns3_1_1_p1906_m_o_l_message_carrier.html" title="ns3::P1906MOLMessageCarrier" alt="" coords="432,289,639,315"/>
-<area shape="rect" id="node12" href="$classns3_1_1_p1906_e_m_motion.html" title="Base class implementing the Motion component of the P1906 framework, dedicated to the EM example..." alt="" coords="462,339,609,366"/>
-<area shape="rect" id="node13" href="$classns3_1_1_p1906_m_o_l_motion.html" title="Base class implementing the Motion component of the P1906 framework, dedicated to the MOLECULAR Examp..." alt="" coords="458,390,613,417"/>
-<area shape="rect" id="node15" href="$classns3_1_1_p1906_e_m_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="446,441,625,467"/>
-<area shape="rect" id="node16" href="$classns3_1_1_p1906_m_o_l_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="442,491,629,518"/>
-<area shape="rect" id="node18" href="$classns3_1_1_p1906_e_m_receiver_communication_interface.html" title="Base class implementing a the Receiver entity of the P1906 framework for the EM example. " alt="" coords="412,543,659,584"/>
-<area shape="rect" id="node19" href="$classns3_1_1_p1906_m_o_l_receiver_communication_interface.html" title="Base class implementing a the Receiver entity of the P1906 framework for the MOLECULAR Example..." alt="" coords="408,608,663,649"/>
-<area shape="rect" id="node21" href="$classns3_1_1_p1906_e_m_specificity.html" title="Base class implementing the Specificity component of the P1906 framework, dedicated to the EM example..." alt="" coords="451,674,619,701"/>
-<area shape="rect" id="node22" href="$classns3_1_1_p1906_m_o_l_specificity.html" title="Base class implementing the Specificity component of the P1906 framework, dedicated to the MOLECULAR ..." alt="" coords="447,725,623,751"/>
-<area shape="rect" id="node24" href="$classns3_1_1_p1906_e_m_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the EM example. " alt="" coords="404,776,667,817"/>
-<area shape="rect" id="node25" href="$classns3_1_1_p1906_m_o_l_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the MOLECULAR Example..." alt="" coords="445,841,626,883"/>
+<area shape="rect" id="node8" href="$classns3_1_1_p1906_m_o_l___extended_field.html" title="Class extends the molecular Field component of the P1906 framework towards implementing a vector fiel..." alt="" coords="720,187,927,214"/>
+<area shape="rect" id="node9" href="$classns3_1_1_p1906_m_o_l___microtubules_field.html" title="Class implements molecular motor transport using microtubules in the P1906 framework. " alt="" coords="980,179,1177,220"/>
+<area shape="rect" id="node10" href="$classns3_1_1_p1906_m_o_l___tube.html" title="Class implementing a generic nanotube structure. " alt="" coords="1003,245,1154,271"/>
+<area shape="rect" id="node12" href="$classns3_1_1_p1906_e_m_message_carrier.html" title="ns3::P1906EMMessageCarrier" alt="" coords="436,238,635,265"/>
+<area shape="rect" id="node13" href="$classns3_1_1_p1906_m_o_l_message_carrier.html" title="ns3::P1906MOLMessageCarrier" alt="" coords="720,294,927,321"/>
+<area shape="rect" id="node14" href="$classns3_1_1_p1906_m_o_l___motor.html" title="Class implementing a molecular motor. " alt="" coords="1001,341,1157,367"/>
+<area shape="rect" id="node20" href="$classns3_1_1_p1906_e_m_motion.html" title="Base class implementing the Motion component of the P1906 framework, dedicated to the EM example..." alt="" coords="462,381,609,407"/>
+<area shape="rect" id="node21" href="$classns3_1_1_p1906_m_o_l_motion.html" title="Base class implementing the Motion component of the P1906 framework, dedicated to the MOLECULAR Examp..." alt="" coords="458,431,613,458"/>
+<area shape="rect" id="node22" href="$classns3_1_1_p1906_m_o_l___extended_motion.html" title="Class extends the capability of the P1906 molecular Motion component towards molecular motor motion..." alt="" coords="715,387,932,414"/>
+<area shape="rect" id="node24" href="$classns3_1_1_p1906_e_m_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="446,482,625,509"/>
+<area shape="rect" id="node25" href="$classns3_1_1_p1906_m_o_l_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="442,533,629,559"/>
+<area shape="rect" id="node27" href="$classns3_1_1_p1906_e_m_receiver_communication_interface.html" title="Base class implementing a the Receiver entity of the P1906 framework for the EM example. " alt="" coords="412,584,659,625"/>
+<area shape="rect" id="node28" href="$classns3_1_1_p1906_m_o_l_receiver_communication_interface.html" title="Base class implementing a the Receiver entity of the P1906 framework for the MOLECULAR Example..." alt="" coords="408,649,663,691"/>
+<area shape="rect" id="node30" href="$classns3_1_1_p1906_e_m_specificity.html" title="Base class implementing the Specificity component of the P1906 framework, dedicated to the EM example..." alt="" coords="451,715,619,742"/>
+<area shape="rect" id="node31" href="$classns3_1_1_p1906_m_o_l_specificity.html" title="Base class implementing the Specificity component of the P1906 framework, dedicated to the MOLECULAR ..." alt="" coords="447,766,623,793"/>
+<area shape="rect" id="node33" href="$classns3_1_1_p1906_e_m_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the EM example. " alt="" coords="404,817,667,859"/>
+<area shape="rect" id="node34" href="$classns3_1_1_p1906_m_o_l_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the MOLECULAR Example..." alt="" coords="445,883,626,924"/>
 </map>

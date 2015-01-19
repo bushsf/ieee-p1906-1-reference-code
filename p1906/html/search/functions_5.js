@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['findclosestpoint',['findClosestPoint',['../classns3_1_1_p1906_m_o_l_field.html#a55bc0db190d22436d6e7a84c6bff32f6',1,'ns3::P1906MOLField']]],
-  ['findnearesttube',['findNearestTube',['../classns3_1_1_p1906_m_o_l_field.html#a393238a8088b9caf4eb4b4a5f9452230',1,'ns3::P1906MOLField']]],
-  ['float2tube',['float2Tube',['../classns3_1_1_p1906_m_o_l_field.html#ae543086b0f21501a9ca1c16ab7853791',1,'ns3::P1906MOLField']]],
-  ['freefloat',['freeFloat',['../classns3_1_1_p1906_m_o_l_field.html#af7a8b6c9c9e0aee80b9ae08bf6b9eb61',1,'ns3::P1906MOLField']]]
+  ['findclosestpoint',['findClosestPoint',['../classns3_1_1_p1906_m_o_l___extended_field.html#af235a42e0f1f1f8b838dff39a2eb59e0',1,'ns3::P1906MOL_ExtendedField']]],
+  ['findnearesttube',['findNearestTube',['../classns3_1_1_p1906_m_o_l___extended_field.html#a42c4a261c687102a37b3ff4d577901b8',1,'ns3::P1906MOL_ExtendedField']]],
+  ['float2destination',['float2Destination',['../classns3_1_1_p1906_m_o_l___motor.html#a12a95410dfe4405b5fff1da34f85e640',1,'ns3::P1906MOL_Motor']]],
+  ['float2tube',['float2Tube',['../classns3_1_1_p1906_m_o_l___extended_motion.html#ad00e6dfc661bc2dae503520a3cae94a5',1,'ns3::P1906MOL_ExtendedMotion']]],
+  ['freefloat',['freeFloat',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a207d4924173f02b657fdef0141537ec8',1,'ns3::P1906MOL_ExtendedMotion']]]
 ];

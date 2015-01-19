@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['vectorfieldmeshmatlab',['vectorFieldMeshMATLAB',['../classns3_1_1_p1906_m_o_l_field.html#a10b67a11f3af8aada1ff8ad7646a6da8',1,'ns3::P1906MOLField']]],
-  ['vectorfieldmeshmma',['vectorFieldMeshMma',['../classns3_1_1_p1906_m_o_l_field.html#a4073e37b94cfe430280237bee602a7a4',1,'ns3::P1906MOLField']]],
-  ['vectorfieldplotmatlab',['vectorFieldPlotMATLAB',['../classns3_1_1_p1906_m_o_l_field.html#a75ca15b3de2dd855c312e59837cac85a',1,'ns3::P1906MOLField']]],
-  ['vectorfieldplotmma',['vectorFieldPlotMma',['../classns3_1_1_p1906_m_o_l_field.html#adc9b0d7d9c4c5e9a5cd40cc4c945e68f',1,'ns3::P1906MOLField']]]
+  ['vectorfieldmeshmatlab',['vectorFieldMeshMATLAB',['../classns3_1_1_p1906_m_o_l___m_a_t_l_a_b_helper.html#a66430df558e767df1990a6c859eb6d56',1,'ns3::P1906MOL_MATLABHelper']]],
+  ['vectorfieldmeshmma',['vectorFieldMeshMma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#a8d8b70c6c92c9d634e7a842f8b9349f2',1,'ns3::P1906MOL_MathematicaHelper']]],
+  ['vectorfieldplotmatlab',['vectorFieldPlotMATLAB',['../classns3_1_1_p1906_m_o_l___m_a_t_l_a_b_helper.html#a51f0550a7ff681695a30cef28a85875e',1,'ns3::P1906MOL_MATLABHelper']]],
+  ['vectorfieldplotmma',['vectorFieldPlotMma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#a05466f91442cda1dcb7f5f3a46e67db5',1,'ns3::P1906MOL_MathematicaHelper']]]
 ];

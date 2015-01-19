@@ -1,4 +1,7 @@
 <map id="ns3::P1906Field" name="ns3::P1906Field">
 <area shape="rect" id="node3" href="$classns3_1_1_p1906_e_m_field.html" title="Base class implementing the Field component of the P1906 framework, dedicated to the EM example..." alt="" coords="5,155,141,181"/>
 <area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l_field.html" title="Base class implementing the Field component of the P1906 framework, dedicated to the MOLECULAR Exampl..." alt="" coords="165,155,309,181"/>
+<area shape="rect" id="node5" href="$classns3_1_1_p1906_m_o_l___extended_field.html" title="Class extends the molecular Field component of the P1906 framework towards implementing a vector fiel..." alt="" coords="134,229,341,256"/>
+<area shape="rect" id="node6" href="$classns3_1_1_p1906_m_o_l___microtubules_field.html" title="Class implements molecular motor transport using microtubules in the P1906 framework. " alt="" coords="40,304,237,345"/>
+<area shape="rect" id="node7" href="$classns3_1_1_p1906_m_o_l___tube.html" title="Class implementing a generic nanotube structure. " alt="" coords="262,311,413,338"/>
 </map>

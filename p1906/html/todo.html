@@ -104,33 +104,35 @@ $(document).ready(function(){initNavTree('todo.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt><a class="anchor" id="_todo000025"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#aaaceb108c914fcbbfbbbb0d6b683bb1a">ns3::P1906MOLField::activeNetworkProgrammability</a>  (gsl_matrix *vf, gsl_vector *pt)</dt>
-<dd><p class="startdd">implement the standard active network programmability metric </p>
-<p class="enddd">use vector field and divergence to compute this value  </p>
-</dd>
-<dt><a class="anchor" id="_todo000026"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#ac0eac0d2a7d53a5897d33b3a9aa82c0b">ns3::P1906MOLField::brownianMotion</a>  (gsl_rng *r, gsl_vector *currentPos, gsl_vector *newPos, double timePeriod)</dt>
+<dt><a class="anchor" id="_todo000003"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a054dbdb129a28153941a6454c9deb21b">ns3::P1906MOL_ExtendedField::isPointOverlap</a>  (gsl_vector *pt, gsl_vector *segment)</dt>
 <dd>this should be in Motion class  </dd>
-<dt><a class="anchor" id="_todo000029"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#ae543086b0f21501a9ca1c16ab7853791">ns3::P1906MOLField::float2Tube</a>  (gsl_rng *r, gsl_vector *startPt, gsl_matrix *pts, size_t *npts, gsl_matrix *tubeMatrix, double timePeriod, struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1simtime__t.html" title="simulated time structure anticipating other fields that may be required for time management ...">simtime_t</a> *t)</dt>
+<dt><a class="anchor" id="_todo000002"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a29796927790ae0260b0d3a816b2a8597">ns3::P1906MOL_ExtendedField::setTubeVolume</a>  (struct <a class="el" href="structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html" title="properties of the microtubule network ">tubeCharacteristcs_t</a> *ts, double volume=25)</dt>
+<dd>the setTube* functions could be specified before ns-3 starts and exist as ns-3 nodes  </dd>
+<dt><a class="anchor" id="_todo000001"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#aa62c87988bdb1a1a5118c637d8d0482b">ns3::P1906MOL_ExtendedField::unitTestgetOverlap</a>  ()</dt>
+<dd>create unit tests  </dd>
+<dt><a class="anchor" id="_todo000007"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a2f407a6e80c3ee3374f3a43d0ed54690">ns3::P1906MOL_ExtendedMotion::brownianMotion</a>  (gsl_rng *r, gsl_vector *currentPos, gsl_vector *newPos, double timePeriod)</dt>
 <dd>this should be in Motion class  </dd>
-<dt><a class="anchor" id="_todo000028"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#af7a8b6c9c9e0aee80b9ae08bf6b9eb61">ns3::P1906MOLField::freeFloat</a>  (gsl_rng *r, gsl_vector *startPt, gsl_matrix *pts, int time, double timePeriod, struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1simtime__t.html" title="simulated time structure anticipating other fields that may be required for time management ...">simtime_t</a> *t)</dt>
+<dt><a class="anchor" id="_todo000009"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#ad00e6dfc661bc2dae503520a3cae94a5">ns3::P1906MOL_ExtendedMotion::float2Tube</a>  (gsl_rng *r, gsl_vector *startPt, vector&lt; P1906MOL_Pos &gt; &amp;pts, gsl_matrix *tubeMatrix, double timePeriod)</dt>
 <dd>this should be in Motion class  </dd>
-<dt><a class="anchor" id="_todo000021"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#a2c2d89c95a3bd21526857c639775626e">ns3::P1906MOLField::genTube</a>  (struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1tube_characteristcs__t.html" title="properties of the microtubule network ">tubeCharacteristcs_t</a> *ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)</dt>
-<dd>randomize initial tube orientations  </dd>
-<dt><a class="anchor" id="_todo000031"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#a609830653b6cf829e0ddf53900b7adf1">ns3::P1906MOLField::genTubes</a>  (struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1tube_characteristcs__t.html" title="properties of the microtubule network ">tubeCharacteristcs_t</a> *ts, gsl_rng *r, gsl_matrix *tubeMatrix)</dt>
-<dd><p class="startdd">genTube* could be moved to start of ns-3 or each tube could be an ns-3 node </p>
-<p class="enddd">get actual tube graph properties from biologist  </p>
-</dd>
-<dt><a class="anchor" id="_todo000022"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#a6549d24360ff7ac926f9d5e8f893c0b4">ns3::P1906MOLField::getPersistenceLength</a>  (gsl_matrix *segMatrix)</dt>
-<dd>never implemented; may not be needed  </dd>
-<dt><a class="anchor" id="_todo000027"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#ade28316ad09eec9c50873768b6ad3410">ns3::P1906MOLField::isPointOverlap</a>  (gsl_vector *pt, gsl_vector *segment)</dt>
+<dt><a class="anchor" id="_todo000008"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a207d4924173f02b657fdef0141537ec8">ns3::P1906MOL_ExtendedMotion::freeFloat</a>  (gsl_rng *r, gsl_vector *startPt, vector&lt; P1906MOL_Pos &gt; &amp;pts, int time, double timePeriod)</dt>
 <dd>this should be in Motion class  </dd>
-<dt><a class="anchor" id="_todo000030"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#aabea64c4f1e0b4fe7cc7b8ebcd00ca86">ns3::P1906MOLField::motorWalk</a>  (gsl_rng *r, gsl_vector *startPt, gsl_matrix *pts, size_t *numPts, gsl_matrix *tubeMatrix, size_t segPerTube, struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1simtime__t.html" title="simulated time structure anticipating other fields that may be required for time management ...">simtime_t</a> *t)</dt>
+<dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#aa9f1d9c278c3288874220f36f5a31a41">ns3::P1906MOL_ExtendedMotion::getTime</a>  ()</dt>
+<dd>return the propagation delay for a motor  </dd>
+<dt><a class="anchor" id="_todo000010"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a2795ce8a3df759f8364b4c6e45d86963">ns3::P1906MOL_ExtendedMotion::motorWalk</a>  (gsl_rng *r, gsl_vector *startPt, vector&lt; P1906MOL_Pos &gt; &amp;pts, gsl_matrix *tubeMatrix, size_t segPerTube)</dt>
 <dd><p class="startdd">this should be in Motion class </p>
 <p>verify that motorWalk is working properly </p>
 <p class="enddd">set tube radius (thickness) globally  </p>
 </dd>
-<dt><a class="anchor" id="_todo000001"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#a35964be4e276aa748dc5457aa57d0d81">ns3::P1906MOLField::P1906MOLField</a>  ()</dt>
-<dd><p class="startdd">document code and check into <a href="https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/">https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/</a> </p>
+<dt><a class="anchor" id="_todo000031"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a70142fee18c1a8657755bb69eeb9387a">ns3::P1906MOL_Metrics::Active_Network_Programmability</a>  (gsl_matrix *vf, gsl_vector *pt)</dt>
+<dd>consider using vector field and divergence to compute this value  </dd>
+<dt><a class="anchor" id="_todo000030"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a78ab421a0f8e49ccad0fefbf06d60f13">ns3::P1906MOL_MicrotubulesField::genTubes</a>  (struct tubeCharacteristcs_t *ts, gsl_rng *r, gsl_matrix *tubeMatrix)</dt>
+<dd><p class="startdd">genTube* could be moved to start of ns-3 or each tube could be an ns-3 node </p>
+<p class="enddd">get actual tube graph properties from biologist  </p>
+</dd>
+<dt><a class="anchor" id="_todo000011"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a87fa96b57cd67925fe91d2d3eb1cd8ec">ns3::P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField</a>  ()</dt>
+<dd><p class="startdd">implement Brownian motion only versus with microtubules as example: need start/end locations and to compute transit time </p>
+<p>implement metrics or add stubs </p>
+<p>document code and check into <a href="https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/">https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/</a> </p>
 <p>include whether the member should be in a different class, e.g. Motion </p>
 <p>gradient is the vector field as defined above at any point on a tube: length could be scaled to motor movement rate </p>
 <p>consider implementing Random Markov Field (RMF) for analysis of motor motion </p>
@@ -144,21 +146,25 @@ $(document).ready(function(){initNavTree('todo.html','');});
 <p>plot motor starting in random location versus time to reach destination as function of tube structure </p>
 <p>plot structural entropy versus delay </p>
 <p>plot binding time versus delay </p>
-<p class="enddd">plot distance travelled versus delay, structural entropy, etc.  </p>
+<p>plot distance travelled versus delay, structural entropy, etc. </p>
+<p class="enddd">modify this to start from transmitter and end when motor reaches receiver returning propagation time random motion for 100 sec start near the first tube  </p>
 </dd>
-<dt><a class="anchor" id="_todo000024"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#af9b7a8588c72d72f4e793853e376e585">ns3::P1906MOLField::propagationDelay</a>  (struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1simtime__t.html" title="simulated time structure anticipating other fields that may be required for time management ...">simtime_t</a> *t)</dt>
-<dd>return the propagation delay for a motor  </dd>
-<dt><a class="anchor" id="_todo000023"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#a065d0a284f05115b55c563f7e635a5b7">ns3::P1906MOLField::setTubeVolume</a>  (struct <a class="el" href="structns3_1_1_p1906_m_o_l_field_1_1tube_characteristcs__t.html" title="properties of the microtubule network ">tubeCharacteristcs_t</a> *ts, double volume=25)</dt>
-<dd>the setTube* functions could be specified before ns-3 starts and exist as ns-3 nodes  </dd>
-<dt><a class="anchor" id="_todo000020"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l_field.html#ab8fbdb2527a71719d95906da4c2f6fde">ns3::P1906MOLField::unitTestgetOverlap</a>  ()</dt>
-<dd>create unit tests </dd>
+<dt><a class="anchor" id="_todo000032"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#accc9c3f34492887f3a780f3072f6b9b0">ns3::P1906MOL_Motor::move2Destination</a>  (gsl_matrix *tubeMatrix, size_t segPerTube, double timePeriod, vector&lt; P1906MOL_Pos &gt; &amp;pts)</dt>
+<dd><p class="startdd">float until tube then walk and repeat </p>
+<p>save pts for each of the following calls... returns the index of the segment in tubeMatrix to which the motor is bound </p>
+<p class="enddd">set current_location to the last pt in pts walk along tube until end of tube or unbound  </p>
+</dd>
+<dt><a class="anchor" id="_todo000035"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a2c1a7f0b20e7b24b834def6f6cf28c68">ns3::P1906MOL_Tube::genTube</a>  (struct tubeCharacteristcs_t *ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)</dt>
+<dd>randomize initial tube orientations  </dd>
+<dt><a class="anchor" id="_todo000036"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a096b3ef6abe7449dc22543bf2b603360">ns3::P1906MOL_Tube::getPersistenceLength</a>  (gsl_matrix *segMatrix)</dt>
+<dd>never implemented; may not be needed </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Jan 9 2015 08:36:56 for IEEE-Std-1906 by
+    <li class="footer">Generated on Mon Jan 19 2015 12:35:22 for IEEE-Std-1906 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9 </li>
   </ul>

@@ -48,6 +48,7 @@
 #include "ns3/p1906-mol-transmitter-communication-interface.h"
 #include "ns3/p1906-mol-receiver-communication-interface.h"
 #include "ns3/p1906-mol-field-microtubule.h"
+#include "ns3/p1906-field.h"
 
 using namespace ns3;
 

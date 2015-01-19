@@ -21,7 +21,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classns3_1_1_p1906_net_device.html#af5d02db361e089476b43a9b4304a70a4"
+"classns3_1_1_p1906_m_o_l_receiver_communication_interface.html#a40b03526d13d22e6fec22bc7f3baf132"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
