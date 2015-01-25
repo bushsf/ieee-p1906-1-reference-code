@@ -25,6 +25,20 @@
  *                      http://www.amazon.com/author/stephenbush
  */
 
+/* \details
+ * <pre>
+ * Currently very simple:
+ * +--------------------+
+ * |                    |
+ * | X, Y, Z Coordinate |
+ * |                    |
+ * +--------------------+
+ * \todo add timestamp
+ * \todo add resolution (uncertainty related to Clause 6.8 of P1906.1/D1.1 Draft Recommended Practice for Nanoscale and 
+ *       Molecular Communication Framework -> void P1906MOL_Metrics::Positioning_Accuracy_of_Message_Carriers())
+ * </pre>
+ */
+ 
 #include "ns3/log.h"
 
 #include "ns3/p1906-mol-pos.h"

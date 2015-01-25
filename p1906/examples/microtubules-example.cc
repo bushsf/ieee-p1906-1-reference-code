@@ -26,12 +26,9 @@
  *                         telematics.poliba.it/piro
  */
 
-
-
-
 /*
  * Description:
- * this file models the molecular communication based on microtubules structures
+ * this file models the molecular communication based on microtubules structures in class P1906MOL_MicrotubulesField
  */
 
 #include "ns3/core-module.h"
@@ -101,6 +98,7 @@ int main (int argc, char *argv[])
   Ptr<P1906NetDevice> dev2 = CreateObject<P1906NetDevice> ();
   Ptr<P1906MOLCommunicationInterface> c2 = CreateObject<P1906MOLCommunicationInterface> ();
   Ptr<P1906MOLSpecificity> s2 = CreateObject<P1906MOLSpecificity> ();
+  // SFB: this class creates the microtubules
   Ptr<P1906MOL_MicrotubulesField> fi2 = CreateObject<P1906MOL_MicrotubulesField> ();
   Ptr<P1906MOLPerturbation> p2 = CreateObject<P1906MOLPerturbation> ();
   p2->SetPulseInterval (MilliSeconds(pulseInterval));
@@ -133,6 +131,7 @@ int main (int argc, char *argv[])
     {
 	  buffer[i] = 0; //empty information
     }
+  // SFB: this should be a molecular motor
   Ptr<Packet> message = Create<Packet>(buffer, pktSize);
 
 

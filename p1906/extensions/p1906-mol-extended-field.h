@@ -130,9 +130,9 @@ public:
  
   //! Methods implementing unit tests
   //! test tube overlaps
-  bool unitTestgetOverlap();
+  bool unitTest_getOverlap();
   //! test the findClosestPoint function
-  bool unitTestfindClosestPoint();
+  bool unitTest_findClosestPoint();
 
     //! Methods related to creating and displaying points and lines in 3D
   //! return a pt vector comprised of x, y, z

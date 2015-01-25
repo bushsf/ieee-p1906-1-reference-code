@@ -79,8 +79,11 @@ class P1906MOL_Motor : public P1906MOL_ExtendedMotion, public P1906MOLMessageCar
 public:
   static TypeId GetTypeId (void);
   
+  //! the current location of the motor in 3D space
   gsl_vector * current_location;
+  //! the destination volume for the motor
   gsl_vector * destination_volume;
+  //! a record of the position of the motor throughout its lifetime
   vector<P1906MOL_Pos> pos_history;
   
   const gsl_rng_type * T;
@@ -93,9 +96,12 @@ public:
   void setDestinationVolume(gsl_vector * lower_left, gsl_vector * upper_right);
   //! return true if motor is in the destination volume, false otherwise
   bool inDestination();
-  //! free float until the destination is reached, returning the propagation time
-  double float2Destination(double timePeriod);
-  double move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts);
+  //! motor is driven be Brownian motion until the destination is reached, returning the propagation time
+  void float2Destination(double timePeriod);
+  //! motor binds to microtubule and walks and is driven by Brownian motion when unbound to microtubule, returning propagation time
+  void move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts);
+  //! return the elapsed time since the motor was created
+  double propagationDelay();
   
   virtual ~P1906MOL_Motor ();
 

@@ -24,6 +24,17 @@
  *                      bushsf@research.ge.com
  *                      http://www.amazon.com/author/stephenbush
  */
+ 
+/* \details
+ * <pre>
+ * Creates ASCII files designed for import into Mathematica
+ * +---------+                       +-------------+
+ * |         |      +----------+     |             |
+ * |   NS-3  +--->  |  *.mma   +---> | Mathematica |
+ * |         |      +----------+     |             |
+ * +---------+                       +-------------+
+ * </pre>
+ */
 
 #include "ns3/log.h"
 #include "ns3/object.h"

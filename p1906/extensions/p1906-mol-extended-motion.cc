@@ -24,6 +24,24 @@
  *                      bushsf@research.ge.com
  *                      http://www.amazon.com/author/stephenbush
  */
+ 
+/* \details
+ * <pre> 
+ * Molecular 3D Motor Motion
+ *   Z ^     Y
+ *     |  /                   +----->              
+ *     |/                   ++                     
+ *     +------>           +-++------------+        
+ *            X           |               |        
+ *    ++                  +---------------+        
+ *    ++                                           
+ *  MOLECULAR                MICROTUBULE           
+ *    MOTOR                                        
+ *                                                
+ * UNBOUND MOTION               BOUND MOTION       
+ * Next step random Gaussian    Next step along tube
+ * </pre>
+ */
 
 #include "ns3/log.h"
 #include "ns3/object.h"
@@ -69,7 +87,8 @@ P1906MOL_ExtendedMotion::P1906MOL_ExtendedMotion ()
 //! \todo verify that motorWalk is working properly
 void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube)
 {
-  /** See "Movements of Molecular Motors," Reinhard Lipowsky
+  /** 
+    See "Movements of Molecular Motors," Reinhard Lipowsky
 	movement speed: ~1 um / sec
 	bound time ~2 sec
 	assumes startPt is on a tube in tubeMatrix
@@ -80,11 +99,15 @@ void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vecto
   gsl_vector * pt2 = gsl_vector_alloc(6);
   P1906MOL_Pos Pos1;
   P1906MOL_Pos Pos2;
-  double radius = 15;
+  double radius = 15; //! tube radius nm
   double movementRate = 1000; //! nm / sec
   //! double bindingTime = 2; sec
   double x1, y1, z1;
   double x2, y2, z2;
+  
+  //! bind with a given probability
+  if (gsl_ran_ugaussian (r) > 0.6) //! \todo set binding probability
+    return;
 
   //! find the tube the motor is starting on
   int seg = tube.findNearestTube(startPt, tubeMatrix, radius); //! \todo set tube radius (thickness) globally

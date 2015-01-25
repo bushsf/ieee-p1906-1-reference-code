@@ -17,5 +17,6 @@ var searchData=
   ['plot2mma',['plot2Mma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#ab0e0675a5ea3afb29a9dd9471732ec01',1,'ns3::P1906MOL_MathematicaHelper']]],
   ['point',['point',['../classns3_1_1_p1906_m_o_l___extended_field.html#a9bef06a6ec8ff4baa1387922d625b0ce',1,'ns3::P1906MOL_ExtendedField']]],
   ['points2mma',['points2Mma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#afd5eaf1f9f5ebbdb6718d45e7844e8a5',1,'ns3::P1906MOL_MathematicaHelper']]],
-  ['positioning_5faccuracy_5fof_5fmessage_5fcarriers',['Positioning_Accuracy_of_Message_Carriers',['../classns3_1_1_p1906_m_o_l___metrics.html#a7e17a40e0f7f659091b168d4d5cb7258',1,'ns3::P1906MOL_Metrics']]]
+  ['positioning_5faccuracy_5fof_5fmessage_5fcarriers',['Positioning_Accuracy_of_Message_Carriers',['../classns3_1_1_p1906_m_o_l___metrics.html#a7e17a40e0f7f659091b168d4d5cb7258',1,'ns3::P1906MOL_Metrics']]],
+  ['propagationdelay',['propagationDelay',['../classns3_1_1_p1906_m_o_l___motor.html#aa301be3661d0007799412cee1daf347e',1,'ns3::P1906MOL_Motor']]]
 ];

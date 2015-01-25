@@ -24,6 +24,22 @@
  *                      bushsf@research.ge.com
  *                      http://www.amazon.com/author/stephenbush
  */
+ 
+/* \details
+ * <pre>
+ *                                                upper-right corner
+ *                               +--------------------+             
+ *                               |                    |             
+ *                               |                    |             
+ *                   ++          |    DESTINATION     |             
+ *    +-->           ++          |       VOLUME       |             
+ *    |           MOLECULAR      |                    |             
+ *    |             MOTOR        |                    |             
+ *    +                          |                    |             
+ * STARTING                      +--------------------+             
+ *  POINT                  lower-left corner                                             
+ * </pre>
+ */
 
 #include "ns3/log.h"
 
@@ -103,7 +119,7 @@ bool P1906MOL_Motor::inDestination()
 }
 
 //! use microtubules if available to reach the destination and return the propagation time
-double P1906MOL_Motor::move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts)
+void P1906MOL_Motor::move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts)
 {
   //! \todo float until tube then walk and repeat
   while (!inDestination())
@@ -116,13 +132,10 @@ double P1906MOL_Motor::move2Destination(gsl_matrix * tubeMatrix, size_t segPerTu
 	//! walk along tube until end of tube or unbound
 	motorWalk(r, current_location, pts, tubeMatrix, segPerTube);
   }
-  
-  printf ("(float2Destination) float time: %f\n", getTime());
-  return getTime();
 }
 
 //! free float until the destination is reached, returning the propagation time
-double P1906MOL_Motor::float2Destination(double timePeriod)
+void P1906MOL_Motor::float2Destination(double timePeriod)
 {
   gsl_vector * newPos = gsl_vector_alloc (3);
   P1906MOL_Pos Pos;
@@ -150,8 +163,11 @@ double P1906MOL_Motor::float2Destination(double timePeriod)
 			     gsl_vector_get (current_location, 2) );
     pos_history.insert (pos_history.end(), Pos);
   }
-  
-  printf ("(float2Destination) float time: %f\n", getTime());
+}
+
+//! return the elapsed time since the motor was created
+double P1906MOL_Motor::propagationDelay()
+{
   return getTime();
 }
 

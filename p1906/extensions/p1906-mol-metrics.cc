@@ -24,6 +24,23 @@
  *                      bushsf@research.ge.com
  *                      http://www.amazon.com/author/stephenbush
  */
+ 
+/* \details
+ * <pre>
+ * Metrics class monitors components, computes metrics, and exports results
+ *                                               +----------------+    
+ *                                    +--------> |                |    
+ *                                    |          |  MATLABHelper  |    
+ * +------------------------+   +-----+-----+    |                |    
+ * |                        |   |           |    +----------------+    
+ * | 1906 Component Classes +-> |  Metrics  |                            
+ * |                        |   |           |    +--------------------+
+ * +------------------------+   +-----+-----+    |                    |
+ *                                    |          | MathematicaHelper  |
+ *                                    +--------> |                    |
+ *                                               +--------------------+
+ * </pre>
+ */
 
 #include "ns3/log.h"
 

@@ -24,6 +24,24 @@
  *                      bushsf@research.ge.com
  *                      http://www.amazon.com/author/stephenbush
  */
+ 
+ /* \details
+  * <pre>
+  * RADIUS      SEGMENT                                                     
+  *      +    <---------->                               
+  *      |                                               
+  *      |    +----------+----------+----------XXXXX     
+  *      +--> |    S1    |   S2     |   S3     |   XXX   
+  *           +----------+----------+----------XX    XX  
+  *                                          ^  XXX S4 XX+
+  *                                          |    XXX    |
+  *                                   ANGLE  +--->  XXXXX+
+  *                                                      
+  *                                                      
+  *            <-------------------------------->        
+  *                      MICROTUBULE
+  * </pre>
+  */
 
 #include "ns3/log.h"
 

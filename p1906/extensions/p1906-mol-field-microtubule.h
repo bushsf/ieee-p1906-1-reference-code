@@ -69,6 +69,9 @@ namespace ns3 {
  *  Each tube is comprised of a list of segments within a gsl_matrix * of size s x 6 -> s x ((x1, y1, z1), (x2, y2, z2)).
  *  A set of tubes is also a gsl_matrix * of size (s * t) x 6, where s is the number of segments and t the number of tubes.
  *  All random number are derived from gsl_rng *.
+ *  
+ * See http://www.gnu.org/software/gsl/manual/html_node/Level-3-GSL-BLAS-Interface.html#Level-3-GSL-BLAS-Interface.
+ *
  */
 
 class P1906MOL_MicrotubulesField : public P1906MOL_ExtendedField
@@ -77,16 +80,44 @@ public:
   static TypeId GetTypeId (void);
   
   P1906MOL_MicrotubulesField ();
-    
+  
+  //! create a given density of tubes of numSegments in given volume
+  //! volume starts at 0, 0, 0 to volume^(1/3) in each dimension  
+  gsl_matrix * tubeMatrix;
+  //! properties of the microtubule network
+  tubeCharacteristcs_t ts;
+  //! holds the vector field
+  gsl_matrix * vf;
+
+  //! random number generation structures and initialization
+  const gsl_rng_type * T;
+  gsl_rng * r;
+
   /**
    * Methods related to creating microtubules and analyzing molecular motor transport
    */
   
   //! fill tubeMatrix with random tubes in area with a given number of total segments and persistence length
   //! \todo genTube* could be moved to start of ns-3 or each tube could be an ns-3 node
-  void genTubes(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_matrix * tubeMatrix);
+  void genTubes(struct tubeCharacteristcs_t * ts);
   //! plot persistence length versus structural entropy
   void persistenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_vector * persistenceLengths);
+  //! test plot2mma
+  bool unitTest_Plot2Mma(vector<P1906MOL_Pos> pts);
+  //! test persistence length versus entropy plot
+  bool unitTest_PersistenceLengthsVsEntropy();
+  //! test computation of all segment overlaps
+  bool unitTest_AllOverlaps();
+  //! test computation of a single overlap
+  bool unitTest_Overlap();
+  //! test the computation of distance
+  bool unitTest_Distance();
+  //! test the computation of a vector field
+  bool unitTest_VectorField();
+  //! test the movement of a motor floating to a tube and walking on the tube
+  bool unitTest_MotorMovement(vector<P1906MOL_Pos> & pts);
+  //! test motor movement to destination
+  bool unitTest_MotorMove2Destination(vector<P1906MOL_Pos> & pts);
   
   virtual ~P1906MOL_MicrotubulesField ();
 

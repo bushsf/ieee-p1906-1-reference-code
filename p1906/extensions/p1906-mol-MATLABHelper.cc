@@ -25,6 +25,17 @@
  *                      http://www.amazon.com/author/stephenbush
  */
 
+/* \details
+ * <pre>
+ * Creates ASCII files designed for import into MATLAB
+ * +-----------+                      +--------+
+ * |           |     +---------+      |        |
+ * |   NS-3    | +-> | *.dat   |  +-> | MATLAB |
+ * |           |     +---------+      |        |
+ * +-----------+                      +--------+
+ * </pre>
+ */
+ 
 #include "ns3/log.h"
 #include "ns3/object.h"
 #include "ns3/nstime.h"

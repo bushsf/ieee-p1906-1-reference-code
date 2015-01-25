@@ -2,6 +2,9 @@ var NAVTREE =
 [
   [ "IEEE-Std-1906", "index.html", [
     [ "Todo List", "todo.html", null ],
+    [ "Namespaces", null, [
+      [ "Namespace List", "namespaces.html", "namespaces" ]
+    ] ],
     [ "Classes", null, [
       [ "Class List", "annotated.html", "annotated" ],
       [ "Class Index", "classes.html", null ],
@@ -20,8 +23,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-".html",
-"classns3_1_1_p1906_m_o_l_receiver_communication_interface.html#a40b03526d13d22e6fec22bc7f3baf132"
+"annotated.html",
+"classns3_1_1_p1906_m_o_l_motion.html#aa16fd3e86ddcdea1ae896db8060ff4af"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

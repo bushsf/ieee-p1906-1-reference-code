@@ -24,6 +24,23 @@
  *                      bushsf@research.ge.com
  *                      http://www.amazon.com/author/stephenbush
  */
+ 
+//! \details
+//! <pre>
+//! The Field Component is a vector field
+//!
+//! gsl_vector *location (x,y,z)  gsl_vector vector (vx,vy,vz)
+//!                +               +
+//!                v               v
+//!                +--------------->
+//! 			        VECTOR
+//!   
+//! gsl_vector *segment (x1,y1,z1,       x2,y2,z2)
+//!                         +               +                       
+//!                         v               v                                              
+//!                         +---------------+
+//! 				          LINE SEGMENT
+//! </pre>
 
 #include "ns3/log.h"
 #include "ns3/object.h"
@@ -131,6 +148,13 @@ void P1906MOL_ExtendedField::point(gsl_vector * pt, double x, double y, double z
 }
 
 //! set line with end points pt1 and pt2
+//! <pre>
+//! gsl_vector *segment (x1,y1,z1,       x2,y2,z2)
+//!                         +               +                       
+//!                         v               v                                              
+//!                         +---------------+
+//! 				           LINE SEGMENT
+//! </pre>
 void P1906MOL_ExtendedField::line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2)
 {
   for (int i = 0; i < 3; i++)
@@ -141,6 +165,23 @@ void P1906MOL_ExtendedField::line(gsl_vector * line, gsl_vector * pt1, gsl_vecto
 }
 
 //! return the segment in location mp from tubeMatrix
+//! <pre>
+//! segments stored sequentially in tubeMatrix
+//! segment ---+
+//!            | 
+//!            v                                 
+//!          1                     segPerTube    
+//!          +----+ +----+ ... +----+            
+//!                                              
+//!          +----+ +----+ ... +----+            
+//!                                              
+//!           ...   ...    ...  ...              
+//!                                N * segPerTube
+//!          +----+ +----+ ... +----+            
+//!                                              
+//!         <----------------------->            
+//!                    tube                      
+//! </pre>
 void P1906MOL_ExtendedField::line(gsl_vector * segment, gsl_matrix * tubeMatrix, int mp)
 {
   for (size_t i = 0; i < 6; i++)
@@ -376,7 +417,7 @@ void P1906MOL_ExtendedField::cross_product(const gsl_vector *u, const gsl_vector
 }
 
 //! a unit test for getOverlap
-bool P1906MOL_ExtendedField::unitTestgetOverlap()
+bool P1906MOL_ExtendedField::unitTest_getOverlap()
 {
   //! \todo create unit tests
   bool passTests = false;

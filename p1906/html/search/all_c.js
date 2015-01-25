@@ -30,8 +30,8 @@ var searchData=
   ['p1906mol_5fmotor',['P1906MOL_Motor',['../classns3_1_1_p1906_m_o_l___motor.html#af0cc0e37279400696a0a2cd8d9e451c4',1,'ns3::P1906MOL_Motor']]],
   ['p1906mol_5fpos',['P1906MOL_Pos',['../classns3_1_1_p1906_m_o_l___pos.html',1,'ns3']]],
   ['p1906mol_5fpos',['P1906MOL_Pos',['../classns3_1_1_p1906_m_o_l___pos.html#a3c58961fea5ec11280cbe91b9a96db43',1,'ns3::P1906MOL_Pos']]],
-  ['p1906mol_5ftube',['P1906MOL_Tube',['../classns3_1_1_p1906_m_o_l___tube.html#adaca19904580afb365cd2c4d09430b30',1,'ns3::P1906MOL_Tube']]],
   ['p1906mol_5ftube',['P1906MOL_Tube',['../classns3_1_1_p1906_m_o_l___tube.html',1,'ns3']]],
+  ['p1906mol_5ftube',['P1906MOL_Tube',['../classns3_1_1_p1906_m_o_l___tube.html#adaca19904580afb365cd2c4d09430b30',1,'ns3::P1906MOL_Tube']]],
   ['p1906molcommunicationinterface',['P1906MOLCommunicationInterface',['../classns3_1_1_p1906_m_o_l_communication_interface.html',1,'ns3']]],
   ['p1906molfield',['P1906MOLField',['../classns3_1_1_p1906_m_o_l_field.html',1,'ns3']]],
   ['p1906molmessagecarrier',['P1906MOLMessageCarrier',['../classns3_1_1_p1906_m_o_l_message_carrier.html',1,'ns3']]],
@@ -54,5 +54,7 @@ var searchData=
   ['plot2mma',['plot2Mma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#ab0e0675a5ea3afb29a9dd9471732ec01',1,'ns3::P1906MOL_MathematicaHelper']]],
   ['point',['point',['../classns3_1_1_p1906_m_o_l___extended_field.html#a9bef06a6ec8ff4baa1387922d625b0ce',1,'ns3::P1906MOL_ExtendedField']]],
   ['points2mma',['points2Mma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#afd5eaf1f9f5ebbdb6718d45e7844e8a5',1,'ns3::P1906MOL_MathematicaHelper']]],
-  ['positioning_5faccuracy_5fof_5fmessage_5fcarriers',['Positioning_Accuracy_of_Message_Carriers',['../classns3_1_1_p1906_m_o_l___metrics.html#a7e17a40e0f7f659091b168d4d5cb7258',1,'ns3::P1906MOL_Metrics']]]
+  ['pos_5fhistory',['pos_history',['../classns3_1_1_p1906_m_o_l___motor.html#a6d98a54420ecb597c68d49d7d53363e3',1,'ns3::P1906MOL_Motor']]],
+  ['positioning_5faccuracy_5fof_5fmessage_5fcarriers',['Positioning_Accuracy_of_Message_Carriers',['../classns3_1_1_p1906_m_o_l___metrics.html#a7e17a40e0f7f659091b168d4d5cb7258',1,'ns3::P1906MOL_Metrics']]],
+  ['propagationdelay',['propagationDelay',['../classns3_1_1_p1906_m_o_l___motor.html#aa301be3661d0007799412cee1daf347e',1,'ns3::P1906MOL_Motor']]]
 ];
