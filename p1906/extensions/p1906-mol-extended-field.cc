@@ -76,8 +76,7 @@ P1906MOL_ExtendedField::P1906MOL_ExtendedField ()
     Lists of points or positions are in a gsl_matrix * of size n x 3.
     Each tube is comprised of a list of segments within a gsl_matrix * of size s x 6 -> s x ((x1, y1, z1), (x2, y2, z2)).
     A set of tubes is also a gsl_matrix * of size (s * t) x 6, where s is the number of segments and t the number of tubes.
-    All random number are derived from gsl_rng *.
-	  
+    All random number are derived from gsl_rng *  
   */
   
 }
@@ -100,14 +99,15 @@ void P1906MOL_ExtendedField::setTubeVolume(struct tubeCharacteristcs_t * ts, dou
   ts->volume = volume;
 }
 
-//! set the mean tube length
+//! set the mean tube length, segment is arbitrarily set to 1/5 the length of a tube
 void P1906MOL_ExtendedField::setTubeLength(struct tubeCharacteristcs_t * ts, double mean_tube_length)
 {
   ts->mean_tube_length = mean_tube_length;
+  //! 
   ts->segLength = ts->mean_tube_length / 5;
 }
 
-//! set the mean angle between segments of the tube
+//! set the mean angle between segments within a tube
 void P1906MOL_ExtendedField::setTubeIntraAngle(struct tubeCharacteristcs_t * ts, double mean_intra_tube_angle)
 {
   ts->mean_intra_tube_angle = mean_intra_tube_angle;
@@ -119,7 +119,7 @@ void P1906MOL_ExtendedField::setTubeInterAngle(struct tubeCharacteristcs_t * ts,
   ts->mean_inter_tube_angle = mean_inter_tube_angle;
 }
 
-//! this is really the segment density
+//! this is really the segment density and also derives and sets the total number of segments based on the volume
 void P1906MOL_ExtendedField::setTubeDensity(struct tubeCharacteristcs_t * ts, double mean_tube_density)
 {
   ts->mean_tube_density = mean_tube_density;
@@ -132,7 +132,7 @@ void P1906MOL_ExtendedField::setTubePersistenceLength(struct tubeCharacteristcs_
   ts->persistenceLength = persistenceLength;
 }
 
-//! set the number of segments per tube
+//! set the number of segments per tube and also derives and sets the number of tubes
 void P1906MOL_ExtendedField::setTubeSegments(struct tubeCharacteristcs_t * ts, size_t segPerTube)
 {
   ts->segPerTube = segPerTube;
@@ -142,6 +142,9 @@ void P1906MOL_ExtendedField::setTubeSegments(struct tubeCharacteristcs_t * ts, s
 //! set point pt with x, y, and z coordinates
 void P1906MOL_ExtendedField::point(gsl_vector * pt, double x, double y, double z)
 {
+  if (pt->size != 3)
+    printf ("(point) warning: point vector incorrect length: %ld\n", pt->size);
+	
   gsl_vector_set (pt, 0, x);
   gsl_vector_set (pt, 1, y);
   gsl_vector_set (pt, 2, z);
@@ -157,6 +160,15 @@ void P1906MOL_ExtendedField::point(gsl_vector * pt, double x, double y, double z
 //! </pre>
 void P1906MOL_ExtendedField::line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2)
 {
+  if (pt1->size != 3)
+    printf ("(line) warning: point vector incorrect length: %ld\n", pt1->size);
+
+  if (pt2->size != 3)
+    printf ("(line) warning: point vector incorrect length: %ld\n", pt2->size);
+
+  if (line->size != 6)
+    printf ("(line) warning: line vector incorrect length: %ld\n", line->size);
+	
   for (int i = 0; i < 3; i++)
     gsl_vector_set (line, i, gsl_vector_get (pt1, i));
 
@@ -182,15 +194,21 @@ void P1906MOL_ExtendedField::line(gsl_vector * line, gsl_vector * pt1, gsl_vecto
 //!         <----------------------->            
 //!                    tube                      
 //! </pre>
-void P1906MOL_ExtendedField::line(gsl_vector * segment, gsl_matrix * tubeMatrix, int mp)
+void P1906MOL_ExtendedField::line(gsl_vector * segment, gsl_matrix * tubeMatrix, size_t mp)
 {
+  if (mp > tubeMatrix->size1)
+    printf ("(line) warning: mp %ld is larger than matrix %ld", mp, tubeMatrix->size1);
+
   for (size_t i = 0; i < 6; i++)
-    gsl_vector_set (segment, i, gsl_matrix_get(tubeMatrix, mp, i));
+    gsl_vector_set (segment, i, gsl_matrix_get( tubeMatrix, mp, i ));
 }
 
 //! set the segment at location mp in the line matrix with pt1 and pt2
-void P1906MOL_ExtendedField::line(gsl_matrix * line, int mp, gsl_vector * pt1, gsl_vector * pt2)
+void P1906MOL_ExtendedField::line(gsl_matrix * line, size_t mp, gsl_vector * pt1, gsl_vector * pt2)
 {
+  if (mp > line->size1)
+    printf ("(line)warning: mp %ld is larger than matrix %ld", mp, line->size1);
+
   for (int i = 0; i < 3; i++)
     gsl_matrix_set (line, mp, i, gsl_vector_get (pt1, i));
 
@@ -198,7 +216,7 @@ void P1906MOL_ExtendedField::line(gsl_matrix * line, int mp, gsl_vector * pt1, g
     gsl_matrix_set (line, mp, i + 3, gsl_vector_get (pt2, i));
 }
 
-//! print the points in pts
+//! print all the points in the list of pts
 void P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts)
 {
   size_t numPts = pts->size1;
@@ -262,7 +280,7 @@ bool P1906MOL_ExtendedField::isPointOverlap(gsl_vector * pt, gsl_vector * segmen
 	return overlap;
 }
 
-//! print the point pt
+//! print the single 3D point pt
 void P1906MOL_ExtendedField::displayPoint(gsl_vector *pt)
 {
   printf ("Point: %g %g %g\n", 
@@ -271,7 +289,7 @@ void P1906MOL_ExtendedField::displayPoint(gsl_vector *pt)
 	gsl_vector_get(pt, 2));
 }
 
-//! print the first numPts points pts
+//! print the first numPts points in the list of pts
 void P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts, size_t numPts)
 {
   for (size_t i = 0; i < numPts; i++)
@@ -281,7 +299,7 @@ void P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts, size_t numPts)
 	  gsl_matrix_get(pts, i, 2));
 }
 
-//! return vector field vf based upon tubes in tubeMatrix
+//! return vector field vf determined by the tubes in tubeMatrix
 void P1906MOL_ExtendedField::tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matrix * vf)
 {
   gsl_matrix * v = gsl_matrix_alloc (tubeMatrix->size1, 3);
@@ -307,12 +325,12 @@ void P1906MOL_ExtendedField::tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matr
   // printf ("(tubes2VectorField) set vf\n");
 }
 
-//! return the index of the nearest tube in tubeMatrix within a given radius from pt otherwise return -1
-int P1906MOL_ExtendedField::findNearestTube(gsl_vector *pt, gsl_matrix *tubeMatrix, double radius)
+//! return the index of the nearest tube in tubeMatrix within a given radius from pt otherwise return ULONG_MAX
+size_t P1906MOL_ExtendedField::findNearestTube(gsl_vector * pt, gsl_matrix * tubeMatrix, double radius)
 {
   double shortestDistance = GSL_POSINF;
   double d = 0;
-  size_t closestSegment = -1;
+  size_t closestSegment = ULONG_MAX;
   gsl_vector *segment = gsl_vector_alloc (6);
   
   for (size_t i = 0; i < tubeMatrix->size1; i++)
@@ -398,18 +416,19 @@ double P1906MOL_ExtendedField::distance(gsl_vector *pt, gsl_vector *segment_or_p
   }
 }
 
-//! the vector cross product is normal to the input vectors and has magnitude equivalent to the volume of a parallelogram formed by the input vectors
-//! u and v are the input vectors and product is the output vector
+//! the vector cross product is normal to the input vectors and has magnitude equivalent to the 
+//! volume of a parallelogram formed by the input vectors, u and v are the input vectors and 
+//! product is the output vector
 void P1906MOL_ExtendedField::cross_product(const gsl_vector *u, const gsl_vector *v, gsl_vector *product)
 {
-  double p1 = gsl_vector_get(u, 1)*gsl_vector_get(v, 2)
-    - gsl_vector_get(u, 2)*gsl_vector_get(v, 1);
+  double p1 = gsl_vector_get(u, 1) * gsl_vector_get(v, 2)
+    - gsl_vector_get(u, 2) * gsl_vector_get(v, 1);
  
-  double p2 = gsl_vector_get(u, 2)*gsl_vector_get(v, 0)
-    - gsl_vector_get(u, 0)*gsl_vector_get(v, 2);
+  double p2 = gsl_vector_get(u, 2) * gsl_vector_get(v, 0)
+    - gsl_vector_get(u, 0) * gsl_vector_get(v, 2);
  
-  double p3 = gsl_vector_get(u, 0)*gsl_vector_get(v, 1)
-    - gsl_vector_get(u, 1)*gsl_vector_get(v, 0);
+  double p3 = gsl_vector_get(u, 0) * gsl_vector_get(v, 1)
+    - gsl_vector_get(u, 1) * gsl_vector_get(v, 0);
  
   gsl_vector_set(product, 0, p1);
   gsl_vector_set(product, 1, p2);
@@ -419,7 +438,6 @@ void P1906MOL_ExtendedField::cross_product(const gsl_vector *u, const gsl_vector
 //! a unit test for getOverlap
 bool P1906MOL_ExtendedField::unitTest_getOverlap()
 {
-  //! \todo create unit tests
   bool passTests = false;
   gsl_vector * segment = gsl_vector_alloc (6);
   gsl_matrix * tubeMatrix = gsl_matrix_alloc (1, 6);
@@ -484,7 +502,7 @@ void P1906MOL_ExtendedField::getAllOverlaps3D(gsl_matrix *tubeMatrix, vector<P19
 }
 
 //! return the number of overlapping points in pts and the index of the tubeMatrix segments overlapped in tubeSegments
-int P1906MOL_ExtendedField::getOverlap3D(gsl_vector *segment, gsl_matrix *tubeMatrix, gsl_matrix *pts, gsl_vector *tubeSegments)
+int P1906MOL_ExtendedField::getOverlap3D(gsl_vector * segment, gsl_matrix * tubeMatrix, gsl_matrix * pts, gsl_vector * tubeSegments)
 {
   /** 
     all points defined by x, y, z values
@@ -601,8 +619,8 @@ int P1906MOL_ExtendedField::getOverlap3D(gsl_vector *segment, gsl_matrix *tubeMa
   return numPts;
 }
 
-//! return the location of the vector from vf that is closest to the point pt in result
-void P1906MOL_ExtendedField::findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector *result)
+//! return the location of the vector from vf that is closest to the point pt and put it in result
+void P1906MOL_ExtendedField::findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector * result)
 {
   //! the current closest point
   gsl_vector * cpt = gsl_vector_alloc (3);
@@ -684,10 +702,9 @@ void P1906MOL_ExtendedField::findClosestPoint(gsl_vector * pt, gsl_matrix * vf, 
   //	gsl_vector_get (result, 5));
 }
 
-//! return the information entropy of a tube segment defined by its list of angles in segAngle
+//! return the information entropy \f$ H(x) = - sum( P(x) \log P(x) ) \f$ of a tube segment defined by its list of angles in segAngle
 double P1906MOL_ExtendedField::sEntropy(gsl_matrix *segAngle)
 {
-  //! \f$ H(x) = - sum( P(x) \log P(x) ) \f$
   //! bin the values in order to find P(x)
   //! see gsl_histogram_pdf * gsl_histogram_pdf_alloc (size_t n)
   //! see https://www.gnu.org/software/gsl/manual/html_node/The-histogram-probability-distribution-struct.html

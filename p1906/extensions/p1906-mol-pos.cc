@@ -73,7 +73,14 @@ P1906MOL_Pos::P1906MOL_Pos ()
 
   pos = gsl_vector_alloc (3);
 }
- 
+
+//! set the object's position from the vector [x y z] 
+void P1906MOL_Pos::setPos (gsl_vector * in_pos)
+{
+  gsl_vector_memcpy (pos, in_pos);
+}
+
+//! set the object's position
 void P1906MOL_Pos::setPos (double x, double y, double z)
 {
   gsl_vector_set (pos, 0, x);
@@ -81,6 +88,13 @@ void P1906MOL_Pos::setPos (double x, double y, double z)
   gsl_vector_set (pos, 2, z);
 }
 
+//! retrieve the position into out_pos vector [x y z]
+void P1906MOL_Pos::getPos (gsl_vector * out_pos)
+{
+  gsl_vector_memcpy (out_pos, pos);
+}
+
+//! retrieve the position
 void P1906MOL_Pos::getPos (double * x, double * y, double * z)
 {
   *x = gsl_vector_get (pos, 0);
@@ -88,7 +102,7 @@ void P1906MOL_Pos::getPos (double * x, double * y, double * z)
   *z = gsl_vector_get (pos, 2);
 }
 
-//! print the position pts
+//! print the position
 void P1906MOL_Pos::displayPos()
 {
   double x, y, z;

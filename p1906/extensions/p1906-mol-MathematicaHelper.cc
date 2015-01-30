@@ -75,7 +75,7 @@ P1906MOL_MathematicaHelper::P1906MOL_MathematicaHelper ()
 }
 
 //! display the vector field in Mathematica format for VectorPlot3D in file fname
-void P1906MOL_MathematicaHelper::vectorFieldPlotMma(gsl_matrix * vf, const char *fname)
+void P1906MOL_MathematicaHelper::vectorFieldPlotMma(gsl_matrix * vf, const char * fname)
 {
   FILE * pFile;
 
@@ -103,7 +103,7 @@ void P1906MOL_MathematicaHelper::vectorFieldPlotMma(gsl_matrix * vf, const char 
 }
 
 //! write the vector field in Mathematica format using regular spacing between samples in file fname
-void P1906MOL_MathematicaHelper::vectorFieldMeshMma(gsl_matrix * vf, const char *fname)
+void P1906MOL_MathematicaHelper::vectorFieldMeshMma(gsl_matrix * vf, const char * fname)
 {
   FILE * pFile;
 
@@ -131,12 +131,11 @@ void P1906MOL_MathematicaHelper::vectorFieldMeshMma(gsl_matrix * vf, const char 
 }
 
 //! print the points (vertices) in pts in Mathematica format into file fname and include edges between the vertices
-void P1906MOL_MathematicaHelper::connectedPoints2Mma(vector<P1906MOL_Pos> & pts, const char* fname)
+void P1906MOL_MathematicaHelper::connectedPoints2Mma(vector<P1906MOL_Pos> pts, const char * fname)
 {
   FILE * pFile;
-  P1906MOL_Pos point;
   double x, y, z;
-
+  
   pFile = fopen (fname,"w");
   size_t pt = 1;
   
@@ -153,8 +152,7 @@ void P1906MOL_MathematicaHelper::connectedPoints2Mma(vector<P1906MOL_Pos> & pts,
   fprintf (pFile, "VertexCoordinateRules ->{");
   for (size_t i = 0; i < pts.size(); i++)
   {
-    point = pts.at(i);
-	point.getPos (&x, &y, &z);
+	pts.at(i).getPos (&x, &y, &z);
     fprintf (pFile, "%ld -> {%f, %f, %f}", pt, x, y, z);
     pt++;
 	if (i < (pts.size() - 1)) fprintf (pFile, ", ");
@@ -169,7 +167,7 @@ void P1906MOL_MathematicaHelper::connectedPoints2Mma(vector<P1906MOL_Pos> & pts,
 }
 
 //! print the first numPts points pts in Mathematica format in file fname
-void P1906MOL_MathematicaHelper::points2Mma(vector<P1906MOL_Pos> & pts, const char* fname)
+void P1906MOL_MathematicaHelper::points2Mma(vector<P1906MOL_Pos> & pts, const char * fname)
 {
   FILE * pFile;
   P1906MOL_Pos pt;
@@ -191,7 +189,7 @@ void P1906MOL_MathematicaHelper::points2Mma(vector<P1906MOL_Pos> & pts, const ch
 }
 
 //! print a plot of x,y values in vals in Mathematica format into file fname
-void P1906MOL_MathematicaHelper::plot2Mma(gsl_matrix *vals, const char* fname, const char* xlabel, const char* ylabel)
+void P1906MOL_MathematicaHelper::plot2Mma(gsl_matrix * vals, const char * fname, const char * xlabel, const char * ylabel)
 {
   FILE * pFile;
   size_t numVals = vals->size1;
@@ -216,7 +214,7 @@ void P1906MOL_MathematicaHelper::plot2Mma(gsl_matrix *vals, const char* fname, c
 }
 
 //! print all tubes in tubeMatrix into a Mathematica file fname with segments per tube of segPerTube
-void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPerTube, const char* fname)
+void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix * tubeMatrix, size_t segPerTube, const char * fname)
 {
   /** save tubes to file in the form of 
     GraphPlot3D[{1 -> 2, 1 -> 4, 1 -> 5, 2 -> 3, 2 -> 6, 3 -> 4, 3 -> 7, 4 -> 8, 5 -> 6, 5 -> 8, 6 -> 7, 7 -> 8}, 
@@ -230,7 +228,9 @@ void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPer
   size_t pt = 1;
   size_t numTubes = numSegments / segPerTube;
   
-  //! fprintf (pFile, "numTubes: %ld segPerTube: %ld\n", numTubes, segPerTube);
+  //printf ("(tubes2Mma) tubeMatrix: %ld x %ld\n", tubeMatrix->size1, tubeMatrix->size2);
+  //printf ("(tubes2Mma) numTubes: %ld segPerTube: %ld\n", numTubes, segPerTube);
+  //gsl_matrix_fprintf (stdout, tubeMatrix, "%f");
   
   fprintf (pFile, "GraphPlot3D[{");
   for (size_t i = 0; i < numTubes; i++)
@@ -253,6 +253,14 @@ void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPer
 	  {
 	    if (j == 0) //! only print the ends after the first one
 	    {
+		  //printf ("(tubes2Mma) i: %ld j: %ld index: %ld pos: %f %f %f\n", 
+		  //  i, 
+		  //  j, 
+		  //  i * segPerTube + j,
+		  //  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 0),
+		  //  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 1),
+		  //  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 2));
+			
           fprintf (pFile, "%ld -> {%g, %g, %g}, ",
 		    pt,
 	        gsl_matrix_get(tubeMatrix, i * segPerTube + j, 0),
@@ -260,6 +268,14 @@ void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix *tubeMatrix, size_t segPer
 		    gsl_matrix_get(tubeMatrix, i * segPerTube + j, 2));
 		  pt++;
         }
+		//printf ("(tubes2Mma) i: %ld j: %ld index: %ld pos: %f %f %f\n", 
+		//  i, 
+		//  j, 
+		//  i * segPerTube + j,
+		//  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 3),
+		//  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 4),
+		//  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 5));
+		  
 		fprintf (pFile, "%ld -> {%g, %g, %g}", 
 		  pt,
 		  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 3),

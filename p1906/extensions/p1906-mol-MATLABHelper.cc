@@ -75,7 +75,7 @@ P1906MOL_MATLABHelper::P1906MOL_MATLABHelper ()
 }
 
 //! write a list of vectors into file fname in MATLAB loadable format
-void P1906MOL_MATLABHelper::vectorFieldPlotMATLAB(gsl_matrix * vf, const char *fname)
+void P1906MOL_MATLABHelper::vectorFieldPlotMATLAB(gsl_matrix * vf, const char * fname)
 {
   FILE * pFile;
 
@@ -98,10 +98,10 @@ void P1906MOL_MATLABHelper::vectorFieldPlotMATLAB(gsl_matrix * vf, const char *f
 //! write the vector field in MATLAB format using regular spacing between samples in the file fname
 //! The result of this file is loaded into Mathematica and the vector field is reconstructed from the samples via interpolation
 //! Then the vector field operators are applied - see bushsf@research.ge.com for results
-void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *fname)
+void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char * fname)
 {
   FILE * pFile;
-  P1906MOL_Tube tube;
+  //P1906MOL_Tube tube;
 
   pFile = fopen (fname,"w");
   
@@ -136,8 +136,8 @@ void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *f
   gsl_vector_minmax (v, &vMin, &vMax);
   gsl_vector_minmax (w, &wMin, &wMax);
   
-  printf ("xMin: %f yMin: %f zMin: %f uMin: %f vMin: %f wMin: %f\n", xMin, yMin, zMin, vMin, uMin, wMin);
-  printf ("xMax: %f yMax: %f zMax: %f uMax: %f vMax: %f wMax: %f\n", xMax, yMax, zMax, vMax, uMax, wMax);
+  //printf ("xMin: %f yMin: %f zMin: %f uMin: %f vMin: %f wMin: %f\n", xMin, yMin, zMin, vMin, uMin, wMin);
+  //printf ("xMax: %f yMax: %f zMax: %f uMax: %f vMax: %f wMax: %f\n", xMax, yMax, zMax, vMax, uMax, wMax);
 	
   gsl_vector * pt1 = gsl_vector_alloc (3);
   gsl_vector * pt2 = gsl_vector_alloc (3);
@@ -148,7 +148,7 @@ void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *f
   double yStepsize = (yMax - yMin) / 10.0;
   double zStepsize = (zMax - zMin) / 10.0;
   
-  printf ("xStepsize: %f yStepsize: %f zStepsize: %f\n", xStepsize, yStepsize, zStepsize);
+  //printf ("xStepsize: %f yStepsize: %f zStepsize: %f\n", xStepsize, yStepsize, zStepsize);
   
   //! step through equidistant points in a volume and store the vector values at each point
   for (double i = xMin; i < xMax; i += xStepsize)
@@ -156,10 +156,10 @@ void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *f
 	  for (double k = zMin; k < zMax; k += zStepsize)
       {
 	    //! find the closest point to the current location
-	    tube.point (pt1, i, j, k);
+	    P1906MOL_ExtendedField::point (pt1, i, j, k);
 		// printf ("pt1\n");
 		// displayPoint (pt1);
-	    tube.findClosestPoint (pt1, vf, closest);
+	    P1906MOL_ExtendedField::findClosestPoint (pt1, vf, closest);
 		//printf ("(findClosestPoint) closest vector: %f %f %f %f %f %f\n",
         //  gsl_vector_get (closest, 0),
 	    //  gsl_vector_get (closest, 1),
@@ -167,25 +167,25 @@ void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char *f
 	    //  gsl_vector_get (closest, 3),
 	    //  gsl_vector_get (closest, 4),
 	    //  gsl_vector_get (closest, 5));
-		tube.point (pt2, 
+		P1906MOL_ExtendedField::point (pt2, 
 		  gsl_vector_get (closest, 0),
 		  gsl_vector_get (closest, 1),
 		  gsl_vector_get (closest, 2));
 		  
 		// printf ("(vectorFieldMeshMATLAB) distance between pt and vector location: %f\n", distance (pt1, pt2));
 		//! check if distance within range
-		if (distance (pt1, pt2) > 2.0 * xStepsize)
+		if (P1906MOL_ExtendedField::distance(pt1, pt2) > 2.0 * xStepsize)
 		{
 		  //! if not, store the null vector
 		  // printf ("(vectorFieldMeshMATLAB) using null vector\n");
-          tube.point (vec, 0.0, 0.0, 0.0);
+          P1906MOL_ExtendedField::point (vec, 0.0, 0.0, 0.0);
 		  // displayPoint (vec);
 	    } 
 		else 
 		{
 		  // printf ("(vectorFieldMeshMATLAB) using vector\n");
 		  //! otherwise, store the vector value
-		  tube.point (vec,
+		  P1906MOL_ExtendedField::point (vec,
 	        gsl_vector_get (closest, 3),
 	        gsl_vector_get (closest, 4),
 	        gsl_vector_get (closest, 5));

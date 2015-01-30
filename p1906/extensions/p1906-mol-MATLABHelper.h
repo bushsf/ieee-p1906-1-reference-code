@@ -77,9 +77,9 @@ public:
   P1906MOL_MATLABHelper ();
   
   //! write the vector field in MATLAB format using regular spacing between samples
-  void vectorFieldMeshMATLAB(gsl_matrix * vf, const char *fname);
+  void vectorFieldMeshMATLAB(gsl_matrix * vf, const char * fname);
   //! write a list of vectors into file fname in MATLAB loadable format
-  void vectorFieldPlotMATLAB(gsl_matrix * vf, const char *fname);  
+  void vectorFieldPlotMATLAB(gsl_matrix * vf, const char * fname);  
   
   virtual ~P1906MOL_MATLABHelper ();
 

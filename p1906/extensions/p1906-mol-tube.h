@@ -74,21 +74,40 @@ class P1906MOL_Tube : public P1906MOL_ExtendedField
 {
 public:
   static TypeId GetTypeId (void);
-  P1906MOL_Tube ();
-
-  /**
-   * Methods related to generating a single tube and its persistence length
-   */
-   
-  //! generate tube structure with a given segment and persistence length
-  double genPersistenceLength(gsl_rng * r, gsl_matrix *segAngle, double segLength, double persistenceLength); 
-  //! compute the persistence length of a set of segments
-  double getPersistenceLength(gsl_matrix *segMatrix);
   
+  //! random number generation structures and initialization
+  const gsl_rng_type * T;
+  gsl_rng * r;
+  
+  //! the tube starting point
+  //! \todo get actual tube graph properties from a biologist
+  gsl_vector * startPt;
+  //! hold the values for a tube comprised of many segments: x_start y_start x_start x_end y_end z_end
+  gsl_matrix * segMatrix;
+
+  /*
+   * Methods related to creating a tube
+   */  
+  //! the constructor build a tube determined by tubeCharacteristcs_t
+  P1906MOL_Tube (struct tubeCharacteristcs_t * ts, gsl_vector * startPt);
   //! return the microtubule in segMatrix of a given persistence length starting at position startPt and it structural entropy in se
-  int genTube(struct tubeCharacteristcs_t * ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt);
+  int genTube(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_matrix * segMatrix, gsl_vector * startPt);
+
+  /*
+   * Methods related to the tube's persistence length
+   */
+  //! generate tube structure with a given segment and persistence length
+  double genPersistenceLength(gsl_rng * r, gsl_matrix * segAngle, double segLength, double persistenceLength); 
+  //! compute the persistence length of a set of segments
+  double getPersistenceLength();
+  
+  /*
+   * Methods related to accessing and displaying a tube
+   */  
+  //! return the segMatrix, which is comprised of the tube segment end points
+  void getSegmatrix(gsl_matrix * sm);  
   //! simply print the end points of each segment of a tube
-  void displayTube(gsl_matrix *segMatrix);
+  void displayTube();
      
   virtual ~P1906MOL_Tube ();
 

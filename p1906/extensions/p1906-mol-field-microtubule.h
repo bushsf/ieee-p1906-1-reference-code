@@ -82,7 +82,7 @@ public:
   P1906MOL_MicrotubulesField ();
   
   //! create a given density of tubes of numSegments in given volume
-  //! volume starts at 0, 0, 0 to volume^(1/3) in each dimension  
+  //! volume starts at 0, 0, 0 to volume^(1/4) in each dimension  
   gsl_matrix * tubeMatrix;
   //! properties of the microtubule network
   tubeCharacteristcs_t ts;
@@ -98,10 +98,9 @@ public:
    */
   
   //! fill tubeMatrix with random tubes in area with a given number of total segments and persistence length
-  //! \todo genTube* could be moved to start of ns-3 or each tube could be an ns-3 node
   void genTubes(struct tubeCharacteristcs_t * ts);
   //! plot persistence length versus structural entropy
-  void persistenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_vector * persistenceLengths);
+  void persistenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_vector * persistenceLengths);
   //! test plot2mma
   bool unitTest_Plot2Mma(vector<P1906MOL_Pos> pts);
   //! test persistence length versus entropy plot
@@ -114,6 +113,8 @@ public:
   bool unitTest_Distance();
   //! test the computation of a vector field
   bool unitTest_VectorField();
+  //! test motor movement using Brownian motion until destination reached
+  bool unitTest_NoTubeMotion();
   //! test the movement of a motor floating to a tube and walking on the tube
   bool unitTest_MotorMovement(vector<P1906MOL_Pos> & pts);
   //! test motor movement to destination

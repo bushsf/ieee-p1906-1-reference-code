@@ -60,7 +60,7 @@ TypeId P1906MOL_Tube::GetTypeId (void)
   return tid;
 }
 
-P1906MOL_Tube::P1906MOL_Tube ()
+P1906MOL_Tube::P1906MOL_Tube (struct tubeCharacteristcs_t * ts, gsl_vector * startPt)
 {
   /** This class implements persistence length as described in:
 	  Bush, S. F., & Goel, S. (2013). Persistence Length as a Metric for Modeling and 
@@ -76,45 +76,60 @@ P1906MOL_Tube::P1906MOL_Tube ()
     All random number are derived from gsl_rng *.
 	  
   */
+  
+  T = gsl_rng_default;
+  r = gsl_rng_alloc (T);  
+  gsl_rng_env_setup();
+  gsl_rng_set (r, clock());
+  
+  //! hold the values for a tube comprised of many segments: x_start y_start x_start x_end y_end z_end
+  segMatrix = gsl_matrix_alloc (ts->segPerTube, 6);
+  
+  genTube(ts, r, segMatrix, startPt);
+}
 
+//! return the segMatrix, which is the tube segment end points
+void P1906MOL_Tube::getSegmatrix(gsl_matrix * sm)
+{
+  gsl_matrix_memcpy (sm, segMatrix);
 }
     
 //! create and return a microtubule of given persistence length in segMatrix and its structural entropy in se
+//! \todo randomize initial tube orientations
 int P1906MOL_Tube::genTube(struct tubeCharacteristcs_t * ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)
 {
   /**
-    for 3D consider generating two angles per tube: \theta and \psi in spherical coordinates, length is already specified 
+    for 3D there are two angles per tube: \theta and \psi in spherical coordinates, length is already specified 
 	x = r sin \theta cos \psi
 	y = r sin \theta sin \psi
 	z = r cos \theta
 	
-	\todo randomize initial tube orientations
   */
    
   gsl_matrix * segAngleTheta = gsl_matrix_alloc (ts->numSegments, 1);
   gsl_matrix * segAnglePsi = gsl_matrix_alloc (ts->numSegments, 1);
 
-  // printf ("(genTube) startX = %g startY = %g startZ = %g numSegments = %ld segLength = %g persistenceLength = %g\n", 
+  //printf ("(genTube) startX = %g startY = %g startZ = %g numSegments = %ld segLength = %g persistenceLength = %g\n", 
   //  gsl_vector_get (startPt, 0), 
-  //	gsl_vector_get (startPt, 1),  
-  //	gsl_vector_get (startPt, 2), 
-  //	ts->numSegments, 
-  //	ts->segLength, 
-  //	ts->persistenceLength);
+  //  gsl_vector_get (startPt, 1),  
+  //  gsl_vector_get (startPt, 2), 
+  //  ts->numSegments, 
+  //  ts->segLength, 
+  //  ts->persistenceLength);
   
   genPersistenceLength(r, segAngleTheta, ts->segLength, ts->persistenceLength);
   genPersistenceLength(r, segAnglePsi, ts->segLength, ts->persistenceLength);
   
   ts->se = sEntropy (segAngleTheta) + sEntropy (segAnglePsi);
   
-  // for (size_t i = 0; i < ts->numSegments; i++)
+  //for (size_t i = 0; i < ts->numSegments; i++)
   //  for (size_t j = 0; j < 1; j++)
-  //	{
-  //	  printf ("segAngleTheta(%ld,%ld) = %g\n", i, j, gsl_matrix_get (segAngleTheta, i, j));
-  //	  printf ("segAnglePsi(%ld,%ld) = %g\n", i, j, gsl_matrix_get (segAnglePsi, i, j));
+  //  {
+  //    printf ("segAngleTheta(%ld,%ld) = %g\n", i, j, gsl_matrix_get (segAngleTheta, i, j));
+  //    printf ("segAnglePsi(%ld,%ld) = %g\n", i, j, gsl_matrix_get (segAnglePsi, i, j));
   //  }
 	
-  // printf ("(genTube) segments allocated %ld %ld numSegments %ld\n", segMatrix->size1, segMatrix->size2, ts->numSegments);
+  //printf ("(genTube) segments allocated %ld %ld numSegments %ld\n", segMatrix->size1, segMatrix->size2, ts->numSegments);
   
   for (size_t i = 0; i < ts->segPerTube; i++)
   {
@@ -144,7 +159,7 @@ int P1906MOL_Tube::genTube(struct tubeCharacteristcs_t * ts, gsl_rng *r, gsl_mat
 }
 
 //! generate angles for a structure with the given persistence length and segment length and return the angles in setAngle
-double P1906MOL_Tube::genPersistenceLength(gsl_rng *r, gsl_matrix *segAngle, double segLength, double persistenceLength)
+double P1906MOL_Tube::genPersistenceLength(gsl_rng * r, gsl_matrix * segAngle, double segLength, double persistenceLength)
 {
   /** 
     the angle distribution is Gaussian with zero mean and variance \f$\sigma^2 = \sqrt(2 \Delta s / l_p)\f$,
@@ -170,13 +185,25 @@ double P1906MOL_Tube::genPersistenceLength(gsl_rng *r, gsl_matrix *segAngle, dou
 	
 	Ref: Multiscale Modeling in Biomechanics and Mechanobiology edited by Suvranu De, Wonmuk Hwang, Ellen Kuh pp. 68-69
   */
-  double angle; 
+  double angle;
+  double sigma;
 
+  if (persistenceLength > 0)
+    sigma  = sqrt(2.0 * segLength / persistenceLength);
+  else
+	sigma = DBL_MAX; //! maximum possible variance
+
+  //printf ("(genPersistenceLength) sigma = %g\n", sigma);
+	
   for(size_t i = 0; i < segAngle->size1; i++)
   {
-    angle = gsl_ran_gaussian (r, sqrt(2.0 * segLength / persistenceLength));
+    //! return a valid radian [0..2\pi]
+    angle = fmod(gsl_ran_gaussian (r, sigma), (2 * M_PI));
+	if (!gsl_finite (angle))
+	  angle = gsl_ran_ugaussian (r) * (2 * M_PI); //! just pick a uniform random angle
+    //printf ("(genPersistenceLength) radian(%ld) = %g\n", i, angle);
 	//! a radian is 180/Pi degrees
-	// printf ("angle(%ld) = %g\n", i, angle * 180.00 / M_PI);
+	//printf ("(genPersistenceLength) angle(%ld) = %g\n", i, angle * 180.00 / M_PI);
     gsl_matrix_set(segAngle, i, 0, angle);
   }
     
@@ -187,17 +214,15 @@ double P1906MOL_Tube::genPersistenceLength(gsl_rng *r, gsl_matrix *segAngle, dou
 
 //! compute the persistence length of a set of segments
 //! \todo never implemented; may not be needed
-double P1906MOL_Tube::getPersistenceLength(gsl_matrix *segMatrix)
+double P1906MOL_Tube::getPersistenceLength()
 {
   //! segMatrix rows are x_start x_end y_start y_end (may not need numSegments)
-  
-  //! may not need this method
-  
+    
   return 0;
 }
 
 //! print the tube segments in segMatrix
-void P1906MOL_Tube::displayTube(gsl_matrix *segMatrix)
+void P1906MOL_Tube::displayTube()
 {
   for (size_t i = 0; i < segMatrix->size1; i++)
   {
@@ -211,6 +236,9 @@ void P1906MOL_Tube::displayTube(gsl_matrix *segMatrix)
 
 P1906MOL_Tube::~P1906MOL_Tube ()
 {
+  //! close down field activity
+  gsl_rng_free (r);
+  
   NS_LOG_FUNCTION (this);
 }
 

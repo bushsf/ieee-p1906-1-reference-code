@@ -77,9 +77,26 @@ public:
 
   gsl_vector * pos;
   
+  /*
+   * Methods related to recording position
+   */
+  //! record the position
+  void setPos (double x, double y, double z);  
+  //! record the object's position from the vector [x y z] 
+  void setPos (gsl_vector * in_pos);
+
+  /*
+   * Methods related to retrieving the position
+   */
+  //! retrieve the position
   void getPos (double * x, double * y, double * z);
-  void setPos (double x, double y, double z);
-  //! print the position pts
+  //! retrieve the position into out_pos vector [x y z]
+  void getPos (gsl_vector * out_pos);
+  
+  /*
+   * Methods related to displaying position
+   */
+  //! print the position
   void displayPos();
 
   virtual ~P1906MOL_Pos ();

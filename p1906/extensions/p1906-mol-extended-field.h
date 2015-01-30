@@ -103,9 +103,10 @@ public:
     double se;
   };
   
-  //! Methods related to tube properties
+  /*
+   * Methods related to tube properties
+   */
   //! set the volume in which tubes will be generated
-  //! \todo the setTube* functions could be specified before ns-3 starts and exist as ns-3 nodes
   void setTubeVolume(struct tubeCharacteristcs_t * ts, double volume = 25);
   //! set the mean tube length
   void setTubeLength(struct tubeCharacteristcs_t * ts, double mean_tube_length = 100);
@@ -122,52 +123,61 @@ public:
   //! display all the microtubule network properties
   void displayTubeChars(struct tubeCharacteristcs_t * ts);
   
-  //! Methods related to vector fields
+  /*
+   * Methods related to vector fields
+   */
   //! return closest point within threshold
-  void findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector *result);
+  static void findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector *result);
   //! convert the tube structures to a vector field of the same dimensions as the tubeMatrix
   void tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matrix * vf);
  
-  //! Methods implementing unit tests
+  /*
+   * Methods implementing unit tests
+   */
   //! test tube overlaps
   bool unitTest_getOverlap();
   //! test the findClosestPoint function
   bool unitTest_findClosestPoint();
 
-    //! Methods related to creating and displaying points and lines in 3D
+  /*
+   * Methods related to creating and displaying points and lines in 3D
+   */
   //! return a pt vector comprised of x, y, z
-  void point(gsl_vector * pt, double x, double y, double z);
+  static void point(gsl_vector * pt, double x, double y, double z);
   //! return a line comprised of two points
   void line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2);
   //! place a line comprised of pt1 and pt2 into a list of lines at position mp
-  void line(gsl_matrix * line, int mp, gsl_vector * pt1, gsl_vector * pt2);
+  void line(gsl_matrix * line, size_t mp, gsl_vector * pt1, gsl_vector * pt2);
   //! retrieve segment mp from tubeMatrix and place it in segment
-  void line(gsl_vector * segment, gsl_matrix * tubeMatrix, int mp);
+  static void line(gsl_vector * segment, gsl_matrix * tubeMatrix, size_t mp);
   //! simply print the list of points
-  void displayPoints(gsl_matrix *pts);
+  void displayPoints(gsl_matrix * pts);
   //! print only the first numPts
-  void displayPoints(gsl_matrix *pts, size_t numPts);
+  void displayPoints(gsl_matrix * pts, size_t numPts);
   //! simply print the value of a single point pt
-  void displayPoint(gsl_vector *pt);
-  
+  void displayPoint(gsl_vector * pt);
   //! true if pt insects segment, false otherwise
-  //! \todo this should be in Motion class
   bool isPointOverlap(gsl_vector * pt, gsl_vector * segment);
    
-  //! Methods related to computing structural entropy
+  /*
+   * Methods related to computing structural entropy
+   */
   //! return the structural entropy give be a list of angles
-  double sEntropy(gsl_matrix *segAngle);
+  double sEntropy(gsl_matrix * segAngle);
+  
+  /*
+   * Methods related to tube distance and overlap
+   */
   //! return the cross product of u and v in product, all vectors are the same size
-  void cross_product(const gsl_vector *u, const gsl_vector *v, gsl_vector *product);
+  static void cross_product(const gsl_vector * u, const gsl_vector * v, gsl_vector * product);
   //! return the shortest distance in 3D space between the point pt and the segment
-  double distance(gsl_vector *pt, gsl_vector *segment);
-
+  static double distance(gsl_vector * pt, gsl_vector * segment);
   //! return all the points where tubes overlap with one another in pts
-  void getAllOverlaps3D(gsl_matrix *tubeMatrix, vector<P1906MOL_Pos> & pts);
+  void getAllOverlaps3D(gsl_matrix * tubeMatrix, vector<P1906MOL_Pos> & pts);
   //! return all the points where a segment overlaps with a list of tubes in pts
-  int getOverlap3D(gsl_vector *segment, gsl_matrix *tubeMatrix, gsl_matrix *pts, gsl_vector *tubeSegments);
+  int getOverlap3D(gsl_vector * segment, gsl_matrix * tubeMatrix, gsl_matrix * pts, gsl_vector * tubeSegments);
   //! return the nearest segment in tubeMatrix to the point pt that falls within radius, otherwise -1
-  int findNearestTube(gsl_vector *pt, gsl_matrix *tubeMatrix, double radius);  
+  static size_t findNearestTube(gsl_vector * pt, gsl_matrix * tubeMatrix, double radius);  
    
   P1906MOL_ExtendedField ();
   virtual ~P1906MOL_ExtendedField ();

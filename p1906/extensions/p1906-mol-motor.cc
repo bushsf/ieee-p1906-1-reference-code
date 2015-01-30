@@ -73,9 +73,12 @@ P1906MOL_Motor::P1906MOL_Motor ()
     All random number are derived from gsl_rng *.
   */
   
+  //! keep track of the motor's current position
   current_location = gsl_vector_alloc (3);
+  //! location of opposite corners of the destination volume
   destination_volume = gsl_vector_alloc (6);
   
+  //! start with an empty record of for tracking position
   pos_history.clear();
   
   //! random number generation structures and initialization
@@ -85,8 +88,8 @@ P1906MOL_Motor::P1906MOL_Motor ()
   
 }
 
-//! this is where the motor starts, for example, location of the transmitter
-void P1906MOL_Motor::setStartingPoint(gsl_vector *pt)
+//! this is where the motor starts, for example, the location of the transmitter
+void P1906MOL_Motor::setStartingPoint(gsl_vector * pt)
 {
   gsl_vector_memcpy(current_location, pt);
 }
@@ -118,23 +121,60 @@ bool P1906MOL_Motor::inDestination()
   return inDest;
 }
 
-//! use microtubules if available to reach the destination and return the propagation time
+//! use microtubules, if available, Brownian motion otherwise until destination is reached
 void P1906MOL_Motor::move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts)
 {
-  //! \todo float until tube then walk and repeat
-  while (!inDestination())
+  int timeout = 100; //! in case motor never reaches destination
+  int loops = 0; //! keep track of iterations
+  
+  //! \todo consider a bounding box (defined in extended Motion) around the system in which motors are reflected back into the medium
+  while (!inDestination() && (loops < timeout))
   {
-    //! consider a vector<P1906MOL_Pos> where Pos is a class for handling position
-    //! \todo save pts for each of the following calls...
     //! returns the index of the segment in tubeMatrix to which the motor is bound 
     float2Tube(r, current_location, pts, tubeMatrix, timePeriod);
-	//! \todo set current_location to the last pt in pts
+	setLocation(pts.back());
+    //printf ("(move2Destination) current location after float2Tube\n");
+	//displayLocation();
+	pts.back().displayPos();
 	//! walk along tube until end of tube or unbound
 	motorWalk(r, current_location, pts, tubeMatrix, segPerTube);
+	setLocation(pts.back());
+    //printf ("(move2Destination) current location after motorWalk\n");
+	//pts.back().displayPos();
+	//displayLocation();
+	loops++;
   }
 }
 
-//! free float until the destination is reached, returning the propagation time
+//! set the current motor location to pt
+void P1906MOL_Motor::setLocation(P1906MOL_Pos pt)
+{
+  double x, y, z;
+  
+  pt.getPos (&x, &y, &z);
+  gsl_vector_set( current_location, 0, x);
+  gsl_vector_set( current_location, 1, y);
+  gsl_vector_set( current_location, 2, z);
+}
+
+//! set the current location to the 3D Cartesian coordinates
+void P1906MOL_Motor::setLocation(double x, double y, double z)
+{
+  gsl_vector_set( current_location, 0, x);
+  gsl_vector_set( current_location, 1, y);
+  gsl_vector_set( current_location, 2, z);
+}
+
+//! print the current motor location
+void P1906MOL_Motor::displayLocation()
+{
+  printf ("current location: %f %f %f\n", 
+    gsl_vector_get( current_location, 0),
+	gsl_vector_get( current_location, 1),
+	gsl_vector_get( current_location, 2));
+}
+
+//! motor uses Brownian motion until the destination volume is reached
 void P1906MOL_Motor::float2Destination(double timePeriod)
 {
   gsl_vector * newPos = gsl_vector_alloc (3);
@@ -154,8 +194,8 @@ void P1906MOL_Motor::float2Destination(double timePeriod)
 	gsl_vector_set (current_location, 1, gsl_vector_get (newPos, 1));
 	gsl_vector_set (current_location, 2, gsl_vector_get (newPos, 2));
 	//! begin at the motor's current location
-    printf ("motor location: \n");
-    displayPos(current_location);
+    //printf ("motor location: \n");
+    //displayPos(current_location);
 	
 	P1906MOL_Pos Pos;
     Pos.setPos ( gsl_vector_get (current_location, 0),
@@ -165,7 +205,7 @@ void P1906MOL_Motor::float2Destination(double timePeriod)
   }
 }
 
-//! return the elapsed time since the motor was created
+//! return the elapsed time since the motor time was last initialized
 double P1906MOL_Motor::propagationDelay()
 {
   return getTime();

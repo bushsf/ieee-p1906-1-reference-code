@@ -30,6 +30,55 @@
  * Description:
  * this file models the molecular communication based on microtubules structures in class P1906MOL_MicrotubulesField
  */
+ 
+ //! \details 1906 Component map to the molecular motor instantiation
+//! <pre>
+//!  1906 Component             Molecular Motor 
+//!                              Instantiation
+//! +----------------------+-----------------------+
+//! |                      |                       |
+//! |    MESSAGE           |  MOTOR CARGO          |
+//! |                      |                       |
+//! +----------------------------------------------+
+//! |                      |                       |
+//! |    MESSAGE CARRIER   |  MOLECULAR MOTOR      |
+//! |                      |                       |
+//! +----------------------------------------------+
+//! |                      |                       |
+//! |    MOTION            |  BROWNIAN / WALK      |
+//! |                      |                       |
+//! +----------------------------------------------+
+//! |                      |                       |
+//! |    FIELD             |  MICROTUBULE          |
+//! |                      |                       |
+//! +----------------------------------------------+
+//! |                      |                       |
+//! |    PERTURBATION      |  MOTOR CARGO TYPE     |
+//! +----------------------------------------------+
+//! |                      |                       |
+//! |    SPECIFICITY       |  BINDING TO TARGET    |
+//! |                      |                       |
+//! +----------------------+-----------------------+
+//! 
+//!            Motor and Microtubule Network
+//!
+//!     XXXXX                                             
+//!         XXX XX                 XXXX                 
+//!                XX X       XXXXX   XXX               
+//!            _        XXXXXXXX          XXXXXX         
+//!            /|        XXXXX                 XXX       
+//!    +-+   /     XXXXXX    XX                 XXX     
+//!    +-+      XXX           XX                  XX    
+//! MOLECULAR XXX                X                  XXXXX  
+//!   MOTOR                      XXXXX                  X
+//!                                                     
+//!            XXXXX                                    
+//!                 X XX X                              
+//!                       X X XX                      XX
+//!                             XXXX XX XXXXXX XXXXXXX  
+//!                                                     
+//!                              MICROTUBULES
+//! </pre>
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"

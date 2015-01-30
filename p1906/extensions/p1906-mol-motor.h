@@ -90,16 +90,38 @@ public:
   gsl_rng * r;
   
   P1906MOL_Motor ();
+  
+  /*
+   * Methods related to motor start and destination locations
+   */
   //! this is where the motor starts, for example, location of the transmitter
-  void setStartingPoint(gsl_vector *pt);
+  void setStartingPoint(gsl_vector * pt);
   //! this is where the motor ends defined by the lower left corner and upper right corner of a cube, for example, the location of a receiver
   void setDestinationVolume(gsl_vector * lower_left, gsl_vector * upper_right);
   //! return true if motor is in the destination volume, false otherwise
   bool inDestination();
+  
+  /*
+   * Methods related to motor positioning and tracking
+   */
+  //! print the current location
+  void displayLocation();
+  //! set the current location
+  void setLocation(P1906MOL_Pos pt);
+  //! set the current location
+  void setLocation(double x, double y, double z);
+
+  /*
+   * Methods related to motor motion
+   */  
   //! motor is driven be Brownian motion until the destination is reached, returning the propagation time
   void float2Destination(double timePeriod);
   //! motor binds to microtubule and walks and is driven by Brownian motion when unbound to microtubule, returning propagation time
   void move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts);
+
+  /*
+   * Methods related to motor time
+   */    
   //! return the elapsed time since the motor was created
   double propagationDelay();
   

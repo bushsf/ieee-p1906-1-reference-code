@@ -79,13 +79,84 @@ P1906MOL_ExtendedMotion::P1906MOL_ExtendedMotion ()
     All random number are derived from gsl_rng *.
 	  
   */
-
+  
+  /* debug later 
+  
+  P1906MOL_Pos ll, ur;
+  //! set the lower-left corner of the universe
+  ll.setPos (-5000, -5000, -5000);
+  //! set the opposite corner of the universe
+  ur.setPos (5000, 5000, 5000);
+  
+  setBoundingBox(ll, ur);
+  
+  //! test an out of bounds condition
+  P1906MOL_Pos lp, cp;
+  lp.setPos (0, 0, 499);
+  cp.setPos (0, 0, 505);
+  
+  printf ("position before checkBoundingBox \n");
+  cp.displayPos ();
+  
+  //! test bounding box
+  checkBoundingBox (lp, cp);
+  printf ("position after checkBoundingBox \n");
+  cp.displayPos ();
+  
+  */
+  
   NS_LOG_FUNCTION (this);
   NS_LOG_FUNCTION (this << "Created MOL Extended Motion Component");
 }
 
-//! \todo verify that motorWalk is working properly
-void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube)
+//! set the bounding box, particles reflect off the bounding box
+void P1906MOL_ExtendedMotion::setBoundingBox(P1906MOL_Pos lower_left, P1906MOL_Pos upper_right)
+{
+  bb.lower_left = lower_left;
+  bb.upper_right = upper_right;
+}
+
+//! check if position exceeds bounding box; if so, reflect the position back in (current_pos may change)
+void P1906MOL_ExtendedMotion::checkBoundingBox(P1906MOL_Pos last_pos, P1906MOL_Pos& current_pos)
+{
+  double llx, lly, llz, urx, ury, urz;
+  double cpx, cpy, cpz;
+  
+  //! bounding box set in this Motion class
+  bb.lower_left.getPos (&llx, &lly, &llz);
+  bb.upper_right.getPos (&urx, &ury, &urz);
+  
+  //! extract the current position
+  current_pos.getPos (&cpx, &cpy, &cpz);
+  
+  printf ("(checkBoundingBox) current_pos: %f %f %f\n", cpx, cpy, cpz);
+  
+  //! check if current_pos is outside the box
+  if (cpx < llx)
+    cpx = llx + (llx - cpx);
+  if (cpx > urx)
+    cpx = urx - (cpx - urx);
+
+  if (cpy < lly)
+    cpy = lly + (lly - cpy);
+  if (cpy > ury)
+    cpy = ury - (cpy - ury);
+
+  if (cpz < llz)
+    cpz = llz + (llz - cpz);
+  if (cpz > urz)
+    cpz = urz - (cpz - urz);
+	
+  printf ("(checkBoundingBox) updated current_pos: %f %f %f\n", cpx, cpy, cpz);
+	
+  //! update and return the current position
+  current_pos.setPos (cpx, cpy, cpz);
+  current_pos.displayPos();
+}
+
+//! assumes motor is within radius of a tube, returns otherwise
+//! if within radius, motor walks along along the tube until unbound (binding_time) or reaches end of tube
+void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, size_t segPerTube)
 {
   /** 
     See "Movements of Molecular Motors," Reinhard Lipowsky
@@ -93,10 +164,10 @@ void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vecto
 	bound time ~2 sec
 	assumes startPt is on a tube in tubeMatrix
   */
-  P1906MOL_Tube tube;
+  //P1906MOL_Tube tube;
   gsl_vector * segment = gsl_vector_alloc(6);
-  gsl_vector * pt1 = gsl_vector_alloc(6);
-  gsl_vector * pt2 = gsl_vector_alloc(6);
+  gsl_vector * pt1 = gsl_vector_alloc(3);
+  gsl_vector * pt2 = gsl_vector_alloc(3);
   P1906MOL_Pos Pos1;
   P1906MOL_Pos Pos2;
   double radius = 15; //! tube radius nm
@@ -104,52 +175,74 @@ void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vecto
   //! double bindingTime = 2; sec
   double x1, y1, z1;
   double x2, y2, z2;
+  double binding_probability = 1.0; //! always bind for testing purposes
+  //double binding_time = 1.0; //! sec \todo incorporate binding time
   
   //! bind with a given probability
-  if (gsl_ran_ugaussian (r) > 0.6) //! \todo set binding probability
+  if (gsl_rng_uniform(r) > binding_probability) //! \todo set realistic binding probability
+  {
+    printf ("(motorWalk) motor did not bind\n");
     return;
-
-  //! find the tube the motor is starting on
-  int seg = tube.findNearestTube(startPt, tubeMatrix, radius); //! \todo set tube radius (thickness) globally
+  }
   
+  //! find the tube the motor is starting on
+  size_t seg = P1906MOL_ExtendedField::findNearestTube(startPt, tubeMatrix, radius); //! \todo set tube radius (thickness) globally
+  
+  //! no tube is within the radius, so exit
+  if (seg == ULONG_MAX)
+  {
+    printf ("(motorWalk) no tube is within radius: %f\n", radius);
+    return;
+  }
+  
+  //! record the current location
   P1906MOL_Pos Pos;
   Pos.setPos ( gsl_vector_get(startPt, 0),
                gsl_vector_get(startPt, 1),
                gsl_vector_get(startPt, 2) );
   pts.insert(pts.end(), Pos);
-  printf ("(motorWalk) after first point\n");
+  //printf ("(motorWalk) recorded first location\n");
+  //Pos.displayPos();
   
   //! walk along tube for distance determined by bound time
   //! segments are sequential in tubeMatrix of length segPerTube
-  int segOfTube = seg % segPerTube; //! the segment within the tube
-  int segToGo = segPerTube - segOfTube; //! segments until end of tube
+  size_t segOfTube = seg % segPerTube; //! the current segment within the tube
+  size_t segToGo = segPerTube - segOfTube; //! segments until the end of tube
   
-  // printf ("seg: %d segOfTube: %d segToGo: %d\n", seg, segOfTube, segToGo);
-  for (int i = seg; i < (seg + segToGo); i++)
+  //printf ("(motorWalk) seg: %ld segOfTube: %ld segToGo: %ld\n", seg, segOfTube, segToGo);
+  for (size_t i = seg; i < (seg + segToGo); i++)
   {
     //! walk to end of segment
-    tube.line(segment, tubeMatrix, i);
+    P1906MOL_ExtendedField::line(segment, tubeMatrix, i);
 
-	//! record the position
+	//! record the position after moving to the end of the segment
     P1906MOL_Pos Pos;
 	Pos.setPos ( gsl_vector_get(segment, 3), 
 	             gsl_vector_get(segment, 4), 
 			     gsl_vector_get(segment, 5) );
 	pts.insert(pts.end(), Pos);
-
+	//printf ("(motorWalk) segment(%ld) recorded position\n", i);
+	//Pos.displayPos();
+	
 	//! get next-to-last point
 	Pos1 = pts.at(pts.size() - 2);
 	Pos1.getPos (&x1, &y1, &z1);
-	tube.point (pt1, x1, y1, z1);
+	P1906MOL_ExtendedField::point (pt1, x1, y1, z1);
+	
 	//! get last point
     Pos2 = pts.at(pts.size() - 1);
 	Pos2.getPos (&x2, &y2, &z2);
-    tube.point (pt2, x2, y2, z2);	
-    updateTime(distance(pt1, pt2) / movementRate);
-  }  
+    P1906MOL_ExtendedField::point (pt2, x2, y2, z2);
+
+	//printf ("(motorWalk) distance: %f movementRate: %f time: %f\n", 
+	//  P1906MOL_ExtendedField::distance(pt1, pt2), 
+	//  movementRate, 
+	//  P1906MOL_ExtendedField::distance(pt1, pt2) / movementRate);
+    updateTime(P1906MOL_ExtendedField::distance(pt1, pt2) / movementRate);
+  }
 }
 
-//! print the position pts
+//! print the position in pt
 void P1906MOL_ExtendedMotion::displayPos(gsl_vector *pt)
 {
   printf ("Position: %g %g %g\n", 
@@ -163,18 +256,18 @@ void P1906MOL_ExtendedMotion::displayPos(gsl_vector *pt)
 //!   startPt - where the motor began its random walk
 //!   timePeriod - length of each step of the walk
 //!   returns the index of the contact segment in tubeMatrix
-int P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, double timePeriod)
+size_t P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, double timePeriod)
 {
-  P1906MOL_Tube tube;
+  //P1906MOL_Tube tube;
   gsl_vector * currentPos = gsl_vector_alloc (3);
   gsl_vector * newPos = gsl_vector_alloc (3);
   int numPts = 0; //! total number of points traversed
-  double timeout = 200; //! end after this many steps
+  double timeout = 100; //! stop if no tube found
   int ts; //! nearest tube segment
   double radius = 15;
   
   //! begin at the starting point
-  tube.point (currentPos, 
+  P1906MOL_ExtendedField::point (currentPos, 
     gsl_vector_get (startPt, 0), 
 	gsl_vector_get (startPt, 1), 
 	gsl_vector_get (startPt, 2));
@@ -186,48 +279,74 @@ int P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, vecto
 	Pos.setPos ( gsl_vector_get (currentPos, 0), 
 	             gsl_vector_get (currentPos, 1), 
 			     gsl_vector_get (currentPos, 2) );
+	printf ("(float2Tube) position\n");
+	Pos.displayPos ();
 	pts.insert(pts.end(), Pos);
-
-	ts = tube.findNearestTube(currentPos, tubeMatrix, radius);
 	numPts++; //! consider starting position the first point
-	if (ts != -1)
-	{
-	  printf ("motor contact with segment: %d\n", ts);
-	  return ts;
-	}
 	brownianMotion(r, currentPos, newPos, timePeriod);
 	updateTime(timePeriod);
     gsl_vector_set (currentPos, 0, gsl_vector_get (newPos, 0));
 	gsl_vector_set (currentPos, 1, gsl_vector_get (newPos, 1));
 	gsl_vector_set (currentPos, 2, gsl_vector_get (newPos, 2));
+	ts = P1906MOL_ExtendedField::findNearestTube(currentPos, tubeMatrix, radius);
+	if (ts != ULONG_MAX)
+	{
+	  printf ("motor contact with segment: %d\n", ts);
+	  break; //! end after contact with tube
+	}
   }
-  
+
   return ts;
 }
 
-//! return newPos based upon Brownian motion from currentPos over timePeriod
-int P1906MOL_ExtendedMotion::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod)
+//! return newPos based upon Brownian motion from currentPos over timePeriod...
+//! Distance travelled will be a function of particle diameter, temperature, diffusion coefficient.
+//! To simplify things, consider the second moment as \f$\bar{x^2} = 2 D t\f$, where \f$D\f$ is the mass diffusivity and \f$t\f$ is time.
+//! Brownian motion landing on a receiver is a form of the "narrow escape" problem.
+void P1906MOL_ExtendedMotion::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod)
 {
   //! the new position is Gaussian with variance proportional to time taken: W_t - W_s ~ N(0, t - s)
-  double sigma = timePeriod; /* sigma should be proportional to time */
-  P1906MOL_ExtendedField field;
+  //! sigma is the standard deviation
+  double D = 1.0; //! mass diffusivity (simple assumption for now)
+  double sigma = sqrt(2 * D * timePeriod); /* sigma should be proportional to time */
+  //P1906MOL_ExtendedField field;
   
-  field.point (newPos, 
+  P1906MOL_ExtendedField::point (newPos, 
     gsl_vector_get (currentPos, 0) + gsl_ran_gaussian (r, sigma), /* x distance */
     gsl_vector_get (currentPos, 1) + gsl_ran_gaussian (r, sigma), /* y distance */
     gsl_vector_get (currentPos, 2) + gsl_ran_gaussian (r, sigma)  /* z distance */
   );
   
-  return 0;
+  //! make sure the distance scales to the length of the tube segments
+  
+  /* debug later
+  
+  printf ("(brownianMotion) newPos: %f %f %f\n", 
+    gsl_vector_get (newPos, 0),
+	gsl_vector_get (newPos, 1),
+	gsl_vector_get (newPos, 2));
+	
+  P1906MOL_Pos lp, cp;
+  lp.setPos (currentPos);
+  cp.setPos (newPos);
+  checkBoundingBox (lp, cp);
+  
+  //! update the new position given reflection off the bounding box
+  cp.getPos (newPos);
+  
+  */
 }
 
 //! implements a motor floating via Brownian motion for time steps with step lengths of timePeriod
 int P1906MOL_ExtendedMotion::freeFloat(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod)
 {
-  P1906MOL_Tube tube;
+  //P1906MOL_Tube tube;
   gsl_vector * currentPos = gsl_vector_alloc (3);
   gsl_vector * newPos = gsl_vector_alloc (3);
-  tube.point (currentPos, gsl_vector_get (currentPos, 0), gsl_vector_get (currentPos, 1), gsl_vector_get (currentPos, 2));
+  P1906MOL_ExtendedField::point (currentPos, 
+    gsl_vector_get (currentPos, 0), 
+	gsl_vector_get (currentPos, 1), 
+	gsl_vector_get (currentPos, 2));
   int numPts = 0;
   
   for (int i = 0; i < time; i++)

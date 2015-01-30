@@ -2,8 +2,11 @@ var searchData=
 [
   ['sensitivity',['Sensitivity',['../classns3_1_1_p1906_m_o_l___metrics.html#a61ed87fae81a909212854cfe16e1f1eb',1,'ns3::P1906MOL_Metrics']]],
   ['sentropy',['sEntropy',['../classns3_1_1_p1906_m_o_l___extended_field.html#aca7b6e97ebc17f2987112c6d2f30ff12',1,'ns3::P1906MOL_ExtendedField']]],
+  ['setboundingbox',['setBoundingBox',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a58ff951e3ecac90977bdd05fd53df897',1,'ns3::P1906MOL_ExtendedMotion']]],
   ['setdestinationvolume',['setDestinationVolume',['../classns3_1_1_p1906_m_o_l___motor.html#aee7a1b7fc4b3f594a708fe757ab5add7',1,'ns3::P1906MOL_Motor']]],
+  ['setlocation',['setLocation',['../classns3_1_1_p1906_m_o_l___motor.html#a3a03286fafe9fce2b02f3cb8c0464d3d',1,'ns3::P1906MOL_Motor::setLocation(P1906MOL_Pos pt)'],['../classns3_1_1_p1906_m_o_l___motor.html#aec796a8116ddd6b72dbe413ebf87a6aa',1,'ns3::P1906MOL_Motor::setLocation(double x, double y, double z)']]],
   ['setp1906communicationinterface',['SetP1906CommunicationInterface',['../classns3_1_1_p1906_net_device.html#a223fa80042dec156f94954b8ef3f441d',1,'ns3::P1906NetDevice']]],
+  ['setpos',['setPos',['../classns3_1_1_p1906_m_o_l___pos.html#ae67cc1898cf8bc6a409d9ea62e584a04',1,'ns3::P1906MOL_Pos::setPos(double x, double y, double z)'],['../classns3_1_1_p1906_m_o_l___pos.html#a432e580aaf39047b88df1254fcc88d15',1,'ns3::P1906MOL_Pos::setPos(gsl_vector *in_pos)']]],
   ['setstartingpoint',['setStartingPoint',['../classns3_1_1_p1906_m_o_l___motor.html#aefc4c4603b97397ae16f27d09b6ecc58',1,'ns3::P1906MOL_Motor']]],
   ['settubedensity',['setTubeDensity',['../classns3_1_1_p1906_m_o_l___extended_field.html#af8124a0c9ec162e04dd62d26ebc5f8da',1,'ns3::P1906MOL_ExtendedField']]],
   ['settubeinterangle',['setTubeInterAngle',['../classns3_1_1_p1906_m_o_l___extended_field.html#a3bf7fb0ca2fa5f33eb1df82ec3844202',1,'ns3::P1906MOL_ExtendedField']]],

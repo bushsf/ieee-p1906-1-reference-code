@@ -74,7 +74,8 @@ namespace ns3 {
 class P1906MOL_ExtendedMotion : public P1906MOLMotion
 {
 public:
-
+  static TypeId GetTypeId (void);
+  
   //! simulated time structure anticipating other fields that may be required for time management
   struct simtime_t
   {
@@ -82,33 +83,50 @@ public:
     double time;
   } t;
   
-  //! Methods related to simulation time
+  //! defines the universe in which motion can take place: particles reflect from the walls of the bounding box
+  //! since the only free motion involved is brownianMotion, that is the only function that needs to handle the bounding box
+  struct boundingbox_t
+  {
+    //! lower left corner of 3D bounding box
+    P1906MOL_Pos lower_left;
+	//! upper right corner of 3D bounding box
+	P1906MOL_Pos upper_right;
+  } bb;
+  
+  /*
+   * Methods related to simulation time
+   */
   //! \todo return the propagation delay for a motor
-  double getTime();
+  double getTime();  
   //! reset the simulation time
   void initTime();
   //! update the simulation given an event duration
   void updateTime(double event_time);
- //! print a single position
-  void displayPos(gsl_vector *pts);
  
-  static TypeId GetTypeId (void);
-    
-   //! Methods related to Brownian motion in 3D 
+  /*
+   * Methods related to tracking motor position
+   */ 
+  //! print a single position
+  void displayPos(gsl_vector * pts);
+ 
+  /*
+   * Methods related to bounding motion
+   */
+  //! set the bounding box
+  void setBoundingBox(P1906MOL_Pos lower_left, P1906MOL_Pos upper_right);
+  //! check if position exceeds bounding box; if so, reflect the position back in (current_pos may change)
+  void checkBoundingBox(P1906MOL_Pos last_pos, P1906MOL_Pos & current_pos);
+   
+  /*
+   * Methods related to motor motion
+   */   
   //! newPos is Brownian motion from currentPos over timePeriod 
-  //! \todo this should be in Motion class
-  int brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod);
-
+  void brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod);
   //! Brownian motion from startPt for length time in timePeriod units; results returned in pts
-  //! \todo this should be in Motion class
   int freeFloat(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod);
   //! free float until intersection with any tube
-  //! \todo this should be in Motion class
-  int float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, double timePeriod);
-  
-  //! Methods related to walking along tubes and finding tube overlap
+  size_t float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, double timePeriod);
   //! walk along a specific tube identified by startPt and place result in pts
-  //! \todo this should be in Motion class
   void motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube);
   
   P1906MOL_ExtendedMotion ();
