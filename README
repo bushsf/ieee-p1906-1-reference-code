@@ -34,3 +34,5 @@ cp ns-3-dev/p1906/example/first-example.cc scratch
 == Run EM or MOLECULAR examples ==
 Have a look to the presentation into the docs folder 
 
+== Documentation ==
+See the Doxygen documentation in p1906/html/index.html
