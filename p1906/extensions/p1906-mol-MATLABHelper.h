@@ -49,7 +49,7 @@ using namespace std;
 namespace ns3 {
 
 /**
- * \ingroup P1906 framework
+ * \ingroup IEEE P1906 framework
  *
  * \class P1906MOL_MATLABHelper
  *

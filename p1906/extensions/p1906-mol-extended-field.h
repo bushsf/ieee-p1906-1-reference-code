@@ -51,11 +51,11 @@ using namespace std;
 namespace ns3 {
 
 /**
- * \ingroup P1906 framework
+ * \ingroup IEEE P1906 framework
  *
  * \class P1906MOL_ExtendedField
  *
- * \brief Class extends the molecular Field component of the P1906 framework towards implementing a vector field
+ * \brief Class extends the molecular Field component of the P1906 framework toward implementing a vector field
  *
  * This class implements persistence length as described in:
  *	  Bush, S. F., & Goel, S. (2013). Persistence Length as a Metric for Modeling and 
@@ -145,11 +145,15 @@ public:
   //! return a pt vector comprised of x, y, z
   static void point(gsl_vector * pt, double x, double y, double z);
   //! return a line comprised of two points
-  void line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2);
+  static void line(gsl_vector * line, gsl_vector * pt1, gsl_vector * pt2);
   //! place a line comprised of pt1 and pt2 into a list of lines at position mp
   void line(gsl_matrix * line, size_t mp, gsl_vector * pt1, gsl_vector * pt2);
   //! retrieve segment mp from tubeMatrix and place it in segment
   static void line(gsl_vector * segment, gsl_matrix * tubeMatrix, size_t mp);
+  //! display the segment
+  static void displayLine(gsl_vector * line);
+  //! set the segment with the given end points
+  static void line(gsl_vector * line, P1906MOL_Pos p1, P1906MOL_Pos p2);
   //! simply print the list of points
   void displayPoints(gsl_matrix * pts);
   //! print only the first numPts
@@ -158,6 +162,8 @@ public:
   void displayPoint(gsl_vector * pt);
   //! true if pt insects segment, false otherwise
   bool isPointOverlap(gsl_vector * pt, gsl_vector * segment);
+  //! copy the vector into the vector list v_list at position index
+  void insertVector(gsl_matrix * v_list, size_t index, gsl_vector * vector);
    
   /*
    * Methods related to computing structural entropy

@@ -83,6 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -100,6 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_m"><span>m</span></a></li>
       <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
       <li><a href="#index_u"><span>u</span></a></li>
@@ -146,6 +148,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>AddP1906CommunicationInterface()
 : <a class="el" href="classns3_1_1_p1906_medium.html#a7bfc0a61cdbbac04b58a447babb9e466">ns3::P1906Medium</a>
 </li>
+<li>addVolumeSurface()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#af09d8af58a71ef935ffa725cafcd34ca">ns3::P1906MOL_Motor</a>
+</li>
 <li>Affinity()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a0b270e4f919566883d075d9d862e6a4a">ns3::P1906MOL_Metrics</a>
 </li>
@@ -163,14 +168,14 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a24b6a753fc134859dc30c0855885ad46">ns3::P1906MOL_Metrics</a>
 </li>
 <li>brownianMotion()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a6761fe3455b145a997da239db55d4cb5">ns3::P1906MOL_ExtendedMotion</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a56c775c6191914b72c3686e98cc43ba5">ns3::P1906MOL_ExtendedMotion</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
-<li>checkBoundingBox()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a7155afcba7c1d016ae63233b4c331a4c">ns3::P1906MOL_ExtendedMotion</a>
+<li>center
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#ad97cfafb4c5e4b087dd4f2d7970b88a1">ns3::P1906MOL_VolSurface</a>
 </li>
 <li>Collision_Behavior()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a7b5168ade95e5d5823cbc75897ea055a">ns3::P1906MOL_Metrics</a>
@@ -194,11 +199,11 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>Delay_Spectrum()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a0426c16c3f1863636ac7cc0699dbd077">ns3::P1906MOL_Metrics</a>
 </li>
-<li>destination_volume
-: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a51348a78c47be359eb3e1d7fec22f785">ns3::P1906MOL_Motor</a>
-</li>
 <li>Diffusive_Flux()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a8104f31d32df26039602c4777f8ed415">ns3::P1906MOL_Metrics</a>
+</li>
+<li>displayLine()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a95e67d8f1e5236857d9a7446f406ed9d">ns3::P1906MOL_ExtendedField</a>
 </li>
 <li>displayLocation()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a1455428c3792f8ca063a22c77a8c9824">ns3::P1906MOL_Motor</a>
@@ -218,6 +223,12 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>displayTubeChars()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a3de54074d2f432fceeb110dfc1a11f69">ns3::P1906MOL_ExtendedField</a>
+</li>
+<li>displayVolSurface()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a871762aa468d4b9161c7c1062bc10344">ns3::P1906MOL_VolSurface</a>
+</li>
+<li>displayVolSurfaces()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#ae63e0c75cceaeb5d186eb292d32f649c">ns3::P1906MOL_Motor</a>
 </li>
 <li>distance()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a3029a534e6659343303339eeeaf4d880">ns3::P1906MOL_ExtendedField</a>
@@ -243,10 +254,13 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#afa017220ba4af7b00650597517c94af7">ns3::P1906MOL_Motor</a>
 </li>
 <li>float2Tube()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a86d8e715fcf61246791105b0c1605460">ns3::P1906MOL_ExtendedMotion</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a0e80b4390f18e495d3ac154fcda4fc52">ns3::P1906MOL_ExtendedMotion</a>
+</li>
+<li>fluxMeter()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a8bb268eda92a459c54220edfd75504ca">ns3::P1906MOL_VolSurface</a>
 </li>
 <li>freeFloat()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a207d4924173f02b657fdef0141537ec8">ns3::P1906MOL_ExtendedMotion</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a013d7fe7a75aa938563df24321b87121">ns3::P1906MOL_ExtendedMotion</a>
 </li>
 </ul>
 
@@ -276,11 +290,17 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>getPos()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___pos.html#a6ae2ce33fe576020f94f7641ab5306ec">ns3::P1906MOL_Pos</a>
 </li>
+<li>getRadiusLine()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a3a870e103114205aa73ab3ea1534a962">ns3::P1906MOL_VolSurface</a>
+</li>
 <li>getSegmatrix()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a85b914ec188515d4546d18b5888e96e0">ns3::P1906MOL_Tube</a>
 </li>
 <li>getTime()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#aa9f1d9c278c3288874220f36f5a31a41">ns3::P1906MOL_ExtendedMotion</a>
+</li>
+<li>getType()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#aaf34c24f901e8510f7f550a627887187">ns3::P1906MOL_VolSurface</a>
 </li>
 </ul>
 
@@ -308,6 +328,12 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>initTime()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#ad1ecc82aca2f2d5ef278837553777f2b">ns3::P1906MOL_ExtendedMotion</a>
 </li>
+<li>insertVector()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#aeedf0a8ea8e710630dd4f3b1bad73d59">ns3::P1906MOL_ExtendedField</a>
+</li>
+<li>isInsideVolSurf()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a627ff4d4a212728c679db9aa9c04da30">ns3::P1906MOL_VolSurface</a>
+</li>
 <li>isPointOverlap()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a054dbdb129a28153941a6454c9deb21b">ns3::P1906MOL_ExtendedField</a>
 </li>
@@ -319,10 +345,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#ac964b649d64f2bf5a61c8c053c03a295">ns3::P1906MOL_Metrics</a>
 </li>
 <li>line()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a0751c3f0941e361ca7d42b2b33b0f345">ns3::P1906MOL_ExtendedField</a>
-</li>
-<li>lower_left
-: <a class="el" href="structns3_1_1_p1906_m_o_l___extended_motion_1_1boundingbox__t.html#a5b292d7d9a46ea267e3ff0e72bcee3ac">ns3::P1906MOL_ExtendedMotion::boundingbox_t</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a2e8bd19f4b109f55f92c7923513fb33b">ns3::P1906MOL_ExtendedField</a>
 </li>
 </ul>
 
@@ -350,7 +373,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a6668341834b0a71f15087ce7f4d9aa1b">ns3::P1906MOL_Metrics</a>
 </li>
 <li>motorWalk()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a2795ce8a3df759f8364b4c6e45d86963">ns3::P1906MOL_ExtendedMotion</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#ab5b8da4d84827272164cc0e04b4b627b">ns3::P1906MOL_ExtendedMotion</a>
 </li>
 <li>move2Destination()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a01c70eac778c4a60c3be5240ce1c27a0">ns3::P1906MOL_Motor</a>
@@ -399,6 +422,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>P1906MOL_Tube()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#adc850e3efdb19d72e59501b5cd9a2018">ns3::P1906MOL_Tube</a>
 </li>
+<li>P1906MOL_VolSurface()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a8ee5af704878d51235c7443c3a516add">ns3::P1906MOL_VolSurface</a>
+</li>
 <li>P1906NetDevice()
 : <a class="el" href="classns3_1_1_p1906_net_device.html#af278de38aca3b3e7dce615cd53292aff">ns3::P1906NetDevice</a>
 </li>
@@ -435,6 +461,16 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </ul>
 
 
+<h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>radius
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a3d6632e1296cdc0bd049d0867eb65c57">ns3::P1906MOL_VolSurface</a>
+</li>
+<li>reflect()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a38ae804bfe18e63b53897c6e4afea3cc">ns3::P1906MOL_VolSurface</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
 <li>se
 : <a class="el" href="structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html#aa40540c6dbc32ea8392772f9bab900a3">ns3::P1906MOL_ExtendedField::tubeCharacteristcs_t</a>
@@ -454,14 +490,8 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>sEntropy()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#aca7b6e97ebc17f2987112c6d2f30ff12">ns3::P1906MOL_ExtendedField</a>
 </li>
-<li>setBoundingBox()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a58ff951e3ecac90977bdd05fd53df897">ns3::P1906MOL_ExtendedMotion</a>
-</li>
-<li>setDestinationVolume()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#aee7a1b7fc4b3f594a708fe757ab5add7">ns3::P1906MOL_Motor</a>
-</li>
 <li>setLocation()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a3a03286fafe9fce2b02f3cb8c0464d3d">ns3::P1906MOL_Motor</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#aec796a8116ddd6b72dbe413ebf87a6aa">ns3::P1906MOL_Motor</a>
 </li>
 <li>SetP1906CommunicationInterface()
 : <a class="el" href="classns3_1_1_p1906_net_device.html#a223fa80042dec156f94954b8ef3f441d">ns3::P1906NetDevice</a>
@@ -493,8 +523,20 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>setTubeVolume()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a29796927790ae0260b0d3a816b2a8597">ns3::P1906MOL_ExtendedField</a>
 </li>
+<li>setType()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#aedcd0feaeaead79c255ab81073c969cf">ns3::P1906MOL_VolSurface</a>
+</li>
+<li>setVolume()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a502f3bc385eda43b3524ed8d2a1279c7">ns3::P1906MOL_VolSurface</a>
+</li>
+<li>shiftPos()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___pos.html#ab5c0958fa6c93db588b083ef04dedc8e">ns3::P1906MOL_Pos</a>
+</li>
 <li>Specificity()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#acf5e82fbbc013d3417f226b38ec5542a">ns3::P1906MOL_Metrics</a>
+</li>
+<li>sphereIntersections()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#ab26a290ab9e2733ae266cbd4dd4c3d36">ns3::P1906MOL_VolSurface</a>
 </li>
 <li>startPt
 : <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#ac7f5633037ff404639e526d819eec9c8">ns3::P1906MOL_Tube</a>
@@ -508,7 +550,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
 <li>T
 : <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a663a4dbdaa6d44597bd04c97cf7b79b2">ns3::P1906MOL_MicrotubulesField</a>
+, <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#ab93cfd112e6c81e530f7c937661a2b80">ns3::P1906MOL_Motor</a>
 , <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a313b3a8712d7bdac0e882bfb5a09a771">ns3::P1906MOL_Tube</a>
+, <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#abb7412d0fac595eb69642a4d3081dd50">ns3::P1906MOL_VolSurface</a>
 </li>
 <li>time
 : <a class="el" href="structns3_1_1_p1906_m_o_l___extended_motion_1_1simtime__t.html#a182fa0be39c3d2e2fa411e19d8351f87">ns3::P1906MOL_ExtendedMotion::simtime_t</a>
@@ -525,6 +569,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>tubes2VectorField()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#aa2315e33ba004aa962876310b9bc59b4">ns3::P1906MOL_ExtendedField</a>
 </li>
+<li>typeOfVolume
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#aee4eda6e2d4c7af523cd5e65357bc95b">ns3::P1906MOL_VolSurface</a>
+</li>
 </ul>
 
 
@@ -537,6 +584,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>unitTest_findClosestPoint()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a4435aadad2792b3402ff46bfcc206297">ns3::P1906MOL_ExtendedField</a>
+</li>
+<li>unitTest_FluxMeter()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a98b37729ea2573b7ff087baa40679ee2">ns3::P1906MOL_MicrotubulesField</a>
 </li>
 <li>unitTest_getOverlap()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_field.html#a4ba8f420d59b4f1d4da6359d03fc1010">ns3::P1906MOL_ExtendedField</a>
@@ -557,21 +607,27 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a0c338297e6ef2b1107ad4d7d966a3c8b">ns3::P1906MOL_MicrotubulesField</a>
 </li>
 <li>unitTest_Plot2Mma()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#af67d566116f1476dc28a459bdebbec07">ns3::P1906MOL_MicrotubulesField</a>
+: <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a570a482568557bf43452dbd9642909ee">ns3::P1906MOL_MicrotubulesField</a>
+</li>
+<li>unitTest_ReflectiveBarrier()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a1f18a5da93a8655b7a244bbbff1eb57e">ns3::P1906MOL_MicrotubulesField</a>
 </li>
 <li>unitTest_VectorField()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a150ff45da72a236508fafccc23d6fff9">ns3::P1906MOL_MicrotubulesField</a>
 </li>
+<li>unitTest_VolSurface()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a44dbe7e82549659dcc7ad39cffe484c1">ns3::P1906MOL_MicrotubulesField</a>
+</li>
 <li>updateTime()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a0fe81a9e965bfbb931371974fb224579">ns3::P1906MOL_ExtendedMotion</a>
-</li>
-<li>upper_right
-: <a class="el" href="structns3_1_1_p1906_m_o_l___extended_motion_1_1boundingbox__t.html#ab573ae42d0b30623bc817e2b855f40bf">ns3::P1906MOL_ExtendedMotion::boundingbox_t</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_v"></a>- v -</h3><ul>
+<li>vectorAngle()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#aeafafb2add48cba63e5685403b36470f">ns3::P1906MOL_VolSurface</a>
+</li>
 <li>vectorFieldMeshMATLAB()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___m_a_t_l_a_b_helper.html#a66430df558e767df1990a6c859eb6d56">ns3::P1906MOL_MATLABHelper</a>
 </li>
@@ -584,11 +640,20 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>vectorFieldPlotMma()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___mathematica_helper.html#a05466f91442cda1dcb7f5f3a46e67db5">ns3::P1906MOL_MathematicaHelper</a>
 </li>
+<li>vectorPlotMma()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___mathematica_helper.html#aa24eb4adab76ec8d34db3a0e33446972">ns3::P1906MOL_MathematicaHelper</a>
+</li>
 <li>vf
 : <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a08d5b6478a75c2ff469140a528fcfa7d">ns3::P1906MOL_MicrotubulesField</a>
 </li>
+<li>volSurfacePlot()
+: <a class="el" href="classns3_1_1_p1906_m_o_l___mathematica_helper.html#aba6ec55b2996685781ab42f9c32f7e6b">ns3::P1906MOL_MathematicaHelper</a>
+</li>
 <li>volume
 : <a class="el" href="structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html#a84d5e663e855245978489225e1d4a2c8">ns3::P1906MOL_ExtendedField::tubeCharacteristcs_t</a>
+</li>
+<li>vsl
+: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a021f8feb85ee39fe164b557010dd6372">ns3::P1906MOL_Motor</a>
 </li>
 </ul>
 
@@ -596,9 +661,6 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <h3><a class="anchor" id="index_~"></a>- ~ -</h3><ul>
 <li>~P1906MOL_MicrotubulesField()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#afde681019f71218b65391c1accdfde07">ns3::P1906MOL_MicrotubulesField</a>
-</li>
-<li>~P1906MOL_Motor()
-: <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a6765361199ee8e07e0a5e42106dc13c5">ns3::P1906MOL_Motor</a>
 </li>
 <li>~P1906MOL_Tube()
 : <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a365c7081336e3eeb650603f17f8bfe7c">ns3::P1906MOL_Tube</a>
@@ -612,7 +674,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2015 21:33:35 for IEEE-Std-1906 by
+    <li class="footer">Generated on Sat Feb 7 2015 20:32:37 for IEEE-Std-1906 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9 </li>
   </ul>

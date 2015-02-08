@@ -25,7 +25,8 @@
  *                      http://www.amazon.com/author/stephenbush
  */
 
-/* \details
+/* \details This class writes data in MATLAB format
+ *
  * <pre>
  * Creates ASCII files designed for import into MATLAB
  * +-----------+                      +--------+

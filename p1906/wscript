@@ -41,6 +41,7 @@ def build(bld):
 		'extensions/p1906-mol-metrics.cc',
 		'extensions/p1906-mol-motor.cc',
 		'extensions/p1906-mol-tube.cc',
+		'extensions/p1906-mol-vol-surface.cc',
 		'extensions/p1906-mol-pos.cc'
     	]
 
@@ -88,6 +89,7 @@ def build(bld):
 		'extensions/p1906-mol-metrics.h',
 		'extensions/p1906-mol-motor.h',
 		'extensions/p1906-mol-tube.h',
+		'extensions/p1906-mol-vol-surface.h',
 		'extensions/p1906-mol-pos.h'
     	]
 

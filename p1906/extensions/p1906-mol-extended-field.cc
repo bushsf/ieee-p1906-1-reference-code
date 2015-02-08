@@ -25,21 +25,26 @@
  *                      http://www.amazon.com/author/stephenbush
  */
  
-//! \details
-//! <pre>
-//! The Field Component is a vector field
+//! \details This class extends the IEEE 1906 Field component to define a vector field.
+//! A vector field defines a vector for every point in three-dimensional space. In this case,
+//! we construct a vector field based upon tube-like structures that impact some type of flow.
+//! 
+//! Note that there two similar structures that should not be confused: line segments and vectors
 //!
-//! gsl_vector *location (x,y,z)  gsl_vector vector (vx,vy,vz)
-//!                +               +
-//!                v               v
-//!                +--------------->
-//! 			        VECTOR
-//!   
+//! <pre>
+//!                     VECTOR
+//!                ---------------->
+//! 			   ^               ^
+//!                |               |
+//! gsl_vector * location  gsl_vector * vector 
+//!            (x, y, z)      (vx, vy, vz)
+//!
+//!                           LINE SEGMENT
+//!                         -----------------
+//! 				        ^               ^
+//!                         |               |
 //! gsl_vector *segment (x1,y1,z1,       x2,y2,z2)
-//!                         +               +                       
-//!                         v               v                                              
-//!                         +---------------+
-//! 				          LINE SEGMENT
+//!
 //! </pre>
 
 #include "ns3/log.h"
@@ -51,6 +56,7 @@
 #include "ns3/p1906-mol-field.h"
 #include "ns3/p1906-mol-extended-field.h"
 #include "ns3/p1906-mol-MathematicaHelper.h"
+#include "ns3/p1906-mol-pos.h"
 
 namespace ns3 {
 
@@ -93,7 +99,7 @@ void P1906MOL_ExtendedField::displayTubeChars(struct tubeCharacteristcs_t * ts)
   printf ("numSegments = %ld\n", ts->numSegments);
 }
 
-//! set the volume in which tube centers exist
+//! set the space in which the tube centers will be formed
 void P1906MOL_ExtendedField::setTubeVolume(struct tubeCharacteristcs_t * ts, double volume)
 {
   ts->volume = volume;
@@ -176,23 +182,23 @@ void P1906MOL_ExtendedField::line(gsl_vector * line, gsl_vector * pt1, gsl_vecto
     gsl_vector_set (line, i + 3, gsl_vector_get (pt2, i));
 }
 
-//! return the segment in location mp from tubeMatrix
+//! return the segment at location mp from within the tubeMatrix
 //! <pre>
 //! segments stored sequentially in tubeMatrix
 //! segment ---+
 //!            | 
 //!            v                                 
-//!          1                     segPerTube    
+//!          1 . . .             segPerTube    
 //!          +----+ +----+ ... +----+            
 //!                                              
 //!          +----+ +----+ ... +----+            
 //!                                              
 //!           ...   ...    ...  ...              
-//!                                N * segPerTube
+//!                              N * segPerTube
 //!          +----+ +----+ ... +----+            
 //!                                              
 //!         <----------------------->            
-//!                    tube                      
+//!           tube (rows of segments)
 //! </pre>
 void P1906MOL_ExtendedField::line(gsl_vector * segment, gsl_matrix * tubeMatrix, size_t mp)
 {
@@ -214,6 +220,45 @@ void P1906MOL_ExtendedField::line(gsl_matrix * line, size_t mp, gsl_vector * pt1
 
   for (int i = 0; i < 3; i++)
     gsl_matrix_set (line, mp, i + 3, gsl_vector_get (pt2, i));
+}
+
+//! set the segment with the given end points
+void P1906MOL_ExtendedField::line(gsl_vector * line, P1906MOL_Pos p1, P1906MOL_Pos p2)
+{
+  gsl_vector * p = gsl_vector_alloc (3);
+  
+  p1.getPos (p);
+  for (size_t i = 0; i < 3; i++)
+    gsl_vector_set (line, i, gsl_vector_get (p, i));
+	
+  p2.getPos (p);
+  for (size_t i = 3; i < 6; i++)
+    gsl_vector_set (line, i, gsl_vector_get (p, i - 3));
+}
+
+//! display the segment
+void P1906MOL_ExtendedField::displayLine(gsl_vector * line)
+{
+  if (line->size != 6)
+  {
+    printf ("(displayLine) invalid size: %ld\n", line->size);
+  }
+  
+  printf ("(displayLine) pt1: %lf, %lf, %lf\n", gsl_vector_get (line, 0), gsl_vector_get (line, 1), gsl_vector_get (line, 2));
+  printf ("(displayLine) pt2: %lf, %lf, %lf\n", gsl_vector_get (line, 3), gsl_vector_get (line, 4), gsl_vector_get (line, 5));
+}
+
+//! copy the vector into the vector list v_list at position index
+void P1906MOL_ExtendedField::insertVector(gsl_matrix * v_list, size_t index, gsl_vector * vector)
+{
+  if (index > v_list->size1)
+  {
+    printf ("(insertVector) index: %ld larger than v_list size: %ld\n", index, v_list->size1);
+  }
+	
+  //! copy the vector into the vector list at position index
+  for (size_t i = 0; i < 6; i++)
+    gsl_matrix_set (v_list, index, i, gsl_vector_get (vector, i));
 }
 
 //! print all the points in the list of pts
@@ -325,12 +370,12 @@ void P1906MOL_ExtendedField::tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matr
   // printf ("(tubes2VectorField) set vf\n");
 }
 
-//! return the index of the nearest tube in tubeMatrix within a given radius from pt otherwise return ULONG_MAX
+//! return the index of the nearest tube in tubeMatrix within a given radius from pt, otherwise return -1 
 size_t P1906MOL_ExtendedField::findNearestTube(gsl_vector * pt, gsl_matrix * tubeMatrix, double radius)
 {
   double shortestDistance = GSL_POSINF;
   double d = 0;
-  size_t closestSegment = ULONG_MAX;
+  size_t closestSegment = -1;
   gsl_vector *segment = gsl_vector_alloc (6);
   
   for (size_t i = 0; i < tubeMatrix->size1; i++)
@@ -341,7 +386,7 @@ size_t P1906MOL_ExtendedField::findNearestTube(gsl_vector * pt, gsl_matrix * tub
 	{
 	  shortestDistance = d;
 	  closestSegment = i;
-	}	
+	}
   }
   
   // printf ("shortestDistance: %f\n", shortestDistance);
@@ -519,10 +564,15 @@ int P1906MOL_ExtendedField::getOverlap3D(gsl_vector * segment, gsl_matrix * tube
 	(b2 - a2) * t - (d2 - c2) * s == c2 - a2
 	(b3 - a3) * t - (d3 - c3) * s == c3 - a3
   */
+  //! total number of segments in tubeMatrix
   size_t numSegments = tubeMatrix->size1;
+  //! first end point of segment under test
   double a1 = gsl_vector_get (segment, 0), a2 = gsl_vector_get (segment, 1), a3 = gsl_vector_get (segment, 2);
+  //! second end point of segment under test
   double b1 = gsl_vector_get (segment, 3), b2 = gsl_vector_get (segment, 4), b3 = gsl_vector_get (segment, 5);
+  //! first end point of tubeMatrix segment 
   double c1, c2, c3;
+  //! second end point of tubeMatrix segment
   double d1, d2, d3;
   
   gsl_matrix * A = gsl_matrix_alloc (3, 2);
@@ -565,7 +615,8 @@ int P1906MOL_ExtendedField::getOverlap3D(gsl_vector * segment, gsl_matrix * tube
 	//  gsl_vector_get(b, 1),
 	//  gsl_vector_get(b, 2));
   
-    //! A is M x N work is tmp storage of length N, A is replaced with U, V is N x N, S is M x N
+    //! solve A x = b
+    //! A is M x N, work is tmp storage of length N, A is replaced with U, V is N x N, S is M x N
     gsl_linalg_SV_decomp (A, V, S, work);
     gsl_linalg_SV_solve (A, V, S, b, x);
 
@@ -582,7 +633,7 @@ int P1906MOL_ExtendedField::getOverlap3D(gsl_vector * segment, gsl_matrix * tube
     // gsl_vector_fprintf(stdout, pt, "%g");
 	
     if(!gsl_isnan (gsl_vector_get(x, 0)) && !gsl_isnan (gsl_vector_get(x, 1)))
-	  //! the segments only overlap if their lengths are long enough
+	  //! the segments only overlap if their lengths are long enough to do so
 	  if(
 	    //! A <= x <= B and C <= x <= D
 	    min(a1, b1) <= gsl_vector_get(pt, 0) && 

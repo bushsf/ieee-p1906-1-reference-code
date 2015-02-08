@@ -25,7 +25,8 @@
  *                      http://www.amazon.com/author/stephenbush
  */
  
-/* \details
+/* \details This class implements the molecular motor.
+ *
  * <pre>
  *                                                upper-right corner
  *                               +--------------------+             
@@ -57,6 +58,7 @@ TypeId P1906MOL_Motor::GetTypeId (void)
   return tid;
 }
 
+//! The motor constructor sets a default P1906MOL_VolSurface::Receiver volume at (1000, 0, 0) with radius 500.
 P1906MOL_Motor::P1906MOL_Motor ()
 {
   /** This class implements persistence length as described in:
@@ -73,10 +75,12 @@ P1906MOL_Motor::P1906MOL_Motor ()
     All random number are derived from gsl_rng *.
   */
   
-  //! keep track of the motor's current position
   current_location = gsl_vector_alloc (3);
-  //! location of opposite corners of the destination volume
-  destination_volume = gsl_vector_alloc (6);
+  
+  //! set the receiver 500 nanometers from the origin
+  P1906MOL_Pos v_c;
+  v_c.setPos (1000, 0, 0);
+  addVolumeSurface(v_c, 500, P1906MOL_VolSurface::Receiver);
   
   //! start with an empty record of for tracking position
   pos_history.clear();
@@ -88,36 +92,53 @@ P1906MOL_Motor::P1906MOL_Motor ()
   
 }
 
+//! create and store a new volume surface of any type: FluxMeter, ReflectiveBarrier, Receiver
+void P1906MOL_Motor::addVolumeSurface(P1906MOL_Pos v_c, double v_radius, P1906MOL_VolSurface::typeOfVolume v_type)
+{
+  P1906MOL_VolSurface vs;
+  
+  vs.setVolume(v_c, v_radius);
+  vs.setType (v_type);
+  vsl.insert(vsl.end(), vs);
+}
+
 //! this is where the motor starts, for example, the location of the transmitter
 void P1906MOL_Motor::setStartingPoint(gsl_vector * pt)
 {
   gsl_vector_memcpy(current_location, pt);
 }
 
-//! this is where the motor ends defined by the lower left corner and upper right corner of a cube, for example, the location of a receiver
-void P1906MOL_Motor::setDestinationVolume(gsl_vector * lower_left, gsl_vector * upper_right)
+//! display all the volume surfaces recognizing the motor
+void P1906MOL_Motor::displayVolSurfaces()
 {
-    gsl_vector_set(destination_volume, 0, gsl_vector_get (lower_left, 0));
-	gsl_vector_set(destination_volume, 1, gsl_vector_get (lower_left, 1));
-	gsl_vector_set(destination_volume, 2, gsl_vector_get (lower_left, 2));
-	gsl_vector_set(destination_volume, 3, gsl_vector_get (upper_right, 0));
-	gsl_vector_set(destination_volume, 4, gsl_vector_get (upper_right, 1));
-	gsl_vector_set(destination_volume, 5, gsl_vector_get (upper_right, 2));	
+  for (size_t i = 0; i < vsl.size(); i++)
+    vsl.at(i).displayVolSurface();
 }
 
 //! return true if motor is in the destination volume, false otherwise
 bool P1906MOL_Motor::inDestination()
 {
   bool inDest = false;
+  P1906MOL_Pos cl;
+  cl.setPos (current_location);
+  size_t numDest = 0;
   
-  if ((gsl_vector_get (current_location, 0) >= gsl_vector_get (destination_volume, 0)) &&
-      (gsl_vector_get (current_location, 0) <= gsl_vector_get (destination_volume, 3)) &&
-      (gsl_vector_get (current_location, 1) <= gsl_vector_get (destination_volume, 1)) &&
-      (gsl_vector_get (current_location, 1) <= gsl_vector_get (destination_volume, 4)) &&
-      (gsl_vector_get (current_location, 2) <= gsl_vector_get (destination_volume, 2)) &&
-      (gsl_vector_get (current_location, 2) <= gsl_vector_get (destination_volume, 5)))
-        inDest = true;
-		
+  //! find the Receiver space(s)
+  for (size_t i = 0; i < vsl.size(); i++)
+  {
+    if (vsl.at(i).getType() == P1906MOL_VolSurface::Receiver)
+	{
+	  numDest++;
+	  if (vsl.at(i).isInsideVolSurf(cl))
+	    inDest = true;
+	}
+  }
+  
+  if (numDest < 1)
+  {
+    printf ("(inDestination) no destination volume found\n");
+  }
+  
   return inDest;
 }
 
@@ -127,17 +148,16 @@ void P1906MOL_Motor::move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube
   int timeout = 100; //! in case motor never reaches destination
   int loops = 0; //! keep track of iterations
   
-  //! \todo consider a bounding box (defined in extended Motion) around the system in which motors are reflected back into the medium
   while (!inDestination() && (loops < timeout))
   {
     //! returns the index of the segment in tubeMatrix to which the motor is bound 
-    float2Tube(r, current_location, pts, tubeMatrix, timePeriod);
+    float2Tube(r, current_location, pts, tubeMatrix, timePeriod, vsl);
 	setLocation(pts.back());
     //printf ("(move2Destination) current location after float2Tube\n");
 	//displayLocation();
-	pts.back().displayPos();
+	//pts.back().displayPos();
 	//! walk along tube until end of tube or unbound
-	motorWalk(r, current_location, pts, tubeMatrix, segPerTube);
+	motorWalk(r, current_location, pts, tubeMatrix, segPerTube, vsl);
 	setLocation(pts.back());
     //printf ("(move2Destination) current location after motorWalk\n");
 	//pts.back().displayPos();
@@ -179,22 +199,25 @@ void P1906MOL_Motor::float2Destination(double timePeriod)
 {
   gsl_vector * newPos = gsl_vector_alloc (3);
   P1906MOL_Pos Pos;
-  
+    
   Pos.setPos ( gsl_vector_get (current_location, 0),
                gsl_vector_get (current_location, 1),
 			   gsl_vector_get (current_location, 2) );
   pos_history.insert (pos_history.end(), Pos);
   
+  //printf ("(float2Destination) motor location:\n");
+  //displayPos(current_location);
+	
   //! float until in destination volume
   while (!inDestination())
   {
-	brownianMotion(r, current_location, newPos, timePeriod);
+	brownianMotion(r, current_location, newPos, timePeriod, vsl);
 	updateTime(timePeriod);
     gsl_vector_set (current_location, 0, gsl_vector_get (newPos, 0));
 	gsl_vector_set (current_location, 1, gsl_vector_get (newPos, 1));
 	gsl_vector_set (current_location, 2, gsl_vector_get (newPos, 2));
-	//! begin at the motor's current location
-    //printf ("motor location: \n");
+	
+    //printf ("(float2Destination) motor location:\n");
     //displayPos(current_location);
 	
 	P1906MOL_Pos Pos;
@@ -213,8 +236,6 @@ double P1906MOL_Motor::propagationDelay()
 
 P1906MOL_Motor::~P1906MOL_Motor ()
 {
-  //! close down random number generator activity
-  gsl_rng_free (r);
   NS_LOG_FUNCTION (this);
 }
 

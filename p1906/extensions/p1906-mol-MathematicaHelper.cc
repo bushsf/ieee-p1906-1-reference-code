@@ -25,9 +25,10 @@
  *                      http://www.amazon.com/author/stephenbush
  */
  
-/* \details
+/* \details This class implements methods that write data in Mathematica format.
+ *
  * <pre>
- * Creates ASCII files designed for import into Mathematica
+ * Create ASCII files designed for import into Mathematica
  * +---------+                       +-------------+
  * |         |      +----------+     |             |
  * |   NS-3  +--->  |  *.mma   +---> | Mathematica |
@@ -84,7 +85,7 @@ void P1906MOL_MathematicaHelper::vectorFieldPlotMma(gsl_matrix * vf, const char 
   fprintf (pFile, "ListVectorPlot3D[{");
   for (size_t i = 0; i < vf->size1; i++)
   {
-    fprintf (pFile, "{{%f, %f, %f}, {%f, %f, %f}}", 
+    fprintf (pFile, "{{%lf, %lf, %lf}, {%lf, %lf, %lf}}", 
 	  gsl_matrix_get (vf, i, 0),
 	  gsl_matrix_get (vf, i, 1),
 	  gsl_matrix_get (vf, i, 2),
@@ -126,6 +127,31 @@ void P1906MOL_MathematicaHelper::vectorFieldMeshMma(gsl_matrix * vf, const char 
   fprintf (pFile, "}]\n");
   //! option to print vertex labels
   //! fprintf (pFile, "}, VertexLabeling -> True]\n");
+  
+  fclose(pFile);
+}
+
+//! write the vector field in Mathematica format using regular spacing between samples in file fname
+void P1906MOL_MathematicaHelper::vectorPlotMma(gsl_matrix * vf, const char * fname)
+{
+  FILE * pFile;
+
+  pFile = fopen (fname,"w");
+  
+  fprintf (pFile, "Graphics3D[{");
+  for (size_t i = 0; i < vf->size1; i++)
+  {
+    //Graphics3D[{Arrow[{{0, 0, 1}, {1, 1, 1}}], Arrow[{{0, 0, 0}, {-1, 1, 1}}]}, Axes -> True]
+    fprintf (pFile, "Arrow[{{%lf, %lf, %lf}, {%lf, %lf, %lf}}]", 
+	  gsl_matrix_get (vf, i, 0),
+	  gsl_matrix_get (vf, i, 1),
+	  gsl_matrix_get (vf, i, 2),
+	  gsl_matrix_get (vf, i, 3),
+	  gsl_matrix_get (vf, i, 4),
+	  gsl_matrix_get (vf, i, 5));
+    if (i < (vf->size1 - 1)) fprintf (pFile, ", ");
+  }
+  fprintf (pFile, "}, Axes -> True]\n");
   
   fclose(pFile);
 }
@@ -188,14 +214,26 @@ void P1906MOL_MathematicaHelper::points2Mma(vector<P1906MOL_Pos> & pts, const ch
   fclose(pFile);
 }
 
+//! display the volume surface in Mathematica format into file fname
+void P1906MOL_MathematicaHelper::volSurfacePlot(P1906MOL_Pos center, double radius, const char * fname)
+{
+  FILE * pFile;
+  double x, y, z;
+  
+  pFile = fopen (fname,"w");
+  
+  center.getPos (&x, &y, &z);
+  fprintf (pFile, "Graphics3D[{Opacity[0.5], Sphere[{%lf, %lf, %lf}, %lf]}, Axes -> True]\n", x, y, z, radius);
+    
+  fclose(pFile);
+}
+
 //! print a plot of x,y values in vals in Mathematica format into file fname
 void P1906MOL_MathematicaHelper::plot2Mma(gsl_matrix * vals, const char * fname, const char * xlabel, const char * ylabel)
 {
   FILE * pFile;
   size_t numVals = vals->size1;
   
-  //! ListLinePlot[Quantity[{0, 3, 6, 8, 10, 11, 11, 16, 20, 22}, "Centimeters"], AxesLabel -> Automatic]
-
   pFile = fopen (fname,"w");
   
   fprintf (pFile, "ListLinePlot[{");
@@ -261,7 +299,7 @@ void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix * tubeMatrix, size_t segPe
 		  //  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 1),
 		  //  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 2));
 			
-          fprintf (pFile, "%ld -> {%g, %g, %g}, ",
+          fprintf (pFile, "%ld -> {%lf, %lf, %lf}, ",
 		    pt,
 	        gsl_matrix_get(tubeMatrix, i * segPerTube + j, 0),
 		    gsl_matrix_get(tubeMatrix, i * segPerTube + j, 1),
@@ -276,7 +314,7 @@ void P1906MOL_MathematicaHelper::tubes2Mma(gsl_matrix * tubeMatrix, size_t segPe
 		//  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 4),
 		//  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 5));
 		  
-		fprintf (pFile, "%ld -> {%g, %g, %g}", 
+		fprintf (pFile, "%ld -> {%lf, %lf, %lf}", 
 		  pt,
 		  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 3),
 		  gsl_matrix_get(tubeMatrix, i * segPerTube + j, 4),

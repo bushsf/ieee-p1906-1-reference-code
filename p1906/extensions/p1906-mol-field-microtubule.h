@@ -82,7 +82,7 @@ public:
   P1906MOL_MicrotubulesField ();
   
   //! create a given density of tubes of numSegments in given volume
-  //! volume starts at 0, 0, 0 to volume^(1/4) in each dimension  
+  //! default volume starts at origin with length volume^(1/4) in each dimension  
   gsl_matrix * tubeMatrix;
   //! properties of the microtubule network
   tubeCharacteristcs_t ts;
@@ -93,7 +93,7 @@ public:
   const gsl_rng_type * T;
   gsl_rng * r;
 
-  /**
+  /*
    * Methods related to creating microtubules and analyzing molecular motor transport
    */
   
@@ -101,8 +101,13 @@ public:
   void genTubes(struct tubeCharacteristcs_t * ts);
   //! plot persistence length versus structural entropy
   void persistenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_vector * persistenceLengths);
+
+  /*
+   * Methods implementing unit tests
+   */
+   
   //! test plot2mma
-  bool unitTest_Plot2Mma(vector<P1906MOL_Pos> pts);
+  bool unitTest_Plot2Mma(vector<P1906MOL_Pos> & pts);
   //! test persistence length versus entropy plot
   bool unitTest_PersistenceLengthsVsEntropy();
   //! test computation of all segment overlaps
@@ -119,6 +124,12 @@ public:
   bool unitTest_MotorMovement(vector<P1906MOL_Pos> & pts);
   //! test motor movement to destination
   bool unitTest_MotorMove2Destination(vector<P1906MOL_Pos> & pts);
+  //! test the volume surface as a flux meter and later as a compartmentalization volume
+  bool unitTest_VolSurface();
+  //! test the volume surface as a compartmentalization volume
+  bool unitTest_ReflectiveBarrier();
+  //! test the FluxMeter
+  bool unitTest_FluxMeter();
   
   virtual ~P1906MOL_MicrotubulesField ();
 

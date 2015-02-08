@@ -80,19 +80,38 @@ public:
   
   P1906MOL_MathematicaHelper ();
   
+  /*
+   * Vector field plotting methods
+   */
   //! write the vector field in Mma format using regular spacing between samples
   void vectorFieldMeshMma(gsl_matrix * vf, const char * fname);
   //! display the vector field in Mma format for VectorPlot3D
   void vectorFieldPlotMma(gsl_matrix * vf, const char * fname);
+  //! write the vector field in Mathematica format using regular spacing between samples in file fname
+  void vectorPlotMma(gsl_matrix * vf, const char * fname);
+  
+  /*
+   * Point plotting methods
+   */
   //! write a list of points into file fname in Mathematica format
   void points2Mma(vector<P1906MOL_Pos> & pts, const char * fname);
   //! write a list of connected points into file fname in Mathematica format
   void connectedPoints2Mma(vector<P1906MOL_Pos> pts, const char * fname);
+  
+  /*
+   * Plot and segment display methods
+   */  
   //! print a plot of x,y values in vals in Mathematica format into file fname
   void plot2Mma(gsl_matrix * vals, const char * fname, const char * xlabel, const char * ylabel);
   //! write a list of tubes into file fname in Mathematica format
   void tubes2Mma(gsl_matrix * tubeMatrix, size_t segPerTube, const char * fname);
 
+  /*
+   * Volume and surface plotting methods
+   */
+  //! display the volume surface in Mathematica format into file fname
+  void volSurfacePlot(P1906MOL_Pos center, double radius, const char * fname);
+  
   virtual ~P1906MOL_MathematicaHelper ();
 
 };

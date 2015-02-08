@@ -49,7 +49,7 @@ using namespace std;
 namespace ns3 {
 
 /**
- * \ingroup P1906 framework
+ * \ingroup IEEE P1906 framework
  *
  * \class P1906MOL_Metrics
  *
@@ -76,6 +76,52 @@ public:
   
   P1906MOL_Metrics ();
   
+/*
+ * Message Component: These metrics deal with the information encoded within a Message and how the 
+ * Message is impacted by the channel and intended target. Metrics (a) thru (d) shall be implemented. 
+ * Metric (e) may be implemented.
+ * a)	Message Deliverability
+ * b)	Message Lifetime
+ * c)	Information Density
+ * d)	Bandwidth-Delay Product
+ * e)	Information and Communication Energy
+ */
+ 
+/* 
+ * Motion Component: These metrics are strongly related to the Motion Component, which describes Message Carrier motion. 
+ * Either both (a) and (b) shall be implemented or (c) shall be implemented. 
+ * a)	Collision Behavior
+ * b)	Mass Displacement
+ * c)	Positioning Accuracy of Message Carriers
+ */
+ 
+/*
+ * Field Component: These metrics relate to the degree to which Message Carrier motion can be controlled such that it 
+ * follows an intended gradient. Diffusive Flux is used in Brownian motion and can be modeled by Levy or Weiner processes 
+ * and can also be described by the Langevin Noise. At least one of (a), (b), or (c) shall be implemented in order to 
+ * describe Message Carrier motion.
+ * a)	Persistence Length
+ * b)	Diffusive Flux
+ * c)	Langevin Noise
+ */
+ 
+/*
+ * Specificity Component: These metrics are related to the ability of a Message Carrier to deliver a Message to its 
+ * intended target. Metrics (a), (c), and (e) shall be implemented; metrics (b) and/oror (d) may be implemented.
+ * a)	Specificity
+ * b)	Affinity
+ * c)	Sensitivity
+ * d)	Angular Spectrum 
+ * e)	Delay Spectrum
+ */
+
+/* System: These metrics relate to and impact all components. All of the metrics in this category shall be implemented. 
+ * a)	Active Network Programmability
+ * b)	Perturbation Rate
+ * c)	Supersystem Degradation
+ * d)	Bandwidth-Volume Ratio
+ */
+
   void Message_Deliverability();
   void Message_Lifetime();
   void Information_Density();

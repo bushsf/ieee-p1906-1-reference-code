@@ -50,11 +50,12 @@ using namespace std;
 #include "ns3/p1906-mol-extended-motion.h"
 #include "ns3/p1906-mol-message-carrier.h"
 #include "ns3/p1906-mol-pos.h"
+#include "ns3/p1906-mol-vol-surface.h"
 
 namespace ns3 {
 
 /**
- * \ingroup P1906 framework
+ * \ingroup IEEE P1906 framework
  *
  * \class P1906MOL_Motor
  *
@@ -81,25 +82,27 @@ public:
   
   //! the current location of the motor in 3D space
   gsl_vector * current_location;
-  //! the destination volume for the motor
-  gsl_vector * destination_volume;
+
   //! a record of the position of the motor throughout its lifetime
   vector<P1906MOL_Pos> pos_history;
-  
+
+  //! randomness for the motor  
   const gsl_rng_type * T;
   gsl_rng * r;
   
+  //! currently, only brownianMotion checks if in the Receiver volume
+  vector<P1906MOL_VolSurface> vsl;
+  
   P1906MOL_Motor ();
+  
+  //! create and store a new volume surface
+  void addVolumeSurface(P1906MOL_Pos v_c, double v_radius, P1906MOL_VolSurface::typeOfVolume v_type);
   
   /*
    * Methods related to motor start and destination locations
    */
   //! this is where the motor starts, for example, location of the transmitter
   void setStartingPoint(gsl_vector * pt);
-  //! this is where the motor ends defined by the lower left corner and upper right corner of a cube, for example, the location of a receiver
-  void setDestinationVolume(gsl_vector * lower_left, gsl_vector * upper_right);
-  //! return true if motor is in the destination volume, false otherwise
-  bool inDestination();
   
   /*
    * Methods related to motor positioning and tracking
@@ -110,7 +113,9 @@ public:
   void setLocation(P1906MOL_Pos pt);
   //! set the current location
   void setLocation(double x, double y, double z);
-
+  //! return true if motor is in the destination volume, false otherwise
+  bool inDestination();
+  
   /*
    * Methods related to motor motion
    */  
@@ -118,7 +123,9 @@ public:
   void float2Destination(double timePeriod);
   //! motor binds to microtubule and walks and is driven by Brownian motion when unbound to microtubule, returning propagation time
   void move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts);
-
+  //! display all the volume surfaces recognizing the motor
+  void displayVolSurfaces();
+  
   /*
    * Methods related to motor time
    */    

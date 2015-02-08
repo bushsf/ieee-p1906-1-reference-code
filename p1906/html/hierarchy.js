@@ -1,6 +1,5 @@
 var hierarchy =
 [
-    [ "ns3::P1906MOL_ExtendedMotion::boundingbox_t", "structns3_1_1_p1906_m_o_l___extended_motion_1_1boundingbox__t.html", null ],
     [ "Channel", null, [
       [ "ns3::P1906Medium", "classns3_1_1_p1906_medium.html", null ]
     ] ],
@@ -17,7 +16,8 @@ var hierarchy =
         [ "ns3::P1906MOLField", "classns3_1_1_p1906_m_o_l_field.html", [
           [ "ns3::P1906MOL_ExtendedField", "classns3_1_1_p1906_m_o_l___extended_field.html", [
             [ "ns3::P1906MOL_MicrotubulesField", "classns3_1_1_p1906_m_o_l___microtubules_field.html", null ],
-            [ "ns3::P1906MOL_Tube", "classns3_1_1_p1906_m_o_l___tube.html", null ]
+            [ "ns3::P1906MOL_Tube", "classns3_1_1_p1906_m_o_l___tube.html", null ],
+            [ "ns3::P1906MOL_VolSurface", "classns3_1_1_p1906_m_o_l___vol_surface.html", null ]
           ] ]
         ] ]
       ] ],

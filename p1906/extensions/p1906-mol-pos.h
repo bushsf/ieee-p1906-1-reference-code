@@ -49,7 +49,7 @@ using namespace std;
 namespace ns3 {
 
 /**
- * \ingroup P1906 framework
+ * \ingroup IEEE P1906 framework
  *
  * \class P1906MOL_Pos
  *
@@ -92,6 +92,9 @@ public:
   void getPos (double * x, double * y, double * z);
   //! retrieve the position into out_pos vector [x y z]
   void getPos (gsl_vector * out_pos);
+  
+  //! shift point by a scaled vector: new_pos = pos + d v_in
+  void shiftPos (P1906MOL_Pos v_in, double d);
   
   /*
    * Methods related to displaying position

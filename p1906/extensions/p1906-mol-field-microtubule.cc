@@ -25,9 +25,10 @@
  *                      http://www.amazon.com/author/stephenbush
  */
  
-//! \details 1906 Component map to the molecular motor instantiation
+//! \details IEEE 1906 Component map to the molecular motor instantiation
+//!
 //! <pre>
-//!  1906 Component             Molecular Motor 
+//!  IEEE 1906 Component        Molecular Motor 
 //!                              Instantiation
 //! +----------------------+-----------------------+
 //! |                      |                       |
@@ -85,6 +86,7 @@
 #include "ns3/p1906-mol-metrics.h"
 #include "ns3/p1906-mol-motor.h"
 #include "ns3/p1906-mol-tube.h"
+#include "ns3/p1906-mol-vol-surface.h"
 
 namespace ns3 {
 
@@ -113,14 +115,8 @@ TypeId P1906MOL_MicrotubulesField::GetTypeId (void)
   
   Next steps:
 	  \todo move this main code into the microtubules-example.cc
-	  \todo implement Brownian motion only versus with microtubules as example: need start/end locations and to compute transit time
-	  \todo implement metrics or add stubs
-	  \todo document code and check into https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/
-	  \todo include whether the member should be in a different class, e.g. Motion
-	  \todo gradient is the vector field as defined above at any point on a tube: length could be scaled to motor movement rate
 	  \todo consider implementing Random Markov Field (RMF) for analysis of motor motion
 	  \todo curve fit to tube segments to obtain vector field equation (vector field reconstruction) is currently done in separate Mathematica code
-	  \todo implement active network programmability metric: \f$A = \int_S \int_t \Delta f(t) dt dS\f$
 	  \todo relate structural entropy to energy, force, and chemical complexity
 	  \todo add convection-diffusion using vector field lines
 	  \todo could grow tubes from alternating ends so that starting point is in the center
@@ -174,6 +170,9 @@ P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField ()
 
   //! test the plotting the vector field
   unitTest_VectorField();
+  
+  //! test the volume surface flux measurement
+  unitTest_VolSurface();
 
   vector<P1906MOL_Pos> pts;
   //! test the movement of a motor floating to a tube and walking along the tube
@@ -186,7 +185,13 @@ P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField ()
   unitTest_NoTubeMotion();
   
   //! test motor movement to destination using Brownian motion or microtubules if available
-  //unitTest_MotorMove2Destination(pts);
+  unitTest_MotorMove2Destination(pts);
+  
+  //! test the reflective barrier volume surface
+  unitTest_ReflectiveBarrier();
+  
+  //! test the FluxMeter
+  bool unitTest_FluxMeter();
   
   //! test persistence length versus entropy plot - NB: this test changes the tubeMatrix
   unitTest_PersistenceLengthsVsEntropy();
@@ -277,6 +282,223 @@ void P1906MOL_MicrotubulesField::genTubes(struct tubeCharacteristcs_t * ts)
   }
   
   ts->se = total_structural_entropy;
+}
+
+//! \todo test the volume surface as a flux meter and later as a compartmentalization volume
+bool P1906MOL_MicrotubulesField::unitTest_VolSurface()
+{
+  P1906MOL_MathematicaHelper mathematica;
+  P1906MOL_Pos c;
+  c.setPos (0, 0, 0);
+  P1906MOL_VolSurface vs;
+  vector<P1906MOL_Pos> ipt;
+  gsl_vector * segment = gsl_vector_alloc (6);
+  gsl_vector * radius = gsl_vector_alloc (6);
+  gsl_matrix * vectors = gsl_matrix_alloc (3, 6);
+  double flux;
+  
+  vs.setVolume (c, 100);
+  
+  // test tube input/output rates relative to the volume surface
+  printf ("beginning unitTest_VolSurface\n");
+  
+  //! segment start point
+  gsl_vector_set (segment, 0, 90);
+  gsl_vector_set (segment, 1, 90);
+  gsl_vector_set (segment, 2, 90);
+  
+  //! segment end point
+  gsl_vector_set (segment, 3, 110);
+  gsl_vector_set (segment, 4, 110);
+  gsl_vector_set (segment, 5, 110);
+  
+  vs.sphereIntersections(segment, ipt);
+  
+  //! draw the volume surface
+  mathematica.volSurfacePlot(vs.center, vs.radius, "volsurface.mma");
+  
+  for (size_t i = 0; i < ipt.size(); i++)
+  {
+    printf ("(unitTest_VolSurface) intersecting point(s):\n");
+	ipt.at(i).displayPos();
+  }
+  
+  //! plot the intersection points with the volume
+  mathematica.points2Mma(ipt, "volsurfintersections.mma");
+  
+  //! find the vector angle with the sphere surface: 
+  //!   compare intersecting segment with sphere radius to determine angle
+  
+  //! radius start point is the same as the intersecting tube segment start point
+  gsl_vector_set (radius, 0, 90);
+  gsl_vector_set (radius, 1, 90);
+  gsl_vector_set (radius, 2, 90);
+  
+  //! radius end point is at the center of the sphere
+  gsl_vector_set (radius, 3, 0);
+  gsl_vector_set (radius, 4, 0);
+  gsl_vector_set (radius, 5, 0);
+  
+  double angle = vs.vectorAngle(segment, radius);
+  printf ("(unitTest_VolSurface) angle: %lf\n", angle);
+	
+  insertVector(vectors, 0, segment);
+  insertVector(vectors, 1, radius);
+  
+  mathematica.vectorPlotMma (vectors, "volsurfvector.mma");
+  
+  P1906MOL_Pos last_pos;
+  P1906MOL_Pos current_pos;
+  
+  /*
+   * reflection 1
+   */
+  
+  last_pos.setPos (40, 40, 40);
+  printf ("(unitTest_VolSurface) last_pos\n");
+  last_pos.displayPos ();
+  current_pos.setPos (110, 110, 110);
+  printf ("(unitTest_VolSurface) current_pos\n");
+  current_pos.displayPos ();
+  
+  line (segment, last_pos, current_pos);
+  vs.sphereIntersections(segment, ipt);
+  vs.getRadiusLine(radius, ipt.front()); //! assuming at least one intersection returned
+  line (segment, ipt.front(), current_pos);
+  
+  insertVector(vectors, 0, segment);
+  insertVector(vectors, 1, radius);
+  line (segment, last_pos, ipt.front());
+  insertVector(vectors, 2, segment);
+  
+  mathematica.vectorPlotMma (vectors, "volsurfvector1beforereflection.mma");
+  
+  vs.reflect(last_pos, current_pos);
+  printf ("(unitTest_VolSurface) new current_pos\n");
+  current_pos.displayPos ();
+  
+  //! update the reflected segment to display
+  line (segment, ipt.front(), current_pos);
+  insertVector(vectors, 0, segment);
+  insertVector(vectors, 1, radius);
+  line (segment, last_pos, ipt.front());
+  insertVector(vectors, 2, segment);
+  
+  mathematica.vectorPlotMma (vectors, "volsurfvector1afterreflection.mma");
+  
+  /*
+   * reflection 2
+   */
+  
+  last_pos.setPos (20, 40, 20);
+  printf ("(unitTest_VolSurface) last_pos\n");
+  last_pos.displayPos ();
+  current_pos.setPos (120, 90, 90);
+  printf ("(unitTest_VolSurface) current_pos\n");
+  current_pos.displayPos ();
+
+  line (segment, last_pos, current_pos);
+  vs.sphereIntersections(segment, ipt);
+  vs.getRadiusLine(radius, ipt.front()); //! assuming at least one intersection returned
+  line (segment, ipt.front(), current_pos);
+  
+  insertVector(vectors, 0, segment);
+  insertVector(vectors, 1, radius);
+  line (segment, last_pos, ipt.front());
+  insertVector(vectors, 2, segment);
+  
+  mathematica.vectorPlotMma (vectors, "volsurfvector2beforereflection.mma");
+  
+  vs.reflect(last_pos, current_pos);
+  printf ("(unitTest_VolSurface) new current_pos\n");
+  current_pos.displayPos ();
+  
+  //! update the reflected segment to display
+  line (segment, ipt.front(), current_pos);
+  insertVector(vectors, 0, segment);
+  
+  line (segment, last_pos, current_pos);
+  insertVector(vectors, 1, radius);
+  line (segment, last_pos, ipt.front());
+  insertVector(vectors, 2, segment);
+  
+  mathematica.vectorPlotMma (vectors, "volsurfvector2afterreflection.mma");
+  
+  //! measure flow through surface
+  flux = vs.fluxMeter(tubeMatrix);
+  printf ("(unitTest_VolSurface) flux: %lf\n", flux);
+  
+  printf ("completed unitTest_VolSurface\n");
+  
+  return true;
+}
+
+//! test the volume surface as a compartmentalization volume
+bool P1906MOL_MicrotubulesField::unitTest_ReflectiveBarrier()
+{
+  P1906MOL_Motor motor;
+  P1906MOL_MathematicaHelper mathematica;
+  gsl_vector * startPt = gsl_vector_alloc (3);
+  double timePeriod = 100;
+  P1906MOL_Pos volCenter;
+
+  printf ("beginning unitTest_ReflectiveBarrier\n");
+  //! start at zero
+  point (startPt, 0, 0, 0);
+  volCenter.setPos (0, 0, 0);
+  
+  //! \todo if the ReflectiveBarrier does include the Receiver destination volume, then motion will continue forever
+  motor.addVolumeSurface (volCenter, 1500.0, P1906MOL_VolSurface::ReflectiveBarrier);
+  
+  //! reset the motor's timer
+  motor.initTime();
+    
+  //! volume surface must overlap with destination in order for the test to end
+  motor.displayVolSurfaces();  
+  /*
+   * move randomly until destination reached
+   */
+  motor.setStartingPoint(startPt);
+  motor.float2Destination(timePeriod);
+  //printf ("(unitTest_MotorMovement) propagation time: %f\n", motor.getTime());
+  mathematica.connectedPoints2Mma(motor.pos_history, "float2destination.mma");
+  printf ("completed unitTest_ReflectiveBarrier\n");
+  
+  return true;
+}
+
+//! test the FluxMeter
+bool P1906MOL_MicrotubulesField::unitTest_FluxMeter()
+{
+  P1906MOL_Motor motor;
+  P1906MOL_MathematicaHelper mathematica;
+  gsl_vector * startPt = gsl_vector_alloc (3);
+  double timePeriod = 100;
+  P1906MOL_Pos volCenter;
+
+  printf ("beginning unitTest_ReflectiveBarrier\n");
+  //! start at zero
+  point (startPt, 0, 0, 0);
+  volCenter.setPos (0, 0, 0);
+  
+  //! add a FluxMeter surface volume
+  motor.addVolumeSurface (volCenter, 1500.0, P1906MOL_VolSurface::FluxMeter);
+  
+  //! reset the motor's timer
+  motor.initTime();
+    
+  //! volume surface must overlap with destination in order for the test to end
+  motor.displayVolSurfaces();  
+  /*
+   * move randomly until destination reached
+   */
+  motor.setStartingPoint(startPt);
+  motor.float2Destination(timePeriod);
+  //printf ("(unitTest_MotorMovement) propagation time: %f\n", motor.getTime());
+  mathematica.connectedPoints2Mma(motor.pos_history, "float2destination.mma");
+  printf ("completed unitTest_ReflectiveBarrier\n");
+  
+  return true;
 }
 
 //! test distance calculation
@@ -375,8 +597,6 @@ bool P1906MOL_MicrotubulesField::unitTest_NoTubeMotion()
   P1906MOL_Motor motor;
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
-  gsl_vector * ll = gsl_vector_alloc (3);
-  gsl_vector * ur = gsl_vector_alloc (3);
   double timePeriod = 100;
 
   printf ("beginning unitTest_NoTubeMotion\n");
@@ -385,15 +605,13 @@ bool P1906MOL_MicrotubulesField::unitTest_NoTubeMotion()
   
   //! start at zero
   point (startPt, 0, 0, 0);
-  //! the corners of the destination volume
-  point (ll, 1000, 1000, 1000);
-  point (ur, 2000, 2000, 2000);
-
+  
+  //! volume surface must overlap with destination in order for the test to end
+  motor.displayVolSurfaces();  
   /*
    * move randomly until destination reached
    */
   motor.setStartingPoint(startPt);
-  motor.setDestinationVolume(ll, ur);
   motor.float2Destination(timePeriod);
   //printf ("(unitTest_MotorMovement) propagation time: %f\n", motor.getTime());
   mathematica.connectedPoints2Mma(motor.pos_history, "float2destination.mma");
@@ -422,7 +640,7 @@ bool P1906MOL_MicrotubulesField::unitTest_MotorMovement(vector<P1906MOL_Pos> & p
     gsl_matrix_get (tubeMatrix, 0, 0) + 30, //! start 10 nanometers away from the first tube segment
 	gsl_matrix_get (tubeMatrix, 0, 1),
 	gsl_matrix_get (tubeMatrix, 0, 2));
-  motor.float2Tube(r, startPt, motor.pos_history, tubeMatrix, 0.1);
+  motor.float2Tube(r, startPt, motor.pos_history, tubeMatrix, 0.1, motor.vsl);
   //printf ("completed float2Tube\n");
   //printf ("(unitTest_MotorMovement) float2Tube propagation time: %f\n", motor.getTime());
   //printf ("(unitTest_MotorMovement) float2Tube number of positions: %ld\n", motor.pos_history.size());
@@ -442,7 +660,7 @@ bool P1906MOL_MicrotubulesField::unitTest_MotorMovement(vector<P1906MOL_Pos> & p
    * now walk along the tube
    */
   motor.pos_history.clear();
-  motor.motorWalk(r, startPt, motor.pos_history, tubeMatrix, ts.segPerTube);
+  motor.motorWalk(r, startPt, motor.pos_history, tubeMatrix, ts.segPerTube, motor.vsl);
   //printf ("(unitTest_MotorMovement) motorWalk propagation time: %f\n", motor.getTime());
   printf ("(unitTest_MotorMovement) motorWalk number of positions: %ld\n", motor.pos_history.size());
   mathematica.connectedPoints2Mma(motor.pos_history, "motion2end_of_tube.mma");
@@ -454,7 +672,7 @@ bool P1906MOL_MicrotubulesField::unitTest_MotorMovement(vector<P1906MOL_Pos> & p
 }
 
 //! test plotting to a Mathematica file using plot2mma, creates plottest.mma
-bool P1906MOL_MicrotubulesField::unitTest_Plot2Mma(vector<P1906MOL_Pos> pts)
+bool P1906MOL_MicrotubulesField::unitTest_Plot2Mma(vector<P1906MOL_Pos> & pts)
 {
   P1906MOL_MathematicaHelper mathematica;
   P1906MOL_Pos Pos;
@@ -484,14 +702,12 @@ bool P1906MOL_MicrotubulesField::unitTest_Plot2Mma(vector<P1906MOL_Pos> pts)
   return true;
 }
 
-//! test motor movement to destination using Brownian and microtubules if if they exist
+//! test motor movement to destination using Brownian and microtubules if they exist
 bool P1906MOL_MicrotubulesField::unitTest_MotorMove2Destination(vector<P1906MOL_Pos> & pts)
 {
   P1906MOL_Motor motor;
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
-  gsl_vector * ll = gsl_vector_alloc (3);
-  gsl_vector * ur = gsl_vector_alloc (3);
   double timePeriod = 100;
 
   printf ("beginning unitTest_MotorMove2Destination\n");
@@ -500,13 +716,10 @@ bool P1906MOL_MicrotubulesField::unitTest_MotorMove2Destination(vector<P1906MOL_
   
   //! start at zero
   point (startPt, 0, 0, 0);
-  //! the opposite corners of the destination volume
-  point (ll, 1000, 1000, 1000);
-  point (ur, 2000, 2000, 2000);
 
   motor.pos_history.clear(); //! reset the position history
   motor.setStartingPoint(startPt);
-  motor.setDestinationVolume(ll, ur);
+
   motor.move2Destination(tubeMatrix, ts.segPerTube, timePeriod, motor.pos_history);
   //printf ("(unitTest_MotorMove2Destination) propagation time: %f\n", motor.getTime());
   mathematica.connectedPoints2Mma(motor.pos_history, "motion2destination.mma");

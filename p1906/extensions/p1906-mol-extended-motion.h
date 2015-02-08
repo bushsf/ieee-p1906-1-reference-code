@@ -47,11 +47,12 @@ using namespace std;
 #include "ns3/ptr.h"
 #include "ns3/p1906-mol-motion.h"
 #include "ns3/p1906-mol-pos.h"
+#include "ns3/p1906-mol-vol-surface.h"
 
 namespace ns3 {
 
 /**
- * \ingroup P1906 framework
+ * \ingroup IEEE P1906 framework
  *
  * \class P1906MOL_ExtendedMotion
  *
@@ -83,16 +84,6 @@ public:
     double time;
   } t;
   
-  //! defines the universe in which motion can take place: particles reflect from the walls of the bounding box
-  //! since the only free motion involved is brownianMotion, that is the only function that needs to handle the bounding box
-  struct boundingbox_t
-  {
-    //! lower left corner of 3D bounding box
-    P1906MOL_Pos lower_left;
-	//! upper right corner of 3D bounding box
-	P1906MOL_Pos upper_right;
-  } bb;
-  
   /*
    * Methods related to simulation time
    */
@@ -108,26 +99,18 @@ public:
    */ 
   //! print a single position
   void displayPos(gsl_vector * pts);
- 
-  /*
-   * Methods related to bounding motion
-   */
-  //! set the bounding box
-  void setBoundingBox(P1906MOL_Pos lower_left, P1906MOL_Pos upper_right);
-  //! check if position exceeds bounding box; if so, reflect the position back in (current_pos may change)
-  void checkBoundingBox(P1906MOL_Pos last_pos, P1906MOL_Pos & current_pos);
-   
+    
   /*
    * Methods related to motor motion
    */   
   //! newPos is Brownian motion from currentPos over timePeriod 
-  void brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod);
+  void brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod, vector<P1906MOL_VolSurface> & vsl);
   //! Brownian motion from startPt for length time in timePeriod units; results returned in pts
-  int freeFloat(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod);
+  int freeFloat(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod, vector<P1906MOL_VolSurface> & vsl);
   //! free float until intersection with any tube
-  size_t float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, double timePeriod);
+  size_t float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, double timePeriod,vector<P1906MOL_VolSurface> & vsl);
   //! walk along a specific tube identified by startPt and place result in pts
-  void motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube);
+  void motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube, vector<P1906MOL_VolSurface> & vsl);
   
   P1906MOL_ExtendedMotion ();
   virtual ~P1906MOL_ExtendedMotion ();

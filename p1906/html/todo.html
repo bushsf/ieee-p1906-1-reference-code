@@ -107,24 +107,20 @@ $(document).ready(function(){initNavTree('todo.html','');});
 <div class="textblock"><dl class="reflist">
 <dt><a class="anchor" id="_todo000003"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#aa9f1d9c278c3288874220f36f5a31a41">ns3::P1906MOL_ExtendedMotion::getTime</a>  ()</dt>
 <dd>return the propagation delay for a motor  </dd>
-<dt><a class="anchor" id="_todo000001"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#a2795ce8a3df759f8364b4c6e45d86963">ns3::P1906MOL_ExtendedMotion::motorWalk</a>  (gsl_rng *r, gsl_vector *startPt, vector&lt; P1906MOL_Pos &gt; &amp;pts, gsl_matrix *tubeMatrix, size_t segPerTube)</dt>
+<dt><a class="anchor" id="_todo000001"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___extended_motion.html#ab5b8da4d84827272164cc0e04b4b627b">ns3::P1906MOL_ExtendedMotion::motorWalk</a>  (gsl_rng *r, gsl_vector *startPt, vector&lt; P1906MOL_Pos &gt; &amp;pts, gsl_matrix *tubeMatrix, size_t segPerTube, vector&lt; P1906MOL_VolSurface &gt; &amp;vsl)</dt>
 <dd><p class="startdd">set realistic binding probability </p>
 <p class="enddd">set tube radius (thickness) globally  </p>
 </dd>
-<dt><a class="anchor" id="_todo000007"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a70142fee18c1a8657755bb69eeb9387a">ns3::P1906MOL_Metrics::Active_Network_Programmability</a>  (gsl_matrix *vf, gsl_vector *pt)</dt>
-<dd>consider using vector field and divergence to compute this value  </dd>
+<dt><a class="anchor" id="_todo000009"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___metrics.html#a70142fee18c1a8657755bb69eeb9387a">ns3::P1906MOL_Metrics::Active_Network_Programmability</a>  (gsl_matrix *vf, gsl_vector *pt)</dt>
+<dd><p class="startdd">consider using vector field and divergence to compute this value </p>
+<p class="enddd">see double <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a8bb268eda92a459c54220edfd75504ca" title="compute the flux through the sphere ">P1906MOL_VolSurface::fluxMeter(gsl_matrix * tubeMatrix)</a> to obtain the data.  </p>
+</dd>
 <dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a4441a9a76bf2b447db42758ff9656821">ns3::P1906MOL_MicrotubulesField::genTubes</a>  (struct tubeCharacteristcs_t *ts)</dt>
 <dd>get actual tube graph properties from biologist  </dd>
 <dt><a class="anchor" id="_todo000004"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a87fa96b57cd67925fe91d2d3eb1cd8ec">ns3::P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField</a>  ()</dt>
 <dd><p class="startdd">move this main code into the <a class="el" href="microtubules-example_8cc_source.html">microtubules-example.cc</a> </p>
-<p>implement Brownian motion only versus with microtubules as example: need start/end locations and to compute transit time </p>
-<p>implement metrics or add stubs </p>
-<p>document code and check into <a href="https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/">https://code.google.com/p/ieee-p1906-1-reference-code/source/browse/</a> </p>
-<p>include whether the member should be in a different class, e.g. Motion </p>
-<p>gradient is the vector field as defined above at any point on a tube: length could be scaled to motor movement rate </p>
 <p>consider implementing Random Markov Field (RMF) for analysis of motor motion </p>
 <p>curve fit to tube segments to obtain vector field equation (vector field reconstruction) is currently done in separate Mathematica code </p>
-<p>implement active network programmability metric: <img class="formulaInl" alt="$A = \int_S \int_t \Delta f(t) dt dS$" src="form_0.png"/> </p>
 <p>relate structural entropy to energy, force, and chemical complexity </p>
 <p>add convection-diffusion using vector field lines </p>
 <p>could grow tubes from alternating ends so that starting point is in the center </p>
@@ -135,21 +131,25 @@ $(document).ready(function(){initNavTree('todo.html','');});
 <p>plot distance travelled versus delay, structural entropy, etc. </p>
 <p class="enddd">plot motor starting in random location versus time to reach destination as function of tube structure  </p>
 </dd>
-<dt><a class="anchor" id="_todo000008"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___motor.html#a01c70eac778c4a60c3be5240ce1c27a0">ns3::P1906MOL_Motor::move2Destination</a>  (gsl_matrix *tubeMatrix, size_t segPerTube, double timePeriod, vector&lt; P1906MOL_Pos &gt; &amp;pts)</dt>
-<dd>consider a bounding box (defined in extended Motion) around the system in which motors are reflected back into the medium  </dd>
-<dt><a class="anchor" id="_todo000009"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a2c1a7f0b20e7b24b834def6f6cf28c68">ns3::P1906MOL_Tube::genTube</a>  (struct tubeCharacteristcs_t *ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)</dt>
+<dt><a class="anchor" id="_todo000008"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a1f18a5da93a8655b7a244bbbff1eb57e">ns3::P1906MOL_MicrotubulesField::unitTest_ReflectiveBarrier</a>  ()</dt>
+<dd>if the ReflectiveBarrier does include the Receiver destination volume, then motion will continue forever  </dd>
+<dt><a class="anchor" id="_todo000007"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___microtubules_field.html#a44dbe7e82549659dcc7ad39cffe484c1">ns3::P1906MOL_MicrotubulesField::unitTest_VolSurface</a>  ()</dt>
+<dd>test the volume surface as a flux meter and later as a compartmentalization volume  </dd>
+<dt><a class="anchor" id="_todo000010"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#a2c1a7f0b20e7b24b834def6f6cf28c68">ns3::P1906MOL_Tube::genTube</a>  (struct tubeCharacteristcs_t *ts, gsl_rng *r, gsl_matrix *segMatrix, gsl_vector *startPt)</dt>
 <dd>randomize initial tube orientations  </dd>
-<dt><a class="anchor" id="_todo000010"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#aab4297dd4d20db71bec0315421f3cf74">ns3::P1906MOL_Tube::getPersistenceLength</a>  ()</dt>
+<dt><a class="anchor" id="_todo000011"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#aab4297dd4d20db71bec0315421f3cf74">ns3::P1906MOL_Tube::getPersistenceLength</a>  ()</dt>
 <dd>never implemented; may not be needed  </dd>
-<dt><a class="anchor" id="_todo000011"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#ac7f5633037ff404639e526d819eec9c8">ns3::P1906MOL_Tube::startPt</a>  </dt>
-<dd>get actual tube graph properties from a biologist </dd>
+<dt><a class="anchor" id="_todo000012"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___tube.html#ac7f5633037ff404639e526d819eec9c8">ns3::P1906MOL_Tube::startPt</a>  </dt>
+<dd>get actual tube graph properties from a biologist  </dd>
+<dt><a class="anchor" id="_todo000013"></a>Member <a class="el" href="classns3_1_1_p1906_m_o_l___vol_surface.html#a8bb268eda92a459c54220edfd75504ca">ns3::P1906MOL_VolSurface::fluxMeter</a>  (gsl_matrix *tubeMatrix)</dt>
+<dd>incorporate direction and motor rate along tube </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jan 29 2015 21:33:30 for IEEE-Std-1906 by
+    <li class="footer">Generated on Sat Feb 7 2015 20:32:27 for IEEE-Std-1906 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9 </li>
   </ul>

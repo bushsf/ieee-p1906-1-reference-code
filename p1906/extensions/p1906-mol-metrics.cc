@@ -25,7 +25,8 @@
  *                      http://www.amazon.com/author/stephenbush
  */
  
-/* \details
+/* \details This class implement the IEEE 1906.1 metrics
+ *
  * <pre>
  * Metrics class monitors components, computes metrics, and exports results
  *                                               +----------------+    
@@ -256,6 +257,7 @@ void P1906MOL_Metrics::Delay_Spectrum()
 //! Field component, for example Persistence Length. The units of the function shall be stated along with the value of the 
 //! Active Network Programmability.
 //! \todo consider using vector field and divergence to compute this value
+//! \todo see double P1906MOL_VolSurface::fluxMeter(gsl_matrix * tubeMatrix) to obtain the data.
 void P1906MOL_Metrics::Active_Network_Programmability(gsl_matrix * vf, gsl_vector * pt)
 {
   //! sum the vector input and output to point pt

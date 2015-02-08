@@ -26,8 +26,8 @@
  */
 
 
-#ifndef P1906_MOL_TUBE
-#define P1906_MOL_TUBE
+#ifndef P1906_MOL_VOLSURFACE
+#define P1906_MOL_VOLSURFACE
 
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_rng.h>
@@ -52,9 +52,9 @@ namespace ns3 {
 /**
  * \ingroup IEEE P1906 framework
  *
- * \class P1906MOL_Tube
+ * \class P1906MOL_VolSurface
  *
- * \brief Class implementing a generic nanotube structure
+ * \brief Class implementing a volume surface
  *
  * This class implements persistence length as described in:
  *	  Bush, S. F., & Goel, S. (2013). Persistence Length as a Metric for Modeling and 
@@ -70,7 +70,7 @@ namespace ns3 {
  *  All random number are derived from gsl_rng *.
  */
 
-class P1906MOL_Tube : public P1906MOL_ExtendedField
+class P1906MOL_VolSurface : public P1906MOL_ExtendedField
 {
 public:
   static TypeId GetTypeId (void);
@@ -79,40 +79,67 @@ public:
   const gsl_rng_type * T;
   gsl_rng * r;
   
-  //! the tube starting point
-  //! \todo get actual tube graph properties from a biologist
-  gsl_vector * startPt;
-  //! hold the values for a tube comprised of many segments: x_start y_start x_start x_end y_end z_end
-  gsl_matrix * segMatrix;
-
-  /*
-   * Methods related to creating a tube
-   */  
-  //! the constructor build a tube determined by tubeCharacteristcs_t
-  P1906MOL_Tube (struct tubeCharacteristcs_t * ts, gsl_vector * startPt);
-  //! return the microtubule in segMatrix of a given persistence length starting at position startPt and its structural entropy in se
-  int genTube(struct tubeCharacteristcs_t * ts, gsl_rng * r, gsl_matrix * segMatrix, gsl_vector * startPt);
-
-  /*
-   * Methods related to the tube's persistence length
-   */
-  //! generate tube structure with a given segment and persistence length
-  double genPersistenceLength(gsl_rng * r, gsl_matrix * segAngle, double segLength, double persistenceLength); 
-  //! compute the persistence length of a set of segments
-  double getPersistenceLength();
+  //! define the volume surface assuming a sphere for now
+  P1906MOL_Pos center; //! the center point of the sphere
+  double radius; //! the radius of the sphere
+  
+  //! FluxMeter - measure flux through the volume surface
+  //! ReflectiveBarrier - act as reflective bounding surface
+  //! Receiver - act as a motor destination volume
+  enum typeOfVolume { FluxMeter, ReflectiveBarrier, Receiver };
+  typeOfVolume volType;
   
   /*
-   * Methods related to accessing and displaying a tube
+   * Methods related to creating the volume surface
    */  
-  //! return the segMatrix, which is comprised of the tube segment end points
-  void getSegmatrix(gsl_matrix * sm);  
-  //! simply print the end points of each segment of a tube
-  void displayTube();
-     
-  virtual ~P1906MOL_Tube ();
+  //! the constructor to build a sphere surface
+  P1906MOL_VolSurface ();
+  //! set enum FluxMeter, ReflectiveBarrier, Receiver
+  void setType (typeOfVolume st);
+  //! return enum FluxMeter, ReflectiveBarrier, Receiver
+  typeOfVolume getType ();
+  //! set the location and size of the volume sphere
+  void setVolume(P1906MOL_Pos v_center, double v_radius);
+  
+  /*
+   * Methods related to accessing and displaying a volume surface
+   */  
+  //! simply print the center and radius of the sphere
+  void displayVolSurface();
+  
+  /*
+   * Methods related to querying location relative to volume
+   */
+  //! return true if the point is inside the volume surface
+  bool isInsideVolSurf(P1906MOL_Pos pt);
+  //! return the angle between two vectors
+  double vectorAngle(gsl_vector * seg1, gsl_vector * seg2);
+  //! return radius line segment from center to a point on the surface
+  //! v_radius must be allocated for a line segment
+  void getRadiusLine(gsl_vector * v_radius, P1906MOL_Pos pt);
+  
+  /*
+   * Methods related to intersection with and reflection from the volume surface
+   */
+  //! reflect a particle from the surface given the last and current positions
+  //! adjust the current position given a reflection
+  void reflect(P1906MOL_Pos last_pos, P1906MOL_Pos & current_pos);
+  //! find the intersecting point(s) ipt that intersect the sphere:
+  //! (1) if no intersection, then ipt has zero values
+  //! (2) if one intersection, then ipt has one intersection point
+  //! (3) if two intersections, then ipt has two intersection points
+  void sphereIntersections(gsl_vector * segment, vector<P1906MOL_Pos> & ipt);
+  
+  /*
+   * Methods related to flow through the volume surface
+   */ 
+  //! compute the flux through the sphere
+  double fluxMeter(gsl_matrix * tubeMatrix);
+
+  virtual ~P1906MOL_VolSurface ();
 
 };
 
 }
 
-#endif /* P1906_MOL_TUBE */
+#endif /* P1906_MOL_VOLSURFACE */

@@ -25,7 +25,8 @@
  *                      http://www.amazon.com/author/stephenbush
  */
 
-/* \details
+/* \details This class implements location related methods
+ *
  * <pre>
  * Currently very simple:
  * +--------------------+
@@ -100,6 +101,19 @@ void P1906MOL_Pos::getPos (double * x, double * y, double * z)
   *x = gsl_vector_get (pos, 0);
   *y = gsl_vector_get (pos, 1);
   *z = gsl_vector_get (pos, 2);
+}
+
+//! shift point by a scaled vector: new_pos = pos + d v_in
+void P1906MOL_Pos::shiftPos (P1906MOL_Pos v_in, double d)
+{
+  gsl_vector * v = gsl_vector_alloc (3);
+  
+  //! get the vector
+  v_in.getPos (v);
+  
+  //! update pos to pos + d v
+  for (size_t i = 0; i< 3; i++)
+    gsl_vector_set (pos, i, gsl_vector_get(pos, i) + (gsl_vector_get (v, i) * d));
 }
 
 //! print the position

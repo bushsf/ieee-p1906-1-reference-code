@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['_7ep1906mol_5fmicrotubulesfield',['~P1906MOL_MicrotubulesField',['../classns3_1_1_p1906_m_o_l___microtubules_field.html#afde681019f71218b65391c1accdfde07',1,'ns3::P1906MOL_MicrotubulesField']]],
-  ['_7ep1906mol_5fmotor',['~P1906MOL_Motor',['../classns3_1_1_p1906_m_o_l___motor.html#a6765361199ee8e07e0a5e42106dc13c5',1,'ns3::P1906MOL_Motor']]],
-  ['_7ep1906mol_5ftube',['~P1906MOL_Tube',['../classns3_1_1_p1906_m_o_l___tube.html#a365c7081336e3eeb650603f17f8bfe7c',1,'ns3::P1906MOL_Tube']]],
-  ['_7ep1906netdevice',['~P1906NetDevice',['../classns3_1_1_p1906_net_device.html#a3e14990700f728992d7b553e116f5daa',1,'ns3::P1906NetDevice']]]
+  ['vectorangle',['vectorAngle',['../classns3_1_1_p1906_m_o_l___vol_surface.html#aeafafb2add48cba63e5685403b36470f',1,'ns3::P1906MOL_VolSurface']]],
+  ['vectorfieldmeshmatlab',['vectorFieldMeshMATLAB',['../classns3_1_1_p1906_m_o_l___m_a_t_l_a_b_helper.html#a66430df558e767df1990a6c859eb6d56',1,'ns3::P1906MOL_MATLABHelper']]],
+  ['vectorfieldmeshmma',['vectorFieldMeshMma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#a8d8b70c6c92c9d634e7a842f8b9349f2',1,'ns3::P1906MOL_MathematicaHelper']]],
+  ['vectorfieldplotmatlab',['vectorFieldPlotMATLAB',['../classns3_1_1_p1906_m_o_l___m_a_t_l_a_b_helper.html#a51f0550a7ff681695a30cef28a85875e',1,'ns3::P1906MOL_MATLABHelper']]],
+  ['vectorfieldplotmma',['vectorFieldPlotMma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#a05466f91442cda1dcb7f5f3a46e67db5',1,'ns3::P1906MOL_MathematicaHelper']]],
+  ['vectorplotmma',['vectorPlotMma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#aa24eb4adab76ec8d34db3a0e33446972',1,'ns3::P1906MOL_MathematicaHelper']]],
+  ['volsurfaceplot',['volSurfacePlot',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#aba6ec55b2996685781ab42f9c32f7e6b',1,'ns3::P1906MOL_MathematicaHelper']]]
 ];

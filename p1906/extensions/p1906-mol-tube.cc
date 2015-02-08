@@ -25,7 +25,8 @@
  *                      http://www.amazon.com/author/stephenbush
  */
  
- /* \details
+ /* \details This class implements creation of a single tube
+  *
   * <pre>
   * RADIUS      SEGMENT                                                     
   *      +    <---------->                               
@@ -39,7 +40,7 @@
   *                                                      
   *                                                      
   *            <-------------------------------->        
-  *                      MICROTUBULE
+  *              MICROTUBULE OR CARBON NANOTUBE
   * </pre>
   */
 
@@ -60,6 +61,7 @@ TypeId P1906MOL_Tube::GetTypeId (void)
   return tid;
 }
 
+//! the constructor creates the tube
 P1906MOL_Tube::P1906MOL_Tube (struct tubeCharacteristcs_t * ts, gsl_vector * startPt)
 {
   /** This class implements persistence length as described in:
@@ -80,7 +82,7 @@ P1906MOL_Tube::P1906MOL_Tube (struct tubeCharacteristcs_t * ts, gsl_vector * sta
   T = gsl_rng_default;
   r = gsl_rng_alloc (T);  
   gsl_rng_env_setup();
-  gsl_rng_set (r, clock());
+  gsl_rng_set (r, rand());
   
   //! hold the values for a tube comprised of many segments: x_start y_start x_start x_end y_end z_end
   segMatrix = gsl_matrix_alloc (ts->segPerTube, 6);
