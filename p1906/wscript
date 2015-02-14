@@ -42,7 +42,11 @@ def build(bld):
 		'extensions/p1906-mol-motor.cc',
 		'extensions/p1906-mol-tube.cc',
 		'extensions/p1906-mol-vol-surface.cc',
-		'extensions/p1906-mol-pos.cc'
+		'extensions/p1906-mol-pos.cc',
+		'extensions/p1906-mol-extended-perturbation.cc',
+		'extensions/p1906-mol-extended-communication-interface.cc',
+    	'extensions/p1906-mol-extended-transmitter-communication-interface.cc',
+    	'extensions/p1906-mol-extended-receiver-communication-interface.cc'
     	]
 
     module_test = bld.create_ns3_module_test_library('p1906')
@@ -90,7 +94,13 @@ def build(bld):
 		'extensions/p1906-mol-motor.h',
 		'extensions/p1906-mol-tube.h',
 		'extensions/p1906-mol-vol-surface.h',
-		'extensions/p1906-mol-pos.h'
+		'extensions/p1906-mol-pos.h',
+		'extensions/p1906-mol-extended-perturbation.h',
+		'extensions/p1906-mol-extended-communication-interface.h',
+    	'extensions/p1906-mol-extended-transmitter-communication-interface.h',
+    	'extensions/p1906-mol-extended-receiver-communication-interface.h',
+		
+		'extensions/tube-characteristics.h'
     	]
 
     if (bld.env['ENABLE_EXAMPLES']):

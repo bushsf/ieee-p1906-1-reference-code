@@ -14,5 +14,5 @@ var searchData=
   ['unittest_5freflectivebarrier',['unitTest_ReflectiveBarrier',['../classns3_1_1_p1906_m_o_l___microtubules_field.html#a1f18a5da93a8655b7a244bbbff1eb57e',1,'ns3::P1906MOL_MicrotubulesField']]],
   ['unittest_5fvectorfield',['unitTest_VectorField',['../classns3_1_1_p1906_m_o_l___microtubules_field.html#a150ff45da72a236508fafccc23d6fff9',1,'ns3::P1906MOL_MicrotubulesField']]],
   ['unittest_5fvolsurface',['unitTest_VolSurface',['../classns3_1_1_p1906_m_o_l___microtubules_field.html#a44dbe7e82549659dcc7ad39cffe484c1',1,'ns3::P1906MOL_MicrotubulesField']]],
-  ['updatetime',['updateTime',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a0fe81a9e965bfbb931371974fb224579',1,'ns3::P1906MOL_ExtendedMotion']]]
+  ['updatetime',['updateTime',['../classns3_1_1_p1906_m_o_l___motor.html#ab97063c8cfbf7ff7ea18f15ec3fa6fa1',1,'ns3::P1906MOL_Motor']]]
 ];

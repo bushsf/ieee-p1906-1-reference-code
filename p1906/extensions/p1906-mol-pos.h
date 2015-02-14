@@ -93,9 +93,12 @@ public:
   //! retrieve the position into out_pos vector [x y z]
   void getPos (gsl_vector * out_pos);
   
+  /*
+   * Operations on position
+   */  
   //! shift point by a scaled vector: new_pos = pos + d v_in
   void shiftPos (P1906MOL_Pos v_in, double d);
-  
+ 
   /*
    * Methods related to displaying position
    */

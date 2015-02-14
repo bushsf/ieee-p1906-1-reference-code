@@ -99,7 +99,10 @@ void P1906MOL_VolSurface::displayVolSurface()
 //! define the volume location and size, in other words, the sphere center and radius
 void P1906MOL_VolSurface::setVolume(P1906MOL_Pos v_center, double v_radius)
 {
-  center = v_center;
+  double x, y, z;
+  
+  v_center.getPos (&x, &y, &z);
+  center.setPos (x, y, z);
   radius = v_radius;
 }
 

@@ -53,8 +53,7 @@ P1906Medium::GetTypeId ()
 {
   static TypeId tid = TypeId ("ns3::P1906Medium")
     .SetParent<Channel> ()
-    .AddConstructor<P1906Medium> ()
-  ;
+    .AddConstructor<P1906Medium> ();
 
   return tid;
 }

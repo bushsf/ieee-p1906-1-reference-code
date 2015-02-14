@@ -75,7 +75,7 @@ namespace ns3 {
  *  All random number are derived from gsl_rng *.
  */
 
-class P1906MOL_Motor : public P1906MOL_ExtendedMotion, public P1906MOLMessageCarrier
+class P1906MOL_Motor : public P1906MOLMessageCarrier
 {
 public:
   static TypeId GetTypeId (void);
@@ -85,6 +85,25 @@ public:
 
   //! a record of the position of the motor throughout its lifetime
   vector<P1906MOL_Pos> pos_history;
+  
+  //! simulated time structure anticipating other fields that may be required for time management
+  struct simtime_t
+  {
+    //! simulated time
+    double time;
+  } t;
+  
+  /*
+   * Methods related to simulation time
+   */
+  //! \todo return the propagation delay for a motor
+  double getTime();  
+  //! reset the simulation time
+  void initTime();
+  //! update the simulation given an event duration
+  void updateTime(double event_time);
+  //! return the elapsed time since the motor was created
+  double propagationDelay();
 
   //! randomness for the motor  
   const gsl_rng_type * T;
@@ -94,15 +113,14 @@ public:
   vector<P1906MOL_VolSurface> vsl;
   
   P1906MOL_Motor ();
-  
+
+  /*
+   * Methods related to volume surfaces
+   */  
   //! create and store a new volume surface
   void addVolumeSurface(P1906MOL_Pos v_c, double v_radius, P1906MOL_VolSurface::typeOfVolume v_type);
-  
-  /*
-   * Methods related to motor start and destination locations
-   */
-  //! this is where the motor starts, for example, location of the transmitter
-  void setStartingPoint(gsl_vector * pt);
+  //! display all the volume surfaces recognizing the motor
+  void displayVolSurfaces();
   
   /*
    * Methods related to motor positioning and tracking
@@ -115,22 +133,8 @@ public:
   void setLocation(double x, double y, double z);
   //! return true if motor is in the destination volume, false otherwise
   bool inDestination();
-  
-  /*
-   * Methods related to motor motion
-   */  
-  //! motor is driven be Brownian motion until the destination is reached, returning the propagation time
-  void float2Destination(double timePeriod);
-  //! motor binds to microtubule and walks and is driven by Brownian motion when unbound to microtubule, returning propagation time
-  void move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts);
-  //! display all the volume surfaces recognizing the motor
-  void displayVolSurfaces();
-  
-  /*
-   * Methods related to motor time
-   */    
-  //! return the elapsed time since the motor was created
-  double propagationDelay();
+  //! this is where the motor starts, for example, location of the transmitter
+  void setStartingPoint(gsl_vector * pt);
   
   virtual ~P1906MOL_Motor ();
 

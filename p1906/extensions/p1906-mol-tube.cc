@@ -50,6 +50,8 @@
 #include "ns3/p1906-mol-extended-field.h"
 #include "ns3/p1906-mol-tube.h"
 
+#include "ns3/tube-characteristics.h"
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("P1906MOL_Tube");
@@ -238,9 +240,6 @@ void P1906MOL_Tube::displayTube()
 
 P1906MOL_Tube::~P1906MOL_Tube ()
 {
-  //! close down field activity
-  gsl_rng_free (r);
-  
   NS_LOG_FUNCTION (this);
 }
 

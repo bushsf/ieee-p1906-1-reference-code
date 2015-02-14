@@ -8,8 +8,8 @@ var searchData=
   ['displaypoints',['displayPoints',['../classns3_1_1_p1906_m_o_l___extended_field.html#aac5cbd7c73e6505ca99842afd79ed27c',1,'ns3::P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts)'],['../classns3_1_1_p1906_m_o_l___extended_field.html#a26e28d7fc2bdb2cef5dc0873025b7a30',1,'ns3::P1906MOL_ExtendedField::displayPoints(gsl_matrix *pts, size_t numPts)']]],
   ['displaypos',['displayPos',['../classns3_1_1_p1906_m_o_l___extended_motion.html#aafaa6473d76ef475ea76957c49ee38aa',1,'ns3::P1906MOL_ExtendedMotion::displayPos()'],['../classns3_1_1_p1906_m_o_l___pos.html#a9d8d6f2b1980e87de5c98bd2f9e001c7',1,'ns3::P1906MOL_Pos::displayPos()']]],
   ['displaytube',['displayTube',['../classns3_1_1_p1906_m_o_l___tube.html#a273c6d728f5dad9f1c4e707c035f9a19',1,'ns3::P1906MOL_Tube']]],
-  ['displaytubechars',['displayTubeChars',['../classns3_1_1_p1906_m_o_l___extended_field.html#a3de54074d2f432fceeb110dfc1a11f69',1,'ns3::P1906MOL_ExtendedField']]],
+  ['displaytubechars',['displayTubeChars',['../classns3_1_1_p1906_m_o_l___microtubules_field.html#a87a40f5d8e6255c4fb50bf6636df6836',1,'ns3::P1906MOL_MicrotubulesField']]],
   ['displayvolsurface',['displayVolSurface',['../classns3_1_1_p1906_m_o_l___vol_surface.html#a871762aa468d4b9161c7c1062bc10344',1,'ns3::P1906MOL_VolSurface']]],
-  ['displayvolsurfaces',['displayVolSurfaces',['../classns3_1_1_p1906_m_o_l___motor.html#ae63e0c75cceaeb5d186eb292d32f649c',1,'ns3::P1906MOL_Motor']]],
+  ['displayvolsurfaces',['displayVolSurfaces',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a64b7a152d2b7e7080ce8390686e17c03',1,'ns3::P1906MOL_ExtendedMotion::displayVolSurfaces()'],['../classns3_1_1_p1906_m_o_l___motor.html#ae63e0c75cceaeb5d186eb292d32f649c',1,'ns3::P1906MOL_Motor::displayVolSurfaces()']]],
   ['distance',['distance',['../classns3_1_1_p1906_m_o_l___extended_field.html#a3029a534e6659343303339eeeaf4d880',1,'ns3::P1906MOL_ExtendedField']]]
 ];

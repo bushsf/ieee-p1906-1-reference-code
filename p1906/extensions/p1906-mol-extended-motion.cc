@@ -54,6 +54,16 @@
 #include "ns3/p1906-mol-tube.h"
 #include "ns3/p1906-mol-pos.h"
 
+#include "ns3/p1906-mol-MathematicaHelper.h"
+#include "ns3/p1906-mol-MATLABHelper.h"
+#include "ns3/p1906-mol-metrics.h"
+#include "ns3/p1906-mol-motor.h"
+#include "ns3/p1906-mol-vol-surface.h"
+
+#include "ns3/p1906-communication-interface.h"
+#include "ns3/mobility-model.h"
+#include "ns3/p1906-net-device.h"
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("P1906MOL_ExtendedMotion");
@@ -88,7 +98,7 @@ P1906MOL_ExtendedMotion::P1906MOL_ExtendedMotion ()
 
 //! assumes motor is within radius of a tube, otherwise it simply returns
 //! if the motor is within radius of a tube, motor walks along along the tube until unbound (binding_time) or reaches end of tube
-void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, size_t segPerTube, vector<P1906MOL_VolSurface> & vsl)
+void P1906MOL_ExtendedMotion::motorWalk(Ptr<P1906MessageCarrier> carrier, gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, size_t segPerTube, vector<P1906MOL_VolSurface> & vsl)
 {
   /** 
     See "Movements of Molecular Motors," Reinhard Lipowsky
@@ -101,13 +111,18 @@ void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vecto
   gsl_vector * pt2 = gsl_vector_alloc(3);
   P1906MOL_Pos Pos1;
   P1906MOL_Pos Pos2;
-  double radius = 15; //! tube radius nm
-  double movementRate = 1000; //! nm / sec
-  //! double bindingTime = 2; sec
+  //! tube radius nm
+  double radius = 15; // [nm]
+  //! motor movement rate (nm / sec)
+  double movementRate = 1000; // [nm/s]
+  //! motor mean binding time (s)
+  //! double bindingTime = 2; // [s]
   double x1, y1, z1;
   double x2, y2, z2;
+  //! motor mean binding probability (default 1.0)
   double binding_probability = 1.0; //! always bind for testing purposes
-  //double binding_time = 1.0; //! sec \todo incorporate binding time
+  //double binding_time = 1.0; //! sec \todo implement binding time
+  Ptr<P1906MOL_Motor> motor = carrier->GetObject <P1906MOL_Motor> ();
   
   //! bind with a given probability
   if (gsl_rng_uniform(r) > binding_probability) //! \todo set realistic binding probability
@@ -169,7 +184,7 @@ void P1906MOL_ExtendedMotion::motorWalk(gsl_rng * r, gsl_vector * startPt, vecto
 	//  P1906MOL_ExtendedField::distance(pt1, pt2), 
 	//  movementRate, 
 	//  P1906MOL_ExtendedField::distance(pt1, pt2) / movementRate);
-    updateTime(P1906MOL_ExtendedField::distance(pt1, pt2) / movementRate);
+    motor->updateTime(P1906MOL_ExtendedField::distance(pt1, pt2) / movementRate);
   }
 }
 
@@ -187,7 +202,7 @@ void P1906MOL_ExtendedMotion::displayPos(gsl_vector *pt)
 //!   startPt - where the motor began its random walk
 //!   timePeriod - length of each step of the walk
 //!   returns the index of the contact segment in tubeMatrix
-size_t P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, double timePeriod, vector<P1906MOL_VolSurface> & vsl)
+size_t P1906MOL_ExtendedMotion::float2Tube(Ptr<P1906MessageCarrier> carrier, gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> &pts, gsl_matrix * tubeMatrix, double timePeriod, vector<P1906MOL_VolSurface> & vsl)
 {
   gsl_vector * currentPos = gsl_vector_alloc (3);
   gsl_vector * newPos = gsl_vector_alloc (3);
@@ -195,6 +210,10 @@ size_t P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, ve
   double timeout = 100; //! stop if no tube found
   int ts; //! nearest tube segment
   double radius = 15;
+  Ptr<P1906MOL_Motor> motor = carrier->GetObject <P1906MOL_Motor> ();
+  double D = 1.0; //! mass diffusivity (default)
+  
+  D = GetDiffusionConefficient ();
   
   //! begin at the starting point
   P1906MOL_ExtendedField::point (currentPos, 
@@ -213,8 +232,8 @@ size_t P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, ve
 	//Pos.displayPos ();
 	pts.insert(pts.end(), Pos);
 	numPts++; //! consider starting position the first point
-	brownianMotion(r, currentPos, newPos, timePeriod, vsl);
-	updateTime(timePeriod);
+	brownianMotion(r, currentPos, newPos, timePeriod, D, vsl);
+	motor->updateTime(timePeriod);
     gsl_vector_set (currentPos, 0, gsl_vector_get (newPos, 0));
 	gsl_vector_set (currentPos, 1, gsl_vector_get (newPos, 1));
 	gsl_vector_set (currentPos, 2, gsl_vector_get (newPos, 2));
@@ -233,11 +252,10 @@ size_t P1906MOL_ExtendedMotion::float2Tube(gsl_rng * r, gsl_vector * startPt, ve
 //! distance travelled will be a function of particle diameter, temperature, diffusion coefficient.
 //! for simplicity, the second moment is \f$\bar{x^2} = 2 D t\f$, where \f$D\f$ is the mass diffusivity and \f$t\f$ is time.
 //! note that Brownian motion landing on a receiver is a form of the "narrow escape" problem.
-void P1906MOL_ExtendedMotion::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod, vector<P1906MOL_VolSurface> & vsl)
+void P1906MOL_ExtendedMotion::brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod, double D, vector<P1906MOL_VolSurface> & vsl)
 {
   //! the new position is Gaussian with variance proportional to time taken: W_t - W_s ~ N(0, t - s)
   //! sigma is the standard deviation
-  double D = 1.0; //! mass diffusivity (simple assumption for now)
   double sigma = sqrt(2 * D * timePeriod); /* sigma should be proportional to time */
   
   P1906MOL_ExtendedField::point (newPos, 
@@ -246,7 +264,7 @@ void P1906MOL_ExtendedMotion::brownianMotion(gsl_rng * r, gsl_vector * currentPo
     gsl_vector_get (currentPos, 2) + gsl_ran_gaussian (r, sigma)  /* z distance */
   );
   
-  //! check for reflection if contact with the volume surface
+  //! check for reflection if contact with the volume surface of a P1906MOL_VolSurface::ReflectiveBarrier
   vector<P1906MOL_Pos> ipt;
   gsl_vector * segment = gsl_vector_alloc (6);
   P1906MOL_Pos cp, np;
@@ -296,7 +314,7 @@ void P1906MOL_ExtendedMotion::brownianMotion(gsl_rng * r, gsl_vector * currentPo
 }
 
 //! implements a motor floating via Brownian motion for time steps with step lengths of timePeriod
-int P1906MOL_ExtendedMotion::freeFloat(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod, vector<P1906MOL_VolSurface> & vsl)
+int P1906MOL_ExtendedMotion::freeFloat(Ptr<P1906MessageCarrier> carrier, gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod, vector<P1906MOL_VolSurface> & vsl)
 {
   //P1906MOL_Tube tube;
   gsl_vector * currentPos = gsl_vector_alloc (3);
@@ -306,6 +324,10 @@ int P1906MOL_ExtendedMotion::freeFloat(gsl_rng * r, gsl_vector * startPt, vector
 	gsl_vector_get (currentPos, 1), 
 	gsl_vector_get (currentPos, 2));
   int numPts = 0;
+  Ptr<P1906MOL_Motor> motor = carrier->GetObject <P1906MOL_Motor> ();
+  double D = 1.0; //! mass diffusivity (default)
+   
+  D = GetDiffusionConefficient ();
   
   for (int i = 0; i < time; i++)
   {
@@ -315,8 +337,8 @@ int P1906MOL_ExtendedMotion::freeFloat(gsl_rng * r, gsl_vector * startPt, vector
 			     gsl_vector_get (currentPos, 2) );
 	pts.insert(pts.end(), Pos);
 	
-	brownianMotion(r, currentPos, newPos, timePeriod, vsl);
-	updateTime(timePeriod);
+	brownianMotion(r, currentPos, newPos, timePeriod, D, vsl);
+	motor->updateTime(timePeriod);
     gsl_vector_set (currentPos, 0, gsl_vector_get (newPos, 0));
 	gsl_vector_set (currentPos, 1, gsl_vector_get (newPos, 1));
 	gsl_vector_set (currentPos, 2, gsl_vector_get (newPos, 2));
@@ -326,22 +348,148 @@ int P1906MOL_ExtendedMotion::freeFloat(gsl_rng * r, gsl_vector * startPt, vector
   return numPts;
 }
 
-//! return simulation time
-double P1906MOL_ExtendedMotion::getTime()
+//! this is called inside the core Medium class before reception
+//! this is where the main action happens: motor movement occurs here
+//! field is actually the extended P1906MOL_MicrotubulesField of the transmitting node
+double P1906MOL_ExtendedMotion::ComputePropagationDelay (Ptr<P1906CommunicationInterface> src,
+  		                                  Ptr<P1906CommunicationInterface> dst,
+  		                                  Ptr<P1906MessageCarrier> message,
+  		                                  Ptr<P1906Field> field)
 {
-  return t.time;
+  P1906MOL_MathematicaHelper mathematica;
+  gsl_vector * startPt = gsl_vector_alloc (3);
+  double timePeriod = 100;
+  char plot_filename[256];
+  //! fix the units used here with those passed in via _RUN_MOTOR_CHANNEL_CAPACITY_
+  float distanceMultiplier = pow(10, 9); //! convert meters to nanometers
+  double D = 1.0; //! mass diffusivity (default)
+
+  NS_LOG_FUNCTION (this << "beginning ComputePropagationDelay");
+  
+  //! reusing the coefficient from the MOL model that is entered at run time
+  //! this can be called directly from brownianMotion 
+  D = GetDiffusionConefficient ();
+  
+  Ptr<MobilityModel> srcMobility = src->GetP1906NetDevice ()->GetNode ()->GetObject<MobilityModel> ();
+  Ptr<MobilityModel> dstMobility = dst->GetP1906NetDevice ()->GetNode ()->GetObject<MobilityModel> ();
+
+  Vector sv = srcMobility->GetPosition();
+  Vector dv = dstMobility->GetPosition();
+  
+  //printf ("(ComputePropagationDelay) transmitter location x: %lf y: %lf z: %lf\n", sv.x, sv.y, sv.z);
+  //printf ("(ComputePropagationDelay) receiver location x: %lf y: %lf z: %lf\n", dv.x, dv.y, dv.z);
+  
+  Ptr<P1906MOL_Motor> motor = message->GetObject <P1906MOL_Motor> ();
+ 
+  //! reset the motor's timer
+  motor->initTime();
+   
+  //! Starting position is the transmitting node location
+  P1906MOL_ExtendedField::point (startPt, sv.x, sv.y, sv.z);
+    
+  //! Receiver volume surface center comes from the receiver Node location
+  P1906MOL_Pos dvol;
+  printf ("(ComputePropagationDelay) position dv.x: %lf multiplier: %lf\n", dv.x, distanceMultiplier);
+  dvol.setPos (dv.x * distanceMultiplier, dv.y, dv.z);
+  motor->addVolumeSurface(dvol, (dv.x * distanceMultiplier)/1.0001, P1906MOL_VolSurface::Receiver);
+ 
+  //! add a reflective barrier around the source and destination
+  dvol.setPos (sv.x, sv.y, sv.z);
+  motor->addVolumeSurface(dvol, distanceMultiplier * (dv.x + (0.1 * dv.x)), P1906MOL_VolSurface::ReflectiveBarrier);
+
+  //! volume surface must overlap with destination in order for the test to end
+  motor->displayVolSurfaces();
+  
+  /*
+   * move randomly until destination reached
+   */
+  motor->setStartingPoint(startPt);
+  
+  float2Destination(motor, timePeriod);
+  
+  NS_LOG_FUNCTION (this << "[propagation time]" << motor->getTime());
+  sprintf (plot_filename, "float2destination_%lf_%lf.mma", sv.x, dv.x * distanceMultiplier);
+  mathematica.connectedPoints2Mma(motor->pos_history, plot_filename);
+  
+  NS_LOG_FUNCTION (this << "completed ComputePropagationDelay");
+  
+  return motor->getTime();
 }
 
-//! initialize simulation time
-void P1906MOL_ExtendedMotion::initTime()
+//! this is called inside the core Medium class before reception
+//! this returns the receivedMessageCarrier that appears at the receiver
+Ptr<P1906MessageCarrier> P1906MOL_ExtendedMotion::CalculateReceivedMessageCarrier(Ptr<P1906CommunicationInterface> src,
+  		                                                           Ptr<P1906CommunicationInterface> dst,
+  		                                                           Ptr<P1906MessageCarrier> motor,
+  		                                                           Ptr<P1906Field> field)
 {
-  t.time = 0;
+  //! 'message' above is really the message carrier (motor)
+
+  NS_LOG_FUNCTION (this << "Do nothing for motor");
+  return motor;
 }
 
-//! update simulation time
-void P1906MOL_ExtendedMotion::updateTime(double event_time)
+//! motor uses Brownian motion until the destination volume is reached
+void P1906MOL_ExtendedMotion::float2Destination(Ptr<P1906MessageCarrier> carrier, double timePeriod)
 {
-  t.time += event_time;
+  gsl_vector * newPos = gsl_vector_alloc (3);
+  P1906MOL_Pos Pos;
+  Ptr<P1906MOL_Motor> motor = carrier->GetObject <P1906MOL_Motor> ();
+  double D = 1.0; //! mass diffusivity (default)
+    
+  D = GetDiffusionConefficient ();
+  
+  Pos.setPos ( gsl_vector_get (motor->current_location, 0),
+               gsl_vector_get (motor->current_location, 1),
+			   gsl_vector_get (motor->current_location, 2) );
+  motor->pos_history.insert (motor->pos_history.end(), Pos);
+  
+  //printf ("(float2Destination) motor location:\n");
+  //displayPos(current_location);
+	
+  //! float until in destination volume
+  while (!motor->inDestination())
+  {
+	brownianMotion(motor->r, motor->current_location, newPos, timePeriod, D, motor->vsl);
+	motor->updateTime(timePeriod);
+    gsl_vector_set (motor->current_location, 0, gsl_vector_get (newPos, 0));
+	gsl_vector_set (motor->current_location, 1, gsl_vector_get (newPos, 1));
+	gsl_vector_set (motor->current_location, 2, gsl_vector_get (newPos, 2));
+	
+    //printf ("(float2Destination) motor location:\n");
+    //displayPos(current_location);
+	
+	P1906MOL_Pos Pos;
+    Pos.setPos ( gsl_vector_get (motor->current_location, 0),
+                 gsl_vector_get (motor->current_location, 1),
+			     gsl_vector_get (motor->current_location, 2) );
+    motor->pos_history.insert (motor->pos_history.end(), Pos);
+  }
+}
+
+//! use microtubules, if available, Brownian motion otherwise until destination is reached
+void P1906MOL_ExtendedMotion::move2Destination(Ptr<P1906MessageCarrier> carrier, gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts)
+{
+  int timeout = 100; //! in case motor never reaches destination
+  int loops = 0; //! keep track of iterations
+  Ptr<P1906MOL_Motor> motor = carrier->GetObject <P1906MOL_Motor> ();
+  
+  while (!motor->inDestination() && (loops < timeout))
+  {
+    //! returns the index of the segment in tubeMatrix to which the motor is bound 
+    float2Tube(motor, motor->r, motor->current_location, pts, tubeMatrix, timePeriod, motor->vsl);
+	motor->setLocation(pts.back());
+    //printf ("(move2Destination) current location after float2Tube\n");
+	//displayLocation();
+	//pts.back().displayPos();
+	//! walk along tube until end of tube or unbound
+	motorWalk(motor, motor->r, motor->current_location, pts, tubeMatrix, segPerTube, motor->vsl);
+	motor->setLocation(pts.back());
+    //printf ("(move2Destination) current location after motorWalk\n");
+	//pts.back().displayPos();
+	//displayLocation();
+	loops++;
+  }
 }
 
 P1906MOL_ExtendedMotion::~P1906MOL_ExtendedMotion ()

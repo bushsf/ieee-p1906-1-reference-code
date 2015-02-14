@@ -8,6 +8,6 @@ var searchData=
   ['vectorplotmma',['vectorPlotMma',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#aa24eb4adab76ec8d34db3a0e33446972',1,'ns3::P1906MOL_MathematicaHelper']]],
   ['vf',['vf',['../classns3_1_1_p1906_m_o_l___microtubules_field.html#a08d5b6478a75c2ff469140a528fcfa7d',1,'ns3::P1906MOL_MicrotubulesField']]],
   ['volsurfaceplot',['volSurfacePlot',['../classns3_1_1_p1906_m_o_l___mathematica_helper.html#aba6ec55b2996685781ab42f9c32f7e6b',1,'ns3::P1906MOL_MathematicaHelper']]],
-  ['volume',['volume',['../structns3_1_1_p1906_m_o_l___extended_field_1_1tube_characteristcs__t.html#a84d5e663e855245978489225e1d4a2c8',1,'ns3::P1906MOL_ExtendedField::tubeCharacteristcs_t']]],
+  ['volume',['volume',['../structtube_characteristcs__t.html#a3e51c7fcfcf1f9f58913e7724b557f48',1,'tubeCharacteristcs_t']]],
   ['vsl',['vsl',['../classns3_1_1_p1906_m_o_l___motor.html#a021f8feb85ee39fe164b557010dd6372',1,'ns3::P1906MOL_Motor']]]
 ];

@@ -60,6 +60,15 @@
 #include "../model-mol/p1906-mol-transmitter-communication-interface.h"
 #include "../model-mol/p1906-mol-receiver-communication-interface.h"
 
+#include "../extensions/p1906-mol-motor.h"
+#include "../extensions/p1906-mol-extended-perturbation.h"
+#include "../extensions/p1906-mol-extended-motion.h"
+#include "../extensions/p1906-mol-extended-field.h"
+//#include "../extensions/p1906-mol-specificity.h"
+#include "../extensions/p1906-mol-extended-communication-interface.h"
+#include "../extensions/p1906-mol-extended-transmitter-communication-interface.h"
+#include "../extensions/p1906-mol-extended-receiver-communication-interface.h"
+
 NS_LOG_COMPONENT_DEFINE ("P1906Helper");
 
 namespace ns3 {
@@ -117,6 +126,15 @@ P1906Helper::EnableLogComponents (void)
   LogComponentEnable ("P1906MOLMotion", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOLPerturbation", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOLSpecificity", LOG_LEVEL_ALL);
+  
+  
+  LogComponentEnable ("P1906MOL_Motor", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_ExtendedField", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_ExtendedMotion", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_ExtendedPerturbation", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_ExtendedTransmitterCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_ExtendedReceiverCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_ExtendedCommunicationInterface", LOG_LEVEL_ALL);
 
 }
 

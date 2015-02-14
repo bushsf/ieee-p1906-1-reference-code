@@ -133,7 +133,7 @@ public:
   /*
    * Methods related to flow through the volume surface
    */ 
-  //! compute the flux through the sphere
+  //! compute the flux through the FluxMeter volume surface based upon the microtubules in tubeMatrix
   double fluxMeter(gsl_matrix * tubeMatrix);
 
   virtual ~P1906MOL_VolSurface ();

@@ -45,6 +45,7 @@ using namespace std;
 #include "ns3/object.h"
 #include "ns3/nstime.h"
 #include "ns3/ptr.h"
+#include "ns3/p1906-motion.h"
 #include "ns3/p1906-mol-motion.h"
 #include "ns3/p1906-mol-pos.h"
 #include "ns3/p1906-mol-vol-surface.h"
@@ -76,23 +77,6 @@ class P1906MOL_ExtendedMotion : public P1906MOLMotion
 {
 public:
   static TypeId GetTypeId (void);
-  
-  //! simulated time structure anticipating other fields that may be required for time management
-  struct simtime_t
-  {
-    //! simulated time
-    double time;
-  } t;
-  
-  /*
-   * Methods related to simulation time
-   */
-  //! \todo return the propagation delay for a motor
-  double getTime();  
-  //! reset the simulation time
-  void initTime();
-  //! update the simulation given an event duration
-  void updateTime(double event_time);
  
   /*
    * Methods related to tracking motor position
@@ -102,15 +86,35 @@ public:
     
   /*
    * Methods related to motor motion
-   */   
+   */
+  //! motor is driven by Brownian motion until the destination is reached, returning the propagation time
+  void float2Destination(Ptr<P1906MessageCarrier> carrier, double timePeriod);
+  //! motor binds to microtubule and walks and is driven by Brownian motion when unbound to microtubule, returning propagation time
+  void move2Destination(Ptr<P1906MessageCarrier> carrier, gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts);
+  //! display all the volume surfaces recognizing the motor
+  void displayVolSurfaces();
   //! newPos is Brownian motion from currentPos over timePeriod 
-  void brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod, vector<P1906MOL_VolSurface> & vsl);
+  void brownianMotion(gsl_rng * r, gsl_vector * currentPos, gsl_vector * newPos, double timePeriod, double D, vector<P1906MOL_VolSurface> & vsl);
   //! Brownian motion from startPt for length time in timePeriod units; results returned in pts
-  int freeFloat(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod, vector<P1906MOL_VolSurface> & vsl);
+  int freeFloat(Ptr<P1906MessageCarrier> carrier, gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, int time, double timePeriod, vector<P1906MOL_VolSurface> & vsl);
   //! free float until intersection with any tube
-  size_t float2Tube(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, double timePeriod,vector<P1906MOL_VolSurface> & vsl);
+  size_t float2Tube(Ptr<P1906MessageCarrier> carrier, gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, double timePeriod,vector<P1906MOL_VolSurface> & vsl);
   //! walk along a specific tube identified by startPt and place result in pts
-  void motorWalk(gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube, vector<P1906MOL_VolSurface> & vsl);
+  void motorWalk(Ptr<P1906MessageCarrier> carrier, gsl_rng * r, gsl_vector * startPt, vector<P1906MOL_Pos> & pts, gsl_matrix * tubeMatrix, size_t segPerTube, vector<P1906MOL_VolSurface> & vsl);
+  
+  /*
+   * These methods are required to utilize the core IEEE 1906 reference model
+   */
+  //! return the propagation delay by simulating motor motion from transmitter to receiver.
+  double ComputePropagationDelay (Ptr<P1906CommunicationInterface> src,
+  		                                  Ptr<P1906CommunicationInterface> dst,
+  		                                  Ptr<P1906MessageCarrier> message,
+  		                                  Ptr<P1906Field> field);
+  //! return the proper Message Carrier
+  Ptr<P1906MessageCarrier> CalculateReceivedMessageCarrier(Ptr<P1906CommunicationInterface> src,
+  		                                                           Ptr<P1906CommunicationInterface> dst,
+  		                                                           Ptr<P1906MessageCarrier> message,
+  		                                                           Ptr<P1906Field> field);
   
   P1906MOL_ExtendedMotion ();
   virtual ~P1906MOL_ExtendedMotion ();

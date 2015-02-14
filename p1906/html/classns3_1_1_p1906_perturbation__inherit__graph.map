@@ -1,4 +1,5 @@
 <map id="ns3::P1906Perturbation" name="ns3::P1906Perturbation">
-<area shape="rect" id="node3" href="$classns3_1_1_p1906_e_m_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="5,155,184,181"/>
-<area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="208,155,395,181"/>
+<area shape="rect" id="node3" href="$classns3_1_1_p1906_e_m_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="355,5,533,32"/>
+<area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l___extended_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="320,56,568,83"/>
+<area shape="rect" id="node5" href="$classns3_1_1_p1906_m_o_l_perturbation.html" title="Base class implementing the Perturbation component of the P1906 framework. " alt="" coords="351,107,537,133"/>
 </map>

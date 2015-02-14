@@ -1,4 +1,5 @@
 <map id="ns3::P1906TransmitterCommunicationInterface" name="ns3::P1906TransmitterCommunicationInterface">
 <area shape="rect" id="node3" href="$classns3_1_1_p1906_e_m_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the EM example. " alt="" coords="404,5,667,47"/>
-<area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the MOLECULAR Example..." alt="" coords="445,71,626,112"/>
+<area shape="rect" id="node4" href="$classns3_1_1_p1906_m_o_l___extended_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the MOLECULAR Example..." alt="" coords="414,71,657,112"/>
+<area shape="rect" id="node5" href="$classns3_1_1_p1906_m_o_l_transmitter_communication_interface.html" title="Base class implementing the Transmitter entity in the P1906 framework for the MOLECULAR Example..." alt="" coords="445,136,626,177"/>
 </map>

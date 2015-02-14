@@ -101,7 +101,7 @@ public:
   /*
    * Plot and segment display methods
    */  
-  //! print a plot of x,y values in vals in Mathematica format into file fname
+  //! print a plot of x, y values in vals in Mathematica format into file fname
   void plot2Mma(gsl_matrix * vals, const char * fname, const char * xlabel, const char * ylabel);
   //! write a list of tubes into file fname in Mathematica format
   void tubes2Mma(gsl_matrix * tubeMatrix, size_t segPerTube, const char * fname);

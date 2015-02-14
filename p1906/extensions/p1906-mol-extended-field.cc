@@ -87,64 +87,6 @@ P1906MOL_ExtendedField::P1906MOL_ExtendedField ()
   
 }
 
-//! print tube characteristics to standard output
-void P1906MOL_ExtendedField::displayTubeChars(struct tubeCharacteristcs_t * ts)
-{
-  printf ("volume = %f\n", ts->volume);
-  printf ("mean_tube_length = %f\n", ts->mean_tube_length);
-  printf ("mean_intra_tube_angle = %f\n", ts->mean_intra_tube_angle);
-  printf ("mean_inter_tube_angle = %f\n", ts->mean_inter_tube_angle);
-  printf ("mean_tube_density = %f\n", ts->mean_tube_density);
-  printf ("segLength = %f\n", ts->segLength);
-  printf ("numSegments = %ld\n", ts->numSegments);
-}
-
-//! set the space in which the tube centers will be formed
-void P1906MOL_ExtendedField::setTubeVolume(struct tubeCharacteristcs_t * ts, double volume)
-{
-  ts->volume = volume;
-}
-
-//! set the mean tube length, segment is arbitrarily set to 1/5 the length of a tube
-void P1906MOL_ExtendedField::setTubeLength(struct tubeCharacteristcs_t * ts, double mean_tube_length)
-{
-  ts->mean_tube_length = mean_tube_length;
-  //! 
-  ts->segLength = ts->mean_tube_length / 5;
-}
-
-//! set the mean angle between segments within a tube
-void P1906MOL_ExtendedField::setTubeIntraAngle(struct tubeCharacteristcs_t * ts, double mean_intra_tube_angle)
-{
-  ts->mean_intra_tube_angle = mean_intra_tube_angle;
-}
-
-//! set the mean angle between tubes
-void P1906MOL_ExtendedField::setTubeInterAngle(struct tubeCharacteristcs_t * ts, double mean_inter_tube_angle)
-{
-  ts->mean_inter_tube_angle = mean_inter_tube_angle;
-}
-
-//! this is really the segment density and also derives and sets the total number of segments based on the volume
-void P1906MOL_ExtendedField::setTubeDensity(struct tubeCharacteristcs_t * ts, double mean_tube_density)
-{
-  ts->mean_tube_density = mean_tube_density;
-  ts->numSegments = ts->mean_tube_density * ts->volume;
-}
-
-//! set the persistence length of each tube
-void P1906MOL_ExtendedField::setTubePersistenceLength(struct tubeCharacteristcs_t * ts, double persistenceLength)
-{
-  ts->persistenceLength = persistenceLength;
-}
-
-//! set the number of segments per tube and also derives and sets the number of tubes
-void P1906MOL_ExtendedField::setTubeSegments(struct tubeCharacteristcs_t * ts, size_t segPerTube)
-{
-  ts->segPerTube = segPerTube;
-  ts->numTubes = floor(ts->numSegments / ts->segPerTube);
-}
-
 //! set point pt with x, y, and z coordinates
 void P1906MOL_ExtendedField::point(gsl_vector * pt, double x, double y, double z)
 {
@@ -665,8 +607,6 @@ int P1906MOL_ExtendedField::getOverlap3D(gsl_vector * segment, gsl_matrix * tube
 	  }
 	}
   
-  gsl_vector_free (x);
-  
   return numPts;
 }
 
@@ -788,7 +728,7 @@ double P1906MOL_ExtendedField::sEntropy(gsl_matrix *segAngle)
 	
   // printf("H = %g\n", H);
   //! gsl_histogram_fprintf (stdout, h, "%g", "%g");
-  gsl_histogram_free (h);
+  //gsl_histogram_free (h);
   
   return H;
 }

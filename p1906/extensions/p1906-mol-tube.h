@@ -104,7 +104,7 @@ public:
   /*
    * Methods related to accessing and displaying a tube
    */  
-  //! return the segMatrix, which is comprised of the tube segment end points
+  //! return segMatrix, which is comprised of tube segment end points
   void getSegmatrix(gsl_matrix * sm);  
   //! simply print the end points of each segment of a tube
   void displayTube();

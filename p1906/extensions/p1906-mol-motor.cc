@@ -44,7 +44,6 @@
 
 #include "ns3/log.h"
 
-#include "ns3/p1906-mol-extended-motion.h"
 #include "ns3/p1906-mol-motor.h"
 
 namespace ns3 {
@@ -54,11 +53,12 @@ NS_LOG_COMPONENT_DEFINE ("P1906MOL_Motor");
 TypeId P1906MOL_Motor::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::P1906MOL_Motor")
-    .SetParent<P1906MOL_ExtendedMotion> ();
+    .SetParent<P1906MOLMessageCarrier> ();
   return tid;
 }
 
-//! The motor constructor sets a default P1906MOL_VolSurface::Receiver volume at (1000, 0, 0) with radius 500.
+//! The motor constructor creates a motor, but no Receiver volume. This must be set using addVolumeSurface.
+//! Without a P1906MOL_VolSurface::Receiver volume, their is no destination and the motor will wander forever.
 P1906MOL_Motor::P1906MOL_Motor ()
 {
   /** This class implements persistence length as described in:
@@ -76,12 +76,7 @@ P1906MOL_Motor::P1906MOL_Motor ()
   */
   
   current_location = gsl_vector_alloc (3);
-  
-  //! set the receiver 500 nanometers from the origin
-  P1906MOL_Pos v_c;
-  v_c.setPos (1000, 0, 0);
-  addVolumeSurface(v_c, 500, P1906MOL_VolSurface::Receiver);
-  
+    
   //! start with an empty record of for tracking position
   pos_history.clear();
   
@@ -115,7 +110,7 @@ void P1906MOL_Motor::displayVolSurfaces()
     vsl.at(i).displayVolSurface();
 }
 
-//! return true if motor is in the destination volume, false otherwise
+//! return true if motor is in a destination (P1906MOL_VolSurface::Receiver) volume, false otherwise
 bool P1906MOL_Motor::inDestination()
 {
   bool inDest = false;
@@ -136,34 +131,10 @@ bool P1906MOL_Motor::inDestination()
   
   if (numDest < 1)
   {
-    printf ("(inDestination) no destination volume found\n");
+    printf ("(inDestination) Warning! No destination P1906MOL_VolSurface::Receiver volume found!\n");
   }
   
   return inDest;
-}
-
-//! use microtubules, if available, Brownian motion otherwise until destination is reached
-void P1906MOL_Motor::move2Destination(gsl_matrix * tubeMatrix, size_t segPerTube, double timePeriod, vector<P1906MOL_Pos> & pts)
-{
-  int timeout = 100; //! in case motor never reaches destination
-  int loops = 0; //! keep track of iterations
-  
-  while (!inDestination() && (loops < timeout))
-  {
-    //! returns the index of the segment in tubeMatrix to which the motor is bound 
-    float2Tube(r, current_location, pts, tubeMatrix, timePeriod, vsl);
-	setLocation(pts.back());
-    //printf ("(move2Destination) current location after float2Tube\n");
-	//displayLocation();
-	//pts.back().displayPos();
-	//! walk along tube until end of tube or unbound
-	motorWalk(r, current_location, pts, tubeMatrix, segPerTube, vsl);
-	setLocation(pts.back());
-    //printf ("(move2Destination) current location after motorWalk\n");
-	//pts.back().displayPos();
-	//displayLocation();
-	loops++;
-  }
 }
 
 //! set the current motor location to pt
@@ -194,38 +165,22 @@ void P1906MOL_Motor::displayLocation()
 	gsl_vector_get( current_location, 2));
 }
 
-//! motor uses Brownian motion until the destination volume is reached
-void P1906MOL_Motor::float2Destination(double timePeriod)
+//! return simulation time
+double P1906MOL_Motor::getTime()
 {
-  gsl_vector * newPos = gsl_vector_alloc (3);
-  P1906MOL_Pos Pos;
-    
-  Pos.setPos ( gsl_vector_get (current_location, 0),
-               gsl_vector_get (current_location, 1),
-			   gsl_vector_get (current_location, 2) );
-  pos_history.insert (pos_history.end(), Pos);
-  
-  //printf ("(float2Destination) motor location:\n");
-  //displayPos(current_location);
-	
-  //! float until in destination volume
-  while (!inDestination())
-  {
-	brownianMotion(r, current_location, newPos, timePeriod, vsl);
-	updateTime(timePeriod);
-    gsl_vector_set (current_location, 0, gsl_vector_get (newPos, 0));
-	gsl_vector_set (current_location, 1, gsl_vector_get (newPos, 1));
-	gsl_vector_set (current_location, 2, gsl_vector_get (newPos, 2));
-	
-    //printf ("(float2Destination) motor location:\n");
-    //displayPos(current_location);
-	
-	P1906MOL_Pos Pos;
-    Pos.setPos ( gsl_vector_get (current_location, 0),
-                 gsl_vector_get (current_location, 1),
-			     gsl_vector_get (current_location, 2) );
-    pos_history.insert (pos_history.end(), Pos);
-  }
+  return t.time;
+}
+
+//! initialize simulation time
+void P1906MOL_Motor::initTime()
+{
+  t.time = 0;
+}
+
+//! update simulation time
+void P1906MOL_Motor::updateTime(double event_time)
+{
+  t.time += event_time;
 }
 
 //! return the elapsed time since the motor time was last initialized

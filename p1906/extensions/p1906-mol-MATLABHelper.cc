@@ -102,7 +102,6 @@ void P1906MOL_MATLABHelper::vectorFieldPlotMATLAB(gsl_matrix * vf, const char * 
 void P1906MOL_MATLABHelper::vectorFieldMeshMATLAB(gsl_matrix * vf, const char * fname)
 {
   FILE * pFile;
-  //P1906MOL_Tube tube;
 
   pFile = fopen (fname,"w");
   

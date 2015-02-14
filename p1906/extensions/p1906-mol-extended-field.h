@@ -76,57 +76,10 @@ class P1906MOL_ExtendedField : public P1906MOLField
 public:
   static TypeId GetTypeId (void);
     
-  //! properties of the microtubule network
-  struct tubeCharacteristcs_t
-  {
-    //! the volume of space in which tubes originate (nm^3)
-    double volume;
-	//! the mean tube length in nm
-    double mean_tube_length;
-	//! the mean angle between segments within a tube (deg)
-    double mean_intra_tube_angle;
-	//! the mean angle between tubes (deg)
-    double mean_inter_tube_angle;
-	//! the density of tube segments within the volume (segments/nm^3)
-    double mean_tube_density;
-	//! segment length (nm)
-    double segLength;
-	//! the total number of segments for all tubes
-    size_t numSegments;
-	//! the persistence length (nm)
-    double persistenceLength;
-	//! the number of segments per tube
-    size_t segPerTube;
-	//! the total number of tubes
-	size_t numTubes;
-	//! the structural entropy of all tubes in bits
-    double se;
-  };
-  
-  /*
-   * Methods related to tube properties
-   */
-  //! set the volume in which tubes will be generated
-  void setTubeVolume(struct tubeCharacteristcs_t * ts, double volume = 25);
-  //! set the mean tube length
-  void setTubeLength(struct tubeCharacteristcs_t * ts, double mean_tube_length = 100);
-  //! set the mean angle between tube segments
-  void setTubeIntraAngle(struct tubeCharacteristcs_t * ts, double mean_intra_tube_angle = 30);
-  //! set the mean angle between entire tubes
-  void setTubeInterAngle(struct tubeCharacteristcs_t * ts, double mean_inter_tube_angle = 10);
-  //! set the density of tube segments
-  void setTubeDensity(struct tubeCharacteristcs_t * ts, double mean_tube_density = 10);
-  //! set the persistence length of the tubes
-  void setTubePersistenceLength(struct tubeCharacteristcs_t * ts, double persistenceLength = 50);
-  //! set the number of segments per tube
-  void setTubeSegments(struct tubeCharacteristcs_t * ts, size_t segPerTube = 10);
-  //! display all the microtubule network properties
-  void displayTubeChars(struct tubeCharacteristcs_t * ts);
-  
   /*
    * Methods related to vector fields
    */
-  //! return closest point within threshold
+  //! return the location of the vector from vf that is closest to the point pt and put it in result
   static void findClosestPoint(gsl_vector * pt, gsl_matrix * vf, gsl_vector *result);
   //! convert the tube structures to a vector field of the same dimensions as the tubeMatrix
   void tubes2VectorField(gsl_matrix * tubeMatrix, gsl_matrix * vf);
@@ -154,11 +107,11 @@ public:
   static void displayLine(gsl_vector * line);
   //! set the segment with the given end points
   static void line(gsl_vector * line, P1906MOL_Pos p1, P1906MOL_Pos p2);
-  //! simply print the list of points
+  //! print the list of 3D points
   void displayPoints(gsl_matrix * pts);
-  //! print only the first numPts
+  //! print only the first 3D numPts
   void displayPoints(gsl_matrix * pts, size_t numPts);
-  //! simply print the value of a single point pt
+  //! print the value of a single 3D point pt
   void displayPoint(gsl_vector * pt);
   //! true if pt insects segment, false otherwise
   bool isPointOverlap(gsl_vector * pt, gsl_vector * segment);
@@ -168,7 +121,7 @@ public:
   /*
    * Methods related to computing structural entropy
    */
-  //! return the structural entropy give be a list of angles
+  //! return the structural entropy based upon a list of angles
   double sEntropy(gsl_matrix * segAngle);
   
   /*
@@ -182,7 +135,7 @@ public:
   void getAllOverlaps3D(gsl_matrix * tubeMatrix, vector<P1906MOL_Pos> & pts);
   //! return all the points where a segment overlaps with a list of tubes in pts
   int getOverlap3D(gsl_vector * segment, gsl_matrix * tubeMatrix, gsl_matrix * pts, gsl_vector * tubeSegments);
-  //! return the nearest segment in tubeMatrix to the point pt that falls within radius, otherwise -1
+  //! return the nearest segment in tubeMatrix to the point pt that falls within radius from the point, otherwise return -1
   static size_t findNearestTube(gsl_vector * pt, gsl_matrix * tubeMatrix, double radius);  
    
   P1906MOL_ExtendedField ();

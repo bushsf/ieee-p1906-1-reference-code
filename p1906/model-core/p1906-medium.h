@@ -58,7 +58,7 @@ public:
 
   static TypeId GetTypeId ();
 
-  // Methods inherrited from base class
+  // Methods inherited from base class
   virtual uint32_t GetNDevices (void) const;
   virtual Ptr<NetDevice> GetDevice (uint32_t i) const;
 

@@ -87,6 +87,7 @@
 #include "ns3/p1906-mol-motor.h"
 #include "ns3/p1906-mol-tube.h"
 #include "ns3/p1906-mol-vol-surface.h"
+#include "ns3/p1906-mol-extended-motion.h"
 
 namespace ns3 {
 
@@ -114,13 +115,11 @@ TypeId P1906MOL_MicrotubulesField::GetTypeId (void)
   All random number are derived from gsl_rng *.
   
   Next steps:
-	  \todo move this main code into the microtubules-example.cc
 	  \todo consider implementing Random Markov Field (RMF) for analysis of motor motion
 	  \todo curve fit to tube segments to obtain vector field equation (vector field reconstruction) is currently done in separate Mathematica code
 	  \todo relate structural entropy to energy, force, and chemical complexity
 	  \todo add convection-diffusion using vector field lines
 	  \todo could grow tubes from alternating ends so that starting point is in the center
-	  \todo return propagation time: need to keep track of time
 	  \todo consider many motors operating simultaneously: they would need to update simultaneously
 	  
 	  \todo plot motor starting in random location versus time to reach destination as function of tube structure
@@ -138,20 +137,20 @@ P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField ()
   gsl_rng_env_setup();
     
   //! set the microtubule network properties
-  setTubeVolume(&ts, 25);
-  setTubeLength(&ts, 100);
-  setTubeIntraAngle(&ts, 30);
-  setTubeInterAngle(&ts, 10);
-  setTubeDensity(&ts, 10);
-  setTubePersistenceLength(&ts, 50);
-  setTubeSegments(&ts, 10);
+  setTubeVolume(25);
+  setTubeLength(100);
+  setTubeIntraAngle(30);
+  setTubeInterAngle(10);
+  setTubeDensity(10);
+  setTubePersistenceLength(50);
+  setTubeSegments(10);
  
   //! display all the microtubule network properties
-  displayTubeChars(&ts);
+  displayTubeChars();
   
   //! create the microtubules
   tubeMatrix = gsl_matrix_alloc (ts.numTubes * ts.segPerTube, 6);
-  genTubes(&ts);
+  genTubes();
   mathematica.tubes2Mma(tubeMatrix, ts.segPerTube, "tubes.mma");
   printf ("completed tube creation\n");
 
@@ -160,49 +159,131 @@ P1906MOL_MicrotubulesField::P1906MOL_MicrotubulesField ()
   tubes2VectorField(tubeMatrix, vf);
 
   //! test the computation of distance
-  unitTest_Distance();
+  //unitTest_Distance();
 
   //! test computation of a single overlap
-  unitTest_Overlap();
+  //unitTest_Overlap();
 
   //! test computation of all segment overlaps
-  unitTest_AllOverlaps();
+  //unitTest_AllOverlaps();
 
   //! test the plotting the vector field
-  unitTest_VectorField();
+  //unitTest_VectorField();
   
   //! test the volume surface flux measurement
-  unitTest_VolSurface();
+  //unitTest_VolSurface();
 
-  vector<P1906MOL_Pos> pts;
+  //vector<P1906MOL_Pos> pts;
   //! test the movement of a motor floating to a tube and walking along the tube
-  unitTest_MotorMovement(pts);
+  //unitTest_MotorMovement(pts);
     
   //! test plot2mma to plot the position history stored in pts
-  unitTest_Plot2Mma(pts);
+  //unitTest_Plot2Mma(pts);
   
   //! start at zero and utilize Brownian motion to reach destination
-  unitTest_NoTubeMotion();
+  //unitTest_NoTubeMotion();
   
   //! test motor movement to destination using Brownian motion or microtubules if available
-  unitTest_MotorMove2Destination(pts);
+  //unitTest_MotorMove2Destination(pts);
   
   //! test the reflective barrier volume surface
-  unitTest_ReflectiveBarrier();
+  //unitTest_ReflectiveBarrier();
   
   //! test the FluxMeter
-  bool unitTest_FluxMeter();
+  //unitTest_FluxMeter();
   
   //! test persistence length versus entropy plot - NB: this test changes the tubeMatrix
-  unitTest_PersistenceLengthsVsEntropy();
+  //unitTest_PersistenceLengthsVsEntropy();
 
   NS_LOG_FUNCTION (this);
-  NS_LOG_FUNCTION (this << "Created MOL Field Component");
+  NS_LOG_FUNCTION (this << "Created P1906MOL_MicrotubulesField");
+}
+
+//! print tube characteristics to standard output
+void P1906MOL_MicrotubulesField::displayTubeChars()
+{
+  printf ("volume = %f\n", ts.volume);
+  printf ("mean_tube_length = %f\n", ts.mean_tube_length);
+  printf ("mean_intra_tube_angle = %f\n", ts.mean_intra_tube_angle);
+  printf ("mean_inter_tube_angle = %f\n", ts.mean_inter_tube_angle);
+  printf ("mean_tube_density = %f\n", ts.mean_tube_density);
+  printf ("segLength = %f\n", ts.segLength);
+  printf ("numSegments = %ld\n", ts.numSegments);
+}
+
+//! set the space in which the tube centers will be formed
+void P1906MOL_MicrotubulesField::setTubeVolume(double volume)
+{
+  ts.volume = volume;
+}
+
+//! set the mean tube length, segment is arbitrarily set to 1/5 the length of a tube
+void P1906MOL_MicrotubulesField::setTubeLength(double mean_tube_length)
+{
+  ts.mean_tube_length = mean_tube_length;
+  ts.segLength = ts.mean_tube_length / 5;
+}
+
+//! set the mean angle between segments within a tube
+void P1906MOL_MicrotubulesField::setTubeIntraAngle(double mean_intra_tube_angle)
+{
+  ts.mean_intra_tube_angle = mean_intra_tube_angle;
+}
+
+//! set the mean angle between tubes
+void P1906MOL_MicrotubulesField::setTubeInterAngle(double mean_inter_tube_angle)
+{
+  ts.mean_inter_tube_angle = mean_inter_tube_angle;
+}
+
+//! this is really the segment density and also derives and sets the total number of segments based on the volume
+void P1906MOL_MicrotubulesField::setTubeDensity(double mean_tube_density)
+{
+  ts.mean_tube_density = mean_tube_density;
+  ts.numSegments = ts.mean_tube_density * ts.volume;
+}
+
+//! set the persistence length of each tube
+void P1906MOL_MicrotubulesField::setTubePersistenceLength(double persistenceLength)
+{
+  ts.persistenceLength = persistenceLength;
+}
+
+//! set the number of segments per tube and also derives and sets the number of tubes
+void P1906MOL_MicrotubulesField::setTubeSegments(size_t segPerTube)
+{
+  ts.segPerTube = segPerTube;
+  ts.numTubes = floor(ts.numSegments / ts.segPerTube);
+}
+
+//! return the size of the matrix to allocate
+void P1906MOL_MicrotubulesField::getTubesSize(double * rows, double * cols)
+{
+  *rows = tubeMatrix->size1;
+  *cols = tubeMatrix->size2;
+}
+
+//! export tubes; copy the object's tubeMatrix into tm for use outside the object
+void P1906MOL_MicrotubulesField::getTubes(gsl_matrix * tm)
+{
+  // copy tubeMatrix to tm, but only if tm->size1 and tm->size2 are consistent with tubeMatrix
+  if (tm->size1 == tubeMatrix->size1 && tm->size2 == tubeMatrix->size2)
+    printf ("(getTubes) sizes not equal tm->size1: %ld tubeMatrix_size1: %ld tm->size2: %ld tubeMatrix->size2: %ld\n", 
+	  tm->size1, tubeMatrix->size1, tm->size2, tubeMatrix->size2);
+  gsl_matrix_memcpy (tm, tubeMatrix);
+}
+
+//! import tubes; create a local copy of the tube structure tm in tubeMatrix
+void P1906MOL_MicrotubulesField::setTubes(gsl_matrix * tm)
+{
+  //copy tm to tubeMatrix, but only if same size tm->size1 and tm->size2
+  gsl_matrix_memcpy (tubeMatrix, tm);
+  // may need to free and then reallocate if different size
 }
 
 //! for each of the persistenceLengths in the vector, generate tubes and plot persistence length versus 
 //! structural entropy in persistenceVersusEntropy.mma, also write tubes_<n>.mma for each of the persistenceLengths
-void P1906MOL_MicrotubulesField::persistenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_vector * persistenceLengths)
+void P1906MOL_MicrotubulesField::persistenceVersusEntropy(gsl_vector * persistenceLengths)
 {
   P1906MOL_MathematicaHelper mathematica;
   char plot_filename[256];
@@ -213,8 +294,8 @@ void P1906MOL_MicrotubulesField::persistenceVersusEntropy(struct tubeCharacteris
   for (size_t i = 0; i < persistenceLengths->size; i++)
   {	
     //printf ("(persistenceVersusEntropy) persistenceLengths(%ld) = %f\n", i, gsl_vector_get (persistenceLengths, i));
-    setTubePersistenceLength (ts, gsl_vector_get (persistenceLengths, i));
-    genTubes(ts);
+    setTubePersistenceLength (gsl_vector_get (persistenceLengths, i));
+    genTubes();
 	
 	//printf ("(persistenceVersusEntropy) i: %ld\n", i);
 	//printf ("(persistenceVersusEntropy) tubeMatrix: %ld x %ld\n", tubeMatrix->size1, tubeMatrix->size2);
@@ -223,9 +304,9 @@ void P1906MOL_MicrotubulesField::persistenceVersusEntropy(struct tubeCharacteris
 	
 	//! store the set of tubes
 	sprintf (plot_filename, "tubes_%ld.mma", i);
-    mathematica.tubes2Mma(tubeMatrix, ts->segPerTube, plot_filename);
+    mathematica.tubes2Mma(tubeMatrix, ts.segPerTube, plot_filename);
 	gsl_matrix_set (pve, i, 0, gsl_vector_get (persistenceLengths, i));
-	gsl_matrix_set (pve, i, 1, ts->se);
+	gsl_matrix_set (pve, i, 1, ts.se);
   }
   
   //! plot the results
@@ -234,7 +315,7 @@ void P1906MOL_MicrotubulesField::persistenceVersusEntropy(struct tubeCharacteris
 
 //! generate a set of tubes comprised of a total of numSegments in volume with segPerTube segments of segLength 
 //! and persistenceLength and return in tubeMatrix
-void P1906MOL_MicrotubulesField::genTubes(struct tubeCharacteristcs_t * ts)
+void P1906MOL_MicrotubulesField::genTubes()
 {
   //! create a given density of tubes of numSegments in given volume
   //! volume starts at 0, 0, 0 to volume^(1/4) in each dimension
@@ -248,40 +329,40 @@ void P1906MOL_MicrotubulesField::genTubes(struct tubeCharacteristcs_t * ts)
   //! \todo get actual tube graph properties from biologist
   gsl_vector * startPt = gsl_vector_alloc (3);
   //! hold the values for a tube comprised of many segments: x_start y_start x_start x_end y_end z_end
-  gsl_matrix * segMatrix = gsl_matrix_alloc (ts->segPerTube, 6);
+  gsl_matrix * segMatrix = gsl_matrix_alloc (ts.segPerTube, 6);
   double total_structural_entropy = 0;
   
   //printf ("(genTubes) tubeMatrix: %ld x %ld\n", tubeMatrix->size1, tubeMatrix->size2);
   //printf ("(genTubes) numTubes: %ld segPerTube: %ld volume: %f\n", ts->numTubes, ts->segPerTube, ts->volume);
   
   //! volume starts at 0, 0, 0 to volume^(1/4) in each dimension
-  for(size_t i = 0; i < ts->numTubes; i++)
+  for(size_t i = 0; i < ts.numTubes; i++)
   {
     //! set the starting location for the tube
     point (startPt, 
-	  gsl_ran_gaussian (r, pow(ts->volume, (1/4))),
-	  gsl_ran_gaussian (r, pow(ts->volume, (1/4))),
-	  gsl_ran_gaussian (r, pow(ts->volume, (1/4))));
+	  gsl_ran_gaussian (r, pow(ts.volume, (1/4))),
+	  gsl_ran_gaussian (r, pow(ts.volume, (1/4))),
+	  gsl_ran_gaussian (r, pow(ts.volume, (1/4))));
 
 	//! create a single tube
-    P1906MOL_Tube tube(ts, startPt);
+    P1906MOL_Tube tube(&ts, startPt);
 	
     //! create a single tube of many segments
     //tube.genTube(ts, r, segMatrix, startPt);
     //printf ("(genTubes) segMatrix\n");
 	//tube.displayTube();
-	total_structural_entropy += (ts->se);
+	total_structural_entropy += (ts.se);
 	
 	tube.getSegmatrix(segMatrix);
 	//! copy tube segments to main tube matrix
-	for(size_t j = 0; j < ts->segPerTube; j++)
+	for(size_t j = 0; j < ts.segPerTube; j++)
 	  for(size_t k = 0; k < 6; k++)
 	  {
-	    gsl_matrix_set(tubeMatrix, i * ts->segPerTube + j, k, gsl_matrix_get(segMatrix, j, k));
+	    gsl_matrix_set(tubeMatrix, i * ts.segPerTube + j, k, gsl_matrix_get(segMatrix, j, k));
 	  }
   }
   
-  ts->se = total_structural_entropy;
+  ts.se = total_structural_entropy;
 }
 
 //! \todo test the volume surface as a flux meter and later as a compartmentalization volume
@@ -436,32 +517,33 @@ bool P1906MOL_MicrotubulesField::unitTest_VolSurface()
 //! test the volume surface as a compartmentalization volume
 bool P1906MOL_MicrotubulesField::unitTest_ReflectiveBarrier()
 {
-  P1906MOL_Motor motor;
+  Ptr<P1906MOL_Motor> motor = CreateObject<P1906MOL_Motor> ();
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
   double timePeriod = 100;
   P1906MOL_Pos volCenter;
+  P1906MOL_ExtendedMotion motion;
 
   printf ("beginning unitTest_ReflectiveBarrier\n");
   //! start at zero
   point (startPt, 0, 0, 0);
   volCenter.setPos (0, 0, 0);
   
-  //! \todo if the ReflectiveBarrier does include the Receiver destination volume, then motion will continue forever
-  motor.addVolumeSurface (volCenter, 1500.0, P1906MOL_VolSurface::ReflectiveBarrier);
+  //! \todo add test if the ReflectiveBarrier includes the Receiver destination volume, if not, warn that motion will continue forever
+  motor->addVolumeSurface (volCenter, 1500.0, P1906MOL_VolSurface::ReflectiveBarrier);
   
   //! reset the motor's timer
-  motor.initTime();
+  motor->initTime();
     
   //! volume surface must overlap with destination in order for the test to end
-  motor.displayVolSurfaces();  
+  motor->displayVolSurfaces();
   /*
    * move randomly until destination reached
    */
-  motor.setStartingPoint(startPt);
-  motor.float2Destination(timePeriod);
+  motor->setStartingPoint(startPt);
+  motion.float2Destination(motor, timePeriod);
   //printf ("(unitTest_MotorMovement) propagation time: %f\n", motor.getTime());
-  mathematica.connectedPoints2Mma(motor.pos_history, "float2destination.mma");
+  mathematica.connectedPoints2Mma(motor->pos_history, "float2destination.mma");
   printf ("completed unitTest_ReflectiveBarrier\n");
   
   return true;
@@ -470,11 +552,12 @@ bool P1906MOL_MicrotubulesField::unitTest_ReflectiveBarrier()
 //! test the FluxMeter
 bool P1906MOL_MicrotubulesField::unitTest_FluxMeter()
 {
-  P1906MOL_Motor motor;
+  Ptr<P1906MOL_Motor> motor = CreateObject<P1906MOL_Motor> ();
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
   double timePeriod = 100;
   P1906MOL_Pos volCenter;
+  P1906MOL_ExtendedMotion motion;
 
   printf ("beginning unitTest_ReflectiveBarrier\n");
   //! start at zero
@@ -482,20 +565,20 @@ bool P1906MOL_MicrotubulesField::unitTest_FluxMeter()
   volCenter.setPos (0, 0, 0);
   
   //! add a FluxMeter surface volume
-  motor.addVolumeSurface (volCenter, 1500.0, P1906MOL_VolSurface::FluxMeter);
+  motor->addVolumeSurface (volCenter, 1500.0, P1906MOL_VolSurface::FluxMeter);
   
   //! reset the motor's timer
-  motor.initTime();
+  motor->initTime();
     
   //! volume surface must overlap with destination in order for the test to end
-  motor.displayVolSurfaces();  
+  motor->displayVolSurfaces();  
   /*
    * move randomly until destination reached
    */
-  motor.setStartingPoint(startPt);
-  motor.float2Destination(timePeriod);
+  motor->setStartingPoint(startPt);
+  motion.float2Destination(motor, timePeriod);
   //printf ("(unitTest_MotorMovement) propagation time: %f\n", motor.getTime());
-  mathematica.connectedPoints2Mma(motor.pos_history, "float2destination.mma");
+  mathematica.connectedPoints2Mma(motor->pos_history, "float2destination.mma");
   printf ("completed unitTest_ReflectiveBarrier\n");
   
   return true;
@@ -571,7 +654,7 @@ bool P1906MOL_MicrotubulesField::unitTest_PersistenceLengthsVsEntropy()
   printf ("beginning unitTest_PersistenceLengthsVsEntropy\n");
   for (size_t i = 0; i < 10; i++)
     gsl_vector_set (persistenceLengths, i, i * 100);
-  persistenceVersusEntropy(&ts, persistenceLengths);
+  persistenceVersusEntropy(persistenceLengths);
   printf ("completed unitTest_PersistenceLengthsVsEntropy\n");
 
   return true;
@@ -594,27 +677,28 @@ bool P1906MOL_MicrotubulesField::unitTest_VectorField()
 //! test motor movement using Brownian motion until destination volume reached
 bool P1906MOL_MicrotubulesField::unitTest_NoTubeMotion()
 {
-  P1906MOL_Motor motor;
+  Ptr<P1906MOL_Motor> motor = CreateObject<P1906MOL_Motor> ();
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
   double timePeriod = 100;
+  P1906MOL_ExtendedMotion motion;
 
   printf ("beginning unitTest_NoTubeMotion\n");
   //! reset the motor's timer
-  motor.initTime();
+  motor->initTime();
   
   //! start at zero
   point (startPt, 0, 0, 0);
   
   //! volume surface must overlap with destination in order for the test to end
-  motor.displayVolSurfaces();  
+  motor->displayVolSurfaces();  
   /*
    * move randomly until destination reached
    */
-  motor.setStartingPoint(startPt);
-  motor.float2Destination(timePeriod);
+  motor->setStartingPoint(startPt);
+  motion.float2Destination(motor, timePeriod);
   //printf ("(unitTest_MotorMovement) propagation time: %f\n", motor.getTime());
-  mathematica.connectedPoints2Mma(motor.pos_history, "float2destination.mma");
+  mathematica.connectedPoints2Mma(motor->pos_history, "float2destination.mma");
   printf ("completed unitTest_NoTubeMotion\n");
   
   return true;
@@ -623,33 +707,34 @@ bool P1906MOL_MicrotubulesField::unitTest_NoTubeMotion()
 //! test motor movement to a tube and then walking along the tube
 bool P1906MOL_MicrotubulesField::unitTest_MotorMovement(vector<P1906MOL_Pos> & pts)
 {
-  P1906MOL_Motor motor;
+  Ptr<P1906MOL_Motor> motor = CreateObject<P1906MOL_Motor> ();
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
   //double timePeriod = 100;
+  P1906MOL_ExtendedMotion motion;
 
   printf ("beginning unitTest_MotorMovement\n");
   //! reset the motor's timer
-  motor.initTime();
+  motor->initTime();
   
   /*
    * move randomly until overlap with tube
    */
-  motor.pos_history.clear();
+  motor->pos_history.clear();
   point (startPt, 
     gsl_matrix_get (tubeMatrix, 0, 0) + 30, //! start 10 nanometers away from the first tube segment
 	gsl_matrix_get (tubeMatrix, 0, 1),
 	gsl_matrix_get (tubeMatrix, 0, 2));
-  motor.float2Tube(r, startPt, motor.pos_history, tubeMatrix, 0.1, motor.vsl);
+  motion.float2Tube(motor, r, startPt, motor->pos_history, tubeMatrix, 0.1, motor->vsl);
   //printf ("completed float2Tube\n");
   //printf ("(unitTest_MotorMovement) float2Tube propagation time: %f\n", motor.getTime());
   //printf ("(unitTest_MotorMovement) float2Tube number of positions: %ld\n", motor.pos_history.size());
-  mathematica.connectedPoints2Mma(motor.pos_history, "motion2tube.mma");
+  mathematica.connectedPoints2Mma(motor->pos_history, "motion2tube.mma");
   //printf ("completed connectedPoints2Mma\n");
   
   //! start where the motor ended
   P1906MOL_Pos Pos;
-  Pos = motor.pos_history.back();
+  Pos = motor->pos_history.back();
   double x, y, z;
   Pos.getPos (&x, &y, &z);
   point(startPt, x, y, z);
@@ -659,13 +744,13 @@ bool P1906MOL_MicrotubulesField::unitTest_MotorMovement(vector<P1906MOL_Pos> & p
   /*
    * now walk along the tube
    */
-  motor.pos_history.clear();
-  motor.motorWalk(r, startPt, motor.pos_history, tubeMatrix, ts.segPerTube, motor.vsl);
+  motor->pos_history.clear();
+  motion.motorWalk(motor, r, startPt, motor->pos_history, tubeMatrix, ts.segPerTube, motor->vsl);
   //printf ("(unitTest_MotorMovement) motorWalk propagation time: %f\n", motor.getTime());
-  printf ("(unitTest_MotorMovement) motorWalk number of positions: %ld\n", motor.pos_history.size());
-  mathematica.connectedPoints2Mma(motor.pos_history, "motion2end_of_tube.mma");
+  printf ("(unitTest_MotorMovement) motorWalk number of positions: %ld\n", motor->pos_history.size());
+  mathematica.connectedPoints2Mma(motor->pos_history, "motion2end_of_tube.mma");
   //! append the motor history into pts
-  pts.insert(pts.end(), motor.pos_history.begin(), motor.pos_history.end());
+  pts.insert(pts.end(), motor->pos_history.begin(), motor->pos_history.end());
   printf ("completed unitTest_MotorMovement\n");
   
   return true;
@@ -705,26 +790,27 @@ bool P1906MOL_MicrotubulesField::unitTest_Plot2Mma(vector<P1906MOL_Pos> & pts)
 //! test motor movement to destination using Brownian and microtubules if they exist
 bool P1906MOL_MicrotubulesField::unitTest_MotorMove2Destination(vector<P1906MOL_Pos> & pts)
 {
-  P1906MOL_Motor motor;
+  Ptr<P1906MOL_Motor> motor = CreateObject<P1906MOL_Motor> ();
   P1906MOL_MathematicaHelper mathematica;
   gsl_vector * startPt = gsl_vector_alloc (3);
   double timePeriod = 100;
+  P1906MOL_ExtendedMotion motion;
 
   printf ("beginning unitTest_MotorMove2Destination\n");
   //! reset the motor's timer
-  motor.initTime();
+  motor->initTime();
   
   //! start at zero
   point (startPt, 0, 0, 0);
 
-  motor.pos_history.clear(); //! reset the position history
-  motor.setStartingPoint(startPt);
+  motor->pos_history.clear(); //! reset the position history
+  motor->setStartingPoint(startPt);
 
-  motor.move2Destination(tubeMatrix, ts.segPerTube, timePeriod, motor.pos_history);
+  motion.move2Destination(motor, tubeMatrix, ts.segPerTube, timePeriod, motor->pos_history);
   //printf ("(unitTest_MotorMove2Destination) propagation time: %f\n", motor.getTime());
-  mathematica.connectedPoints2Mma(motor.pos_history, "motion2destination.mma");
+  mathematica.connectedPoints2Mma(motor->pos_history, "motion2destination.mma");
   //! append the motor history into pts
-  pts.insert(pts.end(), motor.pos_history.begin(), motor.pos_history.end());
+  pts.insert(pts.end(), motor->pos_history.begin(), motor->pos_history.end());
   printf ("completed unitTest_MotorMove2Destination\n");
   
   return true;
@@ -732,9 +818,6 @@ bool P1906MOL_MicrotubulesField::unitTest_MotorMove2Destination(vector<P1906MOL_
 
 P1906MOL_MicrotubulesField::~P1906MOL_MicrotubulesField ()
 {
-  //! close down field activity
-  gsl_rng_free (r);
-
   NS_LOG_FUNCTION (this);
 }
 

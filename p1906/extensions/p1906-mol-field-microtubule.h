@@ -48,6 +48,8 @@ using namespace std;
 #include "ns3/p1906-mol-extended-field.h"
 #include "ns3/p1906-mol-extended-motion.h"
 
+#include "ns3/tube-characteristics.h"
+
 namespace ns3 {
 
 /**
@@ -78,11 +80,8 @@ class P1906MOL_MicrotubulesField : public P1906MOL_ExtendedField
 {
 public:
   static TypeId GetTypeId (void);
-  
-  P1906MOL_MicrotubulesField ();
-  
-  //! create a given density of tubes of numSegments in given volume
-  //! default volume starts at origin with length volume^(1/4) in each dimension  
+    
+  //! create a given density of tubes of numSegments in given volume; default volume starts at origin with length volume^(1/4) in each dimension  
   gsl_matrix * tubeMatrix;
   //! properties of the microtubule network
   tubeCharacteristcs_t ts;
@@ -92,15 +91,42 @@ public:
   //! random number generation structures and initialization
   const gsl_rng_type * T;
   gsl_rng * r;
-
+  
+  P1906MOL_MicrotubulesField ();
+  
+  /*
+   * Methods related to tube properties
+   */
+  //! set the volume in which tubes will be generated
+  void setTubeVolume(double volume = 25);
+  //! set the mean tube length
+  void setTubeLength(double mean_tube_length = 100);
+  //! set the mean angle between tube segments
+  void setTubeIntraAngle(double mean_intra_tube_angle = 30);
+  //! set the mean angle between entire tubes
+  void setTubeInterAngle(double mean_inter_tube_angle = 10);
+  //! set the density of tube segments
+  void setTubeDensity(double mean_tube_density = 10);
+  //! set the persistence length of the tubes
+  void setTubePersistenceLength(double persistenceLength = 50);
+  //! set the number of segments per tube
+  void setTubeSegments(size_t segPerTube = 10);
+  //! display all the microtubule network properties
+  void displayTubeChars();
+  
   /*
    * Methods related to creating microtubules and analyzing molecular motor transport
    */
-  
+  //! return the size of the matrix to allocate
+  void getTubesSize(double * rows, double * cols);
+  //! export tubes; copy the object's tubeMatrix into tm for use outside the object
+  void getTubes(gsl_matrix * tm);
+  //! import tubes; create a local copy of the tube structure tm in tubeMatrix
+  void setTubes(gsl_matrix * tm);
   //! fill tubeMatrix with random tubes in area with a given number of total segments and persistence length
-  void genTubes(struct tubeCharacteristcs_t * ts);
+  void genTubes();
   //! plot persistence length versus structural entropy
-  void persistenceVersusEntropy(struct tubeCharacteristcs_t * ts, gsl_vector * persistenceLengths);
+  void persistenceVersusEntropy(gsl_vector * persistenceLengths);
 
   /*
    * Methods implementing unit tests
