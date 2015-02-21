@@ -44,6 +44,7 @@
 
 
 NS_LOG_COMPONENT_DEFINE ("P1906Medium");
+
 namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (P1906Medium);
@@ -156,6 +157,20 @@ P1906Medium::AddP1906CommunicationInterface (Ptr<P1906CommunicationInterface> i)
 {
   NS_LOG_FUNCTION (this);
   m_communicationInterfaces->push_back (i);
+}
+
+void
+P1906Medium::SetP1906CommunicationInterfaces (P1906CommunicationInterfaces* i)
+{
+  NS_LOG_FUNCTION (this);
+  m_communicationInterfaces = i;
+}
+
+P1906Medium::P1906CommunicationInterfaces*
+P1906Medium::GetP1906CommunicationInterfaces ()
+{
+  NS_LOG_FUNCTION (this);
+  return m_communicationInterfaces;
 }
 
 

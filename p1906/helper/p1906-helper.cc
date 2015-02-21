@@ -69,6 +69,18 @@
 #include "../extensions/p1906-mol-extended-transmitter-communication-interface.h"
 #include "../extensions/p1906-mol-extended-receiver-communication-interface.h"
 
+#include "../extension-template/extension-name-p1906-communication-interface.h"
+#include "../extension-template/extension-name-p1906-field.h"
+#include "../extension-template/extension-name-p1906-medium.h"
+#include "../extension-template/extension-name-p1906-message-carrier.h"
+#include "../extension-template/extension-name-p1906-motion.h"
+#include "../extension-template/extension-name-p1906-net-device.h"
+#include "../extension-template/extension-name-p1906-perturbation.h"
+#include "../extension-template/extension-name-p1906-receiver-communication-interface.h"
+#include "../extension-template/extension-name-p1906-specificity.h"
+#include "../extension-template/extension-name-p1906-transmitter-communication-interface.h"
+
+
 NS_LOG_COMPONENT_DEFINE ("P1906Helper");
 
 namespace ns3 {
@@ -127,14 +139,23 @@ P1906Helper::EnableLogComponents (void)
   LogComponentEnable ("P1906MOLPerturbation", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOLSpecificity", LOG_LEVEL_ALL);
   
-  
   LogComponentEnable ("P1906MOL_Motor", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOL_ExtendedField", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOL_ExtendedMotion", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOL_ExtendedPerturbation", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOL_ExtendedTransmitterCommunicationInterface", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906MOL_ExtendedReceiverCommunicationInterface", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedCommunicationInterface", LOG_LEVEL_ALL);
+
+  LogComponentEnable ("ExtensionNameP1906NetDevice", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906Medium", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906MessageCarrier", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906CommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906TransmitterCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906ReceiverCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906Field", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906Motion", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906Perturbation", LOG_LEVEL_ALL);
+  LogComponentEnable ("ExtensionNameP1906Specificity", LOG_LEVEL_ALL);
 
 }
 

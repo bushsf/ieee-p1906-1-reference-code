@@ -32,7 +32,18 @@ def build(bld):
 		'model-mol/p1906-mol-communication-interface.cc',
     	'model-mol/p1906-mol-transmitter-communication-interface.cc',
     	'model-mol/p1906-mol-receiver-communication-interface.cc',
-    	
+    	   	
+    	'extension-template/extension-name-p1906-medium.cc',
+    	'extension-template/extension-name-p1906-net-device.cc',
+    	'extension-template/extension-name-p1906-message-carrier.cc',
+    	'extension-template/extension-name-p1906-field.cc',
+    	'extension-template/extension-name-p1906-motion.cc',
+    	'extension-template/extension-name-p1906-perturbation.cc',
+    	'extension-template/extension-name-p1906-specificity.cc',
+    	'extension-template/extension-name-p1906-communication-interface.cc',
+    	'extension-template/extension-name-p1906-transmitter-communication-interface.cc',
+    	'extension-template/extension-name-p1906-receiver-communication-interface.cc,
+
         'extensions/p1906-mol-field-microtubule.cc',
 		'extensions/p1906-mol-extended-field.cc',
 		'extensions/p1906-mol-extended-motion.cc',
@@ -47,6 +58,7 @@ def build(bld):
 		'extensions/p1906-mol-extended-communication-interface.cc',
     	'extensions/p1906-mol-extended-transmitter-communication-interface.cc',
     	'extensions/p1906-mol-extended-receiver-communication-interface.cc'
+
     	]
 
     module_test = bld.create_ns3_module_test_library('p1906')
@@ -85,7 +97,19 @@ def build(bld):
     	'model-mol/p1906-mol-transmitter-communication-interface.h',
     	'model-mol/p1906-mol-receiver-communication-interface.h',
 
-	    'extensions/p1906-mol-extended-field.h',
+		'extension-template/extension-name-p1906-medium.h',
+    	'extension-template/extension-name-p1906-net-device.h',
+    	'extension-template/extension-name-p1906-message-carrier.h',
+    	'extension-template/extension-name-p1906-field.h',
+    	'extension-template/extension-name-p1906-motion.h',
+    	'extension-template/extension-name-p1906-perturbation.h',
+    	'extension-template/extension-name-p1906-specificity.h',
+    	'extension-template/extension-name-p1906-communication-interface.h',
+    	'extension-template/extension-name-p1906-transmitter-communication-interface.h',
+    	'extension-template/extension-name-p1906-receiver-communication-interface.h',
+	    
+
+        'extensions/p1906-mol-extended-field.h',
 		'extensions/p1906-mol-extended-motion.h',
 		'extensions/p1906-mol-MathematicaHelper.h',
 		'extensions/p1906-mol-field-microtubule.h',
@@ -100,7 +124,7 @@ def build(bld):
     	'extensions/p1906-mol-extended-transmitter-communication-interface.h',
     	'extensions/p1906-mol-extended-receiver-communication-interface.h',
 		
-		'extensions/tube-characteristics.h'
+		'extensions/tube-characteristics.h'		
     	]
 
     if (bld.env['ENABLE_EXAMPLES']):
