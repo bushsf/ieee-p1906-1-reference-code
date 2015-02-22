@@ -171,7 +171,42 @@ In this step we create a motor and set it's initial position. Notice that GetDif
   motor->setStartingPoint(startPt);
     
 === Step 3: Set Destination and Reflective Boundary ===
-We need to tell the motor where it's destination is so it knows when to stop. This is extremely important, otherwise the motor will continue wandering forever without a destination.
+We need to tell the motor where it's destination is located so it knows when to stop. This is extremely important, otherwise the motor will continue wandering forever without a destination. In the illustration below, motors are created in the center of the Reflective Barrier surface volume and are considered to be received with then pass through the Receiver volume surface. In this example we ignore microtubules for simplicity.
+
+==== Volume Surface Diagram ====
+
+<pre>
+          The Surface Measures Flux, Constrains Particle 
+                 Motion, and Defines a Receiver
+                     _,.,---''''''''---..__
+                _.-''                      `-.._
+             ,-'                                `..
+          ,-' __                                   `._
+        ,'  ,'  `-.  Motor received here              `.
+      ,'   /      _\____                                \
+     /    |    X   |   /                                 `.
+    /      \      ,'  /____                                \
+   /        `._,,'        /                                 \
+  |    Receiver Surface  /                                   |
+  |                     /    Motor transmitted here          |
+ |                      -------X  _,''   ``._                |
+ |                               /           \               |
+ |                              /             \              |
+  |                            |       X       |             /
+  \                            `.             .'            /
+   \                            |             |            ,'
+    \                           `-.         ,'            ,'
+     `.                            `..__,,,'             /
+       `.                       FluxMeter Surface      ,'
+         `.                                          ,'
+           `.                                     _,'
+             `-._                              ,,'
+                 `-..__                  _,.-''
+                       ``---........---''
+
+          Reflective Barrier Volume Surface
+           
+</pre>
 
 ==== Sample Code ====
   
@@ -237,7 +272,38 @@ Compute and return the motor propagation time.
 
   //! return the time for the motor's journey form its creation to the receiver  
   return motor->getTime();
-  
+
+=== Step 8: Integrate with IEEE 1906 Reference Code ===
+This is probably the most important step to learn: how to properly integrate your code with the reference model. The two most important methods for this integration are shown in the Sample Code below. These are methods that appear in the Motion class and are created when we extend the Motion class for our particular application. This application extends the molecular diffusion model, which had extended the core Motion class. 
+
+First, ComputePropagationDelay() provides pointers to the ns-3 information required to simulate the motor, or hopefully any, propagation delay. All of the previous Sample Code is inside (except creation of the microtubules) is inside this method. 
+
+Second, CalculateReceivedMessageCarrier() simply returns the message carrier as it appears upon reception at the receiver, which in this case is simply a motor.
+
+==== Sample Code ====
+
+  double P1906MOL_ExtendedMotion::ComputePropagationDelay (Ptr<P1906CommunicationInterface> src,
+  		                                  Ptr<P1906CommunicationInterface> dst,
+  		                                  Ptr<P1906MessageCarrier> message,
+  		                                  Ptr<P1906Field> field)
+  {
+    (all the prior code above goes here in order to compute propagation delay by actually simulating a motor)
+  }
+
+
+  //! this method is called from inside the core Medium class before reception occurs
+  //! this returns the receivedMessageCarrier that appears at the receiver
+  Ptr<P1906MessageCarrier> P1906MOL_ExtendedMotion::CalculateReceivedMessageCarrier(Ptr<P1906CommunicationInterface> src,
+  		                                                           Ptr<P1906CommunicationInterface> dst,
+  		                                                           Ptr<P1906MessageCarrier> motor,
+    		                                                           Ptr<P1906Field> field)
+  {
+    //! 'message' above is really the message carrier (motor)
+    
+    NS_LOG_FUNCTION (this << "Do nothing for motor");
+    return motor;
+  }
+
 == Notes ==
 * vector field reconstruction using 3D interpolation is done using output data in Mathematica
 * more IEEE 1906 metrics should be implemented and tested
