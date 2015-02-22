@@ -74,25 +74,37 @@
 //! |                      |                       |
 //! +----------------------+-----------------------+
 //! 
-//!            Motor and Microtubule Network
-//!
-//!     XXXXX                                             
-//!         XXX XX                 XXXX                 
-//!                XX X       XXXXX   XXX               
-//!            _        XXXXXXXX          XXXXXX         
-//!            /|        XXXXX                 XXX       
-//!    +-+   /     XXXXXX    XX                 XXX     
-//!    +-+      XXX           XX                  XX    
-//! MOLECULAR XXX                X                  XXXXX  
-//!   MOTOR                      XXXXX                  X
-//!                                                     
-//!            XXXXX                                    
-//!                 X XX X                              
-//!                       X X XX                      XX
-//!                             XXXX XX XXXXXX XXXXXXX  
-//!                                                     
-//!                              MICROTUBULES
-//! </pre>
+//! <pre>
+//!          The Surface Measures Flux, Constrains Particle 
+//!                 Motion, and Defines a Receiver
+//!                     _,.,---''''''''---..__
+//!                _.-''                      `-.._
+//!             ,-'                                `..
+//!          ,-' __                                   `._
+//!        ,'  ,'  `-.                                   `.
+//!      ,'   /Node 2_\____                                \
+//!     /    |    X   |   /   Brownian Motion               `.
+//!    /      \      ,'  /____                                \
+//!   /        `._,,'        /                                 \
+//!  |    Receiver Surface  /                                   |
+//!  |                     /    Node 1                          |
+//! |                     -------X                              |
+//! |                                                           |
+//! |                                                           |
+//!  |                                                          /
+//!  \                                                         /
+//!   \                                                       ,'
+//!    \                                                     ,'
+//!     `.                                                  /
+//!       `.                                              ,'
+//!         `.                                          ,'
+//!           `.                                     _,'
+//!             `-._                              ,,'
+//!                 `-..__                  _,.-''
+//!                       ``---........---''
+//!                Reflective Barrier Volume Surface
+//!           
+//!</pre>
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
