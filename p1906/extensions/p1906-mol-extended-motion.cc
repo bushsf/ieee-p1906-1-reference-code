@@ -64,6 +64,9 @@
 #include "ns3/mobility-model.h"
 #include "ns3/p1906-net-device.h"
 
+//! for ODE test \todo remove before submitting
+#include "ns3/p1906-mol-diffusion.h"
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("P1906MOL_ExtendedMotion");
@@ -351,6 +354,37 @@ int P1906MOL_ExtendedMotion::freeFloat(Ptr<P1906MessageCarrier> carrier, gsl_rng
 //! this is called inside the core Medium class before reception
 //! this is where the main action happens: motor movement occurs here
 //! field is actually the extended P1906MOL_MicrotubulesField of the transmitting node
+//! <pre>
+//!          The Surface Measures Flux, Constrains Particle 
+//!                 Motion, and Defines a Receiver
+//!                     _,.,---''''''''---..__
+//!                _.-''                      `-.._
+//!             ,-'                                `..
+//!          ,-' __                                   `._
+//!        ,'  ,'  `-.  Motor received here              `.
+//!      ,'   /      _\____                                .
+//!     /    |    X   |   /                                 `.
+//!    /      \      ,'  /____                                .
+//!   /        `._,,'        /                                 .
+//!  |    Receiver Surface  /                                   |
+//!  |                     /    Motor transmitted here          |
+//! |                     -------X   _,''   ``._                |
+//! |                               /           \               |
+//! |                              /             \              |
+//!  |                            |       X       |             /
+//!  \                            `.             .'            /
+//!   \                            |             |            ,'
+//!    \                           `-.         ,'            ,'
+//!     `.                            `..__,,,'             /
+//!       `.                       FluxMeter Surface      ,'
+//!         `.                                          ,'
+//!           `.                                     _,'
+//!             `-._                              ,,'
+//!                 `-..__                  _,.-''
+//!                       ``---........---''
+//!                Reflective Barrier Volume Surface
+//!           
+//!</pre>
 double P1906MOL_ExtendedMotion::ComputePropagationDelay (Ptr<P1906CommunicationInterface> src,
   		                                  Ptr<P1906CommunicationInterface> dst,
   		                                  Ptr<P1906MessageCarrier> message,
@@ -361,8 +395,15 @@ double P1906MOL_ExtendedMotion::ComputePropagationDelay (Ptr<P1906CommunicationI
   double timePeriod = 100;
   char plot_filename[256];
   //! fix the units used here with those passed in via _RUN_MOTOR_CHANNEL_CAPACITY_
-  float distanceMultiplier = pow(10, 9); //! convert meters to nanometers
+  float distanceMultiplier = pow(10.0, 9); //! convert meters to nanometers
   double D = 1.0; //! mass diffusivity (default)
+  
+  //! begin test of ODE - \todo remove before submitting
+  P1906MOL_ExtendedDiffusion dif;
+  dif.displayODE ();
+  dif.unitTest_ODE ();
+  dif.unitTest_diffusion ();
+  //! end test of ODE
 
   NS_LOG_FUNCTION (this << "beginning ComputePropagationDelay");
   
