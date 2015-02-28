@@ -36,7 +36,6 @@
 
 
 namespace ns3 {
-
 class P1906CommunicationInterface;
 class P1906MessageCarrier;
 class P1906Field;
@@ -59,7 +58,7 @@ public:
 
   static TypeId GetTypeId ();
 
-  // Methods inherited from base class
+  // Methods inherrited from base class
   virtual uint32_t GetNDevices (void) const;
   virtual Ptr<NetDevice> GetDevice (uint32_t i) const;
 
@@ -88,9 +87,6 @@ public:
   Ptr<P1906Motion> GetP1906Motion ();
 
   typedef std::vector< Ptr<P1906CommunicationInterface> > P1906CommunicationInterfaces;
-
-  void SetP1906CommunicationInterfaces (P1906CommunicationInterfaces* i);
-  P1906CommunicationInterfaces* GetP1906CommunicationInterfaces ();
 
 private:
   P1906CommunicationInterfaces* m_communicationInterfaces;
