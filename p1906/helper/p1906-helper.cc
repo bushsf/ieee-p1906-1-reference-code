@@ -60,14 +60,13 @@
 #include "../model-mol/p1906-mol-transmitter-communication-interface.h"
 #include "../model-mol/p1906-mol-receiver-communication-interface.h"
 
-#include "../extensions/p1906-mol-motor.h"
-#include "../extensions/p1906-mol-extended-perturbation.h"
-#include "../extensions/p1906-mol-extended-motion.h"
-#include "../extensions/p1906-mol-extended-field.h"
-//#include "../extensions/p1906-mol-specificity.h"
-#include "../extensions/p1906-mol-extended-communication-interface.h"
-#include "../extensions/p1906-mol-extended-transmitter-communication-interface.h"
-#include "../extensions/p1906-mol-extended-receiver-communication-interface.h"
+#include "../model-motor/p1906-mol-motor.h"
+#include "../model-motor/p1906-mol-motor-perturbation.h"
+#include "../model-motor/p1906-mol-motor-motion.h"
+#include "../model-motor/p1906-mol-motor-field.h"
+#include "../model-motor/p1906-mol-motor-communication-interface.h"
+#include "../model-motor/p1906-mol-motor-transmitter-communication-interface.h"
+#include "../model-motor/p1906-mol-motor-receiver-communication-interface.h"
 
 NS_LOG_COMPONENT_DEFINE ("P1906Helper");
 
@@ -129,12 +128,12 @@ P1906Helper::EnableLogComponents (void)
   
   
   LogComponentEnable ("P1906MOL_Motor", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedField", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedMotion", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedPerturbation", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedTransmitterCommunicationInterface", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedReceiverCommunicationInterface", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MOL_ExtendedCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_MOTOR_Field", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_MOTOR_Motion", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_MOTOR_Perturbation", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_MOTOR_TransmitterCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_MOTOR_ReceiverCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOL_MOTOR_CommunicationInterface", LOG_LEVEL_ALL);
 
 }
 

@@ -20,10 +20,9 @@
 # *  IEEE harmless from any damages or liability arising out of
 # *  the use thereof.
 # *
-# * Author: Giuseppe Piro - Telematics Lab Research Group
-# *                         Politecnico di Bari
-# *                         giuseppe.piro@poliba.it
-# *                         telematics.poliba.it/piro
+#  * Author: Stephen F Bush - GE Global Research
+# *                      bushsf@research.ge.com
+# *                      http://www.amazon.com/author/stephenbush
 # */
 
 
@@ -37,7 +36,7 @@ for nodeDistance in 1.00000000000000e-06    0.00101109090909091     0.0020211818
 do
 
 
-	./waf --run "microtubules-example --nodeDistance=${nodeDistance}" &> tmp_out
+	./waf --run "motor-example --nodeDistance=${nodeDistance}" &> tmp_out
 
 	grep testcapacity tmp_out | awk '{print $6, $8}' > tmp_select
 

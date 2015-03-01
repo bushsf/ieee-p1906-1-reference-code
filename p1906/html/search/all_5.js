@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['findclosestpoint',['findClosestPoint',['../classns3_1_1_p1906_m_o_l___extended_field.html#af235a42e0f1f1f8b838dff39a2eb59e0',1,'ns3::P1906MOL_ExtendedField']]],
-  ['findnearesttube',['findNearestTube',['../classns3_1_1_p1906_m_o_l___extended_field.html#a1a72ce15781befb78aa12f651e20b200',1,'ns3::P1906MOL_ExtendedField']]],
-  ['float2destination',['float2Destination',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a41ddcfb5536a7130280c53489603daba',1,'ns3::P1906MOL_ExtendedMotion']]],
-  ['float2tube',['float2Tube',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a503d1d0f9fe453e47050151ba45d2a0e',1,'ns3::P1906MOL_ExtendedMotion']]],
-  ['fluxmeter',['fluxMeter',['../classns3_1_1_p1906_m_o_l___vol_surface.html#a8bb268eda92a459c54220edfd75504ca',1,'ns3::P1906MOL_VolSurface']]],
-  ['freefloat',['freeFloat',['../classns3_1_1_p1906_m_o_l___extended_motion.html#a970ca616e12fd0ff13794a9d5aa143c7',1,'ns3::P1906MOL_ExtendedMotion']]]
+  ['findclosestpoint',['findClosestPoint',['../classns3_1_1_p1906_m_o_l___m_o_t_o_r___field.html#aeaf84ff9c9f18268e62c9a0c6b65736e',1,'ns3::P1906MOL_MOTOR_Field']]],
+  ['findnearesttube',['findNearestTube',['../classns3_1_1_p1906_m_o_l___m_o_t_o_r___field.html#aa685467bd62dbbc5548457aba08c6319',1,'ns3::P1906MOL_MOTOR_Field']]],
+  ['float2destination',['float2Destination',['../classns3_1_1_p1906_m_o_l___m_o_t_o_r___motion.html#abe2ec6a4407b358dae309bc3f699dd4c',1,'ns3::P1906MOL_MOTOR_Motion']]],
+  ['float2tube',['float2Tube',['../classns3_1_1_p1906_m_o_l___m_o_t_o_r___motion.html#a4596832158501b86096a45f6a0afeb87',1,'ns3::P1906MOL_MOTOR_Motion']]],
+  ['fluxmeter',['fluxMeter',['../classns3_1_1_p1906_m_o_l___m_o_t_o_r___vol_surface.html#ab9de294ac38ab43f4ea3a19d19888a9b',1,'ns3::P1906MOL_MOTOR_VolSurface']]],
+  ['freefloat',['freeFloat',['../classns3_1_1_p1906_m_o_l___m_o_t_o_r___motion.html#ae3b718fae0b7ce870f176fb98b7c2c66',1,'ns3::P1906MOL_MOTOR_Motion']]]
 ];

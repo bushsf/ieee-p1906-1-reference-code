@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['persistencelength',['persistenceLength',['../structtube_characteristcs__t.html#ae159c7d5866e6f49e343e29100833eab',1,'tubeCharacteristcs_t']]],
-  ['pos_5fhistory',['pos_history',['../classns3_1_1_p1906_m_o_l___motor.html#a6d98a54420ecb597c68d49d7d53363e3',1,'ns3::P1906MOL_Motor']]]
+  ['mean_5finter_5ftube_5fangle',['mean_inter_tube_angle',['../structtube_characteristcs__t.html#a4ddf5678cf6df4cdf6daa54f8b8fd57f',1,'tubeCharacteristcs_t']]],
+  ['mean_5fintra_5ftube_5fangle',['mean_intra_tube_angle',['../structtube_characteristcs__t.html#a08772c37bc3cfddd970315f33c10bbf0',1,'tubeCharacteristcs_t']]],
+  ['mean_5ftube_5fdensity',['mean_tube_density',['../structtube_characteristcs__t.html#ad7e04c073e206ba95e10f4ab150e95cd',1,'tubeCharacteristcs_t']]],
+  ['mean_5ftube_5flength',['mean_tube_length',['../structtube_characteristcs__t.html#a21345c643db068d46551097b71dc9c7f',1,'tubeCharacteristcs_t']]]
 ];

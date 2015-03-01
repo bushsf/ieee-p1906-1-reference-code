@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['radius',['radius',['../classns3_1_1_p1906_m_o_l___vol_surface.html#a3d6632e1296cdc0bd049d0867eb65c57',1,'ns3::P1906MOL_VolSurface']]]
+  ['numsegments',['numSegments',['../structtube_characteristcs__t.html#a97eaaa23dff7caea7a8994a27e84a074',1,'tubeCharacteristcs_t']]],
+  ['numtubes',['numTubes',['../structtube_characteristcs__t.html#a6ea3160a8ebb75c6775d29caf16331c4',1,'tubeCharacteristcs_t']]]
 ];
