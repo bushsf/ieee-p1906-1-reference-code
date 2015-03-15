@@ -46,6 +46,12 @@ using namespace std;
 #include "ns3/nstime.h"
 #include "ns3/ptr.h"
 
+#include "ns3/double.h"
+#include "ns3/object-vector.h"
+#include "ns3/uinteger.h"
+#include "ns3/traced-value.h"
+#include "ns3/trace-source-accessor.h"
+
 namespace ns3 {
 
 /**
@@ -76,6 +82,9 @@ public:
   P1906MOL_MOTOR_Pos ();
 
   gsl_vector * pos;
+  TracedValue<double_t> pos_x;
+  TracedValue<double_t> pos_y;
+  TracedValue<double_t> pos_z;
   
   /*
    * Methods related to recording position
@@ -92,7 +101,7 @@ public:
   void getPos (double * x, double * y, double * z);
   //! retrieve the position into out_pos vector [x y z]
   void getPos (gsl_vector * out_pos);
-  
+    
   /*
    * Operations on position
    */  
@@ -108,6 +117,8 @@ public:
   virtual ~P1906MOL_MOTOR_Pos ();
 
 };
+
+std::ostream& operator<<(std::ostream& out, const P1906MOL_MOTOR_Pos& p);
 
 }
 

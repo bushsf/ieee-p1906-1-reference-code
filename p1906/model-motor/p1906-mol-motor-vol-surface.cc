@@ -59,10 +59,19 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("P1906MOL_MOTOR_VolSurface");
 
+NS_OBJECT_ENSURE_REGISTERED (P1906MOL_MOTOR_VolSurface);
+
+//! \todo Trace should include flux and reflections
 TypeId P1906MOL_MOTOR_VolSurface::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::P1906MOL_MOTOR_VolSurface")
-    .SetParent<P1906MOL_MOTOR_Field> ();
+    .SetParent<P1906MOL_MOTOR_Field> ()
+	//.AddAttribute ("ZLocation",
+	//               "The current Euclidean Z position.",
+	//               ObjectVectorValue (),
+	//			     MakeDoubleAccessor (&P1906MOL_MOTOR_Pos::pos_z),
+	//			     MakeDoubleChecker<double> ())
+	;
   return tid;
 }
 
@@ -86,6 +95,11 @@ P1906MOL_MOTOR_VolSurface::P1906MOL_MOTOR_VolSurface ()
   T = gsl_rng_default;
   r = gsl_rng_alloc (T);  
   gsl_rng_env_setup();  
+}
+
+std::ostream& operator<<(std::ostream& out, const P1906MOL_MOTOR_VolSurface& vs)
+{
+   return out << "center: " << vs.center << " radius: " << vs.radius << " type: " << vs.volType;
 }
 
 //! print information about the volume surface
@@ -149,6 +163,7 @@ void P1906MOL_MOTOR_VolSurface::reflect(P1906MOL_MOTOR_Pos last_pos, P1906MOL_MO
   gsl_matrix * vectors = gsl_matrix_alloc (2, 6);
 
   //printf ("(reflect) Begin\n");
+  NS_LOG_DEBUG ("last_pos: " << last_pos << " current_pos: " << current_pos);
   
   //! x_1' - x_0 = v - 2 (v . n) n
   //! This works, but it reflects off the radius instead of the sphere.
@@ -172,6 +187,7 @@ void P1906MOL_MOTOR_VolSurface::reflect(P1906MOL_MOTOR_Pos last_pos, P1906MOL_MO
   if (intersection.size() == 0)
   {
       printf ("(reflect) motor did not pass through surface\n");
+	  NS_LOG_DEBUG ("motor did not pass through surface");
   }
   
   //! segment CR is the radius of the volume
@@ -229,6 +245,8 @@ void P1906MOL_MOTOR_VolSurface::reflect(P1906MOL_MOTOR_Pos last_pos, P1906MOL_MO
   //printf ("(reflect) current_pos after reflection\n");
   //current_pos.displayPos();
   
+  NS_LOG_DEBUG ("reflected current_pos: " << current_pos);
+  
   //printf ("(reflect) End\n");
 }
 
@@ -255,6 +273,24 @@ double P1906MOL_MOTOR_VolSurface::vectorAngle(gsl_vector * seg1, gsl_vector * se
   gsl_vector_set (v2, 1, gsl_vector_get (seg2, 4) - gsl_vector_get (seg2, 1));
   gsl_vector_set (v2, 2, gsl_vector_get (seg2, 5) - gsl_vector_get (seg2, 2));
   
+  NS_LOG_DEBUG ("v1: " <<
+    gsl_vector_get (v1, 0) << " " <<
+	gsl_vector_get (v1, 2) << " " <<
+	gsl_vector_get (v1, 3) << " " <<
+	gsl_vector_get (v1, 4) << " " <<
+	gsl_vector_get (v1, 5) << " " <<
+	gsl_vector_get (v1, 6)
+  );
+  
+  NS_LOG_DEBUG ("v2: " <<
+    gsl_vector_get (v2, 0) << " " <<
+	gsl_vector_get (v2, 2) << " " <<
+	gsl_vector_get (v2, 3) << " " <<
+	gsl_vector_get (v2, 4) << " " <<
+	gsl_vector_get (v2, 5) << " " <<
+	gsl_vector_get (v2, 6)
+  );
+  
   double dot;
   gsl_blas_ddot (v1, v2, &dot);
   //printf ("(vectorAngle) dot: %lf \n", dot);
@@ -270,6 +306,8 @@ double P1906MOL_MOTOR_VolSurface::vectorAngle(gsl_vector * seg1, gsl_vector * se
   double angle = acos (arc) * 180.0 / M_PI;
   
   //printf ("(vectorAngle) angle: %lf\n", angle);
+  
+  NS_LOG_DEBUG ("angle: " << angle);
   
   return angle;
 }

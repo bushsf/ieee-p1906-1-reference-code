@@ -50,10 +50,29 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("P1906MOL_Motor");
 
+NS_OBJECT_ENSURE_REGISTERED (P1906MOL_Motor);
+
 TypeId P1906MOL_Motor::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::P1906MOL_Motor")
-    .SetParent<P1906MOLMessageCarrier> ();
+    .SetParent<P1906MOLMessageCarrier> ()
+	.AddConstructor<P1906MOL_Motor> ()
+	.AddAttribute ("Initial X Location",
+	               "The motor starting Euclidean X position.",
+				   ObjectVectorValue (),
+				   MakeDoubleAccessor (&P1906MOL_Motor::start_x),
+				   MakeDoubleChecker<double> ())
+	.AddAttribute ("Initial Y Location",
+	               "The motor starting Euclidean Y position.",
+				   ObjectVectorValue (),
+				   MakeDoubleAccessor (&P1906MOL_Motor::start_y),
+				   MakeDoubleChecker<double> ())
+	.AddAttribute ("Initial Z Location",
+	               "The motor starting Euclidean Z position.",
+				   ObjectVectorValue (),
+				   MakeDoubleAccessor (&P1906MOL_Motor::start_z),
+				   MakeDoubleChecker<double> ())
+	;
   return tid;
 }
 
@@ -87,6 +106,14 @@ P1906MOL_Motor::P1906MOL_Motor ()
   
 }
 
+std::ostream& operator<<(std::ostream& out, const P1906MOL_Motor& m)
+{
+   return out << "time: " << m.t.time
+     << "position: " << gsl_vector_get(m.current_location, 0) 
+     << " " << gsl_vector_get(m.current_location, 1) 
+     << " " << gsl_vector_get(m.current_location, 2);
+}
+
 //! create and store a new volume surface of any type: FluxMeter, ReflectiveBarrier, Receiver
 void P1906MOL_Motor::addVolumeSurface(P1906MOL_MOTOR_Pos v_c, double v_radius, P1906MOL_MOTOR_VolSurface::typeOfVolume v_type)
 {
@@ -95,12 +122,18 @@ void P1906MOL_Motor::addVolumeSurface(P1906MOL_MOTOR_Pos v_c, double v_radius, P
   vs.setVolume(v_c, v_radius);
   vs.setType (v_type);
   vsl.insert(vsl.end(), vs);
+  
+  NS_LOG_DEBUG ("volume surface added: " << vs);
 }
 
 //! this is where the motor starts, for example, the location of the transmitter
+//! this function takes precedence over the attribute settings
 void P1906MOL_Motor::setStartingPoint(gsl_vector * pt)
 {
   gsl_vector_memcpy(current_location, pt);
+  start_x = gsl_vector_get (pt, 0);
+  start_y = gsl_vector_get (pt, 1);
+  start_z = gsl_vector_get (pt, 2);
 }
 
 //! display all the volume surfaces recognizing the motor
@@ -132,6 +165,7 @@ bool P1906MOL_Motor::inDestination()
   if (numDest < 1)
   {
     printf ("(inDestination) Warning! No destination P1906MOL_MOTOR_VolSurface::Receiver volume found!\n");
+	NS_LOG_WARN ("No destination P1906MOL_MOTOR_VolSurface::Receiver volume found!");
   }
   
   return inDest;
@@ -143,17 +177,17 @@ void P1906MOL_Motor::setLocation(P1906MOL_MOTOR_Pos pt)
   double x, y, z;
   
   pt.getPos (&x, &y, &z);
-  gsl_vector_set( current_location, 0, x);
-  gsl_vector_set( current_location, 1, y);
-  gsl_vector_set( current_location, 2, z);
+  gsl_vector_set (current_location, 0, x);
+  gsl_vector_set (current_location, 1, y);
+  gsl_vector_set (current_location, 2, z);
 }
 
 //! set the current location to the 3D Cartesian coordinates
 void P1906MOL_Motor::setLocation(double x, double y, double z)
 {
-  gsl_vector_set( current_location, 0, x);
-  gsl_vector_set( current_location, 1, y);
-  gsl_vector_set( current_location, 2, z);
+  gsl_vector_set (current_location, 0, x);
+  gsl_vector_set (current_location, 1, y);
+  gsl_vector_set (current_location, 2, z);
 }
 
 //! print the current motor location
@@ -181,6 +215,7 @@ void P1906MOL_Motor::initTime()
 void P1906MOL_Motor::updateTime(double event_time)
 {
   t.time += event_time;
+  NS_LOG_DEBUG ("event occurred of duration: " << event_time);
 }
 
 //! return the elapsed time since the motor time was last initialized
