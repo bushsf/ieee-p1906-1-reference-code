@@ -141,6 +141,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const P1906MOL_MOTOR_VolSurface& vs);
+std::istream& operator>>(std::istream& is, P1906MOL_MOTOR_VolSurface& vs);
 
 }
 

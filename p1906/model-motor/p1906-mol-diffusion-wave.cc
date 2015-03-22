@@ -39,10 +39,38 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("P1906MOL_ExtendedDiffusionWave");
 
+NS_OBJECT_ENSURE_REGISTERED (P1906MOL_ExtendedDiffusionWave);
+
 TypeId P1906MOL_ExtendedDiffusionWave::GetTypeId (void)
 {
   static TypeId tid = TypeId ("P1906MOL_ExtendedDiffusionWave")
-    .SetParent<Object> ();
+    .SetParent<Object> ()
+	//.AddAttribute ("Transmission_Time",
+	//               "Time the concentration was released in seconds.",
+	//			   DoubleValue (),
+	//			   MakeDoubleAccessor (&P1906MOL_ExtendedDiffusionWave::transmission_time),
+	//			   MakeDoubleChecker<double> ())
+	//.AddAttribute ("Diffusion_Coefficient",
+	//              "The diffusion coefficient [nm^2/s].",
+	//			   DoubleValue (),
+	//			   MakeDoubleAccessor (&P1906MOL_ExtendedDiffusionWave::D),
+	//			   MakeDoubleChecker<double> ())
+	//.AddAttribute ("Initial_Concentration",
+	//              "Initial concentration [nmol/nm^3].",
+	//			   DoubleValue (),
+	//			   MakeDoubleAccessor (&P1906MOL_ExtendedDiffusionWave::c_0),
+	//			   MakeDoubleChecker<double> ())
+	//.AddAttribute ("Transmission_Time",
+	//               "The location of the initial release [nm] (x,y,z).",
+	//			   P1906MOL_MOTOR_PosValue (),
+	//			   MakeP1906MOL_MOTOR_PosAccessor (&P1906MOL_ExtendedDiffusionWave::transmitter),
+	//			   MakeP1906MOL_MOTOR_PosChecker<P1906MOL_MOTOR_Pos> ())
+	//.AddAttribute ("isRemoveLowConcentration",
+	//               "Mark to remove since concentration is too low.",
+	//			   BoolValue (),
+	//			   MakeBoolAccessor (&P1906MOL_ExtendedDiffusionWave::low_concentration),
+	//			   MakeBoolChecker<bool> ())
+	;
   return tid;
 }
 
@@ -72,6 +100,21 @@ P1906MOL_ExtendedDiffusionWave::P1906MOL_ExtendedDiffusionWave ()
   transmitter.setPos (GSL_POSINF, GSL_POSINF, GSL_POSINF);
   //! mark to remove since concentration is too low
   low_concentration = false;
+}
+
+std::ostream& operator<<(std::ostream& out, const P1906MOL_ExtendedDiffusionWave& d_wave)
+{
+	return out << d_wave.transmission_time << " " << 
+	  d_wave.D << " " <<
+	  d_wave.c_0 << " " <<
+	  d_wave.transmitter << " " <<
+	  d_wave.low_concentration;
+}
+
+
+std::istream& operator>>(std::istream& in, P1906MOL_ExtendedDiffusionWave& d_wave)
+{
+	return in >> d_wave.transmission_time >> d_wave.D >> d_wave.c_0 >> d_wave.transmitter >> d_wave.low_concentration;
 }
 
 //! configure a transmission
@@ -144,7 +187,7 @@ double P1906MOL_ExtendedDiffusionWave::concentration_wave (P1906MOL_MOTOR_Pos re
   {
     //! proportion of initial concentration
 	c = c_0 * pow((4.0 * M_PI * D * t), -3.0/2.0) * gsl_sf_exp (-pow(r, 2.0)/(4.0 * D * t));
-	printf ("(concentration_wave) c(t): %lf(%lf)\n", c, t);
+	NS_LOG_DEBUG ("c(t): " << c << " " << t);
   }
   
   return 0;

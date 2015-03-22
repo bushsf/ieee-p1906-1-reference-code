@@ -40,6 +40,10 @@
  * STARTING                      +--------------------+             
  *  POINT                  lower-left corner                                             
  * </pre>
+ *
+ * Molecular motors are derived from Message Carriers and are created as fast as Packets arrive. 
+ * Thus, there may be many motors operating in parallel with one another depending upon the packet rate and motor propagation rate.
+ * There is currently no motor interaction, but this is something that should be considered.
  */
 
 #include "ns3/log.h"
@@ -72,6 +76,11 @@ TypeId P1906MOL_Motor::GetTypeId (void)
 				   ObjectVectorValue (),
 				   MakeDoubleAccessor (&P1906MOL_Motor::start_z),
 				   MakeDoubleChecker<double> ())
+	//.AddAttribute ("Current location",
+	//               "The current motor location.",
+	//			   P1906MOL_MOTOR_PosValue (),
+	//			   MakeP1906MOL_MOTOR_PosAccessor (&P1906MOL_Motor::current_location),
+	//			   MakeP1906MOL_MOTOR_PosChecker ())
 	;
   return tid;
 }
@@ -94,7 +103,8 @@ P1906MOL_Motor::P1906MOL_Motor ()
     All random number are derived from gsl_rng *.
   */
   
-  current_location = gsl_vector_alloc (3);
+  //current_location = gsl_vector_alloc (3);
+  current_location.setPos (start_x, start_y, start_z);
     
   //! start with an empty record of for tracking position
   pos_history.clear();
@@ -103,15 +113,16 @@ P1906MOL_Motor::P1906MOL_Motor ()
   T = gsl_rng_default;
   r = gsl_rng_alloc (T);
   gsl_rng_env_setup();
-  
 }
 
 std::ostream& operator<<(std::ostream& out, const P1906MOL_Motor& m)
 {
-   return out << "time: " << m.t.time
-     << "position: " << gsl_vector_get(m.current_location, 0) 
-     << " " << gsl_vector_get(m.current_location, 1) 
-     << " " << gsl_vector_get(m.current_location, 2);
+  return out << m.t.time << " " << m.current_location;
+}
+
+std::istream& operator>>(std::istream& is, P1906MOL_Motor& m)
+{
+  return is >> m.t.time >> m.current_location;
 }
 
 //! create and store a new volume surface of any type: FluxMeter, ReflectiveBarrier, Receiver
@@ -130,7 +141,7 @@ void P1906MOL_Motor::addVolumeSurface(P1906MOL_MOTOR_Pos v_c, double v_radius, P
 //! this function takes precedence over the attribute settings
 void P1906MOL_Motor::setStartingPoint(gsl_vector * pt)
 {
-  gsl_vector_memcpy(current_location, pt);
+  current_location.setPos (pt);
   start_x = gsl_vector_get (pt, 0);
   start_y = gsl_vector_get (pt, 1);
   start_z = gsl_vector_get (pt, 2);
@@ -147,8 +158,6 @@ void P1906MOL_Motor::displayVolSurfaces()
 bool P1906MOL_Motor::inDestination()
 {
   bool inDest = false;
-  P1906MOL_MOTOR_Pos cl;
-  cl.setPos (current_location);
   size_t numDest = 0;
   
   //! find the Receiver space(s)
@@ -157,7 +166,7 @@ bool P1906MOL_Motor::inDestination()
     if (vsl.at(i).getType() == P1906MOL_MOTOR_VolSurface::Receiver)
 	{
 	  numDest++;
-	  if (vsl.at(i).isInsideVolSurf(cl))
+	  if (vsl.at(i).isInsideVolSurf(current_location))
 	    inDest = true;
 	}
   }
@@ -177,26 +186,22 @@ void P1906MOL_Motor::setLocation(P1906MOL_MOTOR_Pos pt)
   double x, y, z;
   
   pt.getPos (&x, &y, &z);
-  gsl_vector_set (current_location, 0, x);
-  gsl_vector_set (current_location, 1, y);
-  gsl_vector_set (current_location, 2, z);
+  current_location.setPos (x, y, z);
 }
 
 //! set the current location to the 3D Cartesian coordinates
 void P1906MOL_Motor::setLocation(double x, double y, double z)
 {
-  gsl_vector_set (current_location, 0, x);
-  gsl_vector_set (current_location, 1, y);
-  gsl_vector_set (current_location, 2, z);
+  current_location.setPos (x, y, z);
 }
 
 //! print the current motor location
 void P1906MOL_Motor::displayLocation()
 {
-  printf ("current location: %f %f %f\n", 
-    gsl_vector_get( current_location, 0),
-	gsl_vector_get( current_location, 1),
-	gsl_vector_get( current_location, 2));
+  double x, y, z;
+  
+  current_location.getPos (&x, &y, &z);
+  printf ("current location: %f %f %f\n", x, y, z);
 }
 
 //! return simulation time

@@ -69,6 +69,17 @@ P1906MOL_ExtendedDiffusion::P1906MOL_ExtendedDiffusion ()
   */
 }
 
+
+std::ostream& operator<<(std::ostream& out, const P1906MOL_ExtendedDiffusion& d)
+{
+	return out;
+}
+
+std::istream& operator>>(std::istream& is, P1906MOL_ExtendedDiffusion& d)
+{
+	return is;
+}
+
 //! trigger a release of a vector wave at time tt
 //! \todo wv is a growing list of waves, will need to remove waves that have reached equilibrium (or disseminated)
 void P1906MOL_ExtendedDiffusion::transmit(double tt, double D, double ic, P1906MOL_MOTOR_Pos ip)
@@ -171,7 +182,7 @@ double P1906MOL_ExtendedDiffusion::unitTest_diffusion ()
 
 void P1906MOL_ExtendedDiffusion::displayODE ()
 {
-  printf ("(displayODE) testing ODE\n");
+  NS_LOG_DEBUG ("testing ODE");
 }
 
 // The following details are taken from the GSL documentation
@@ -251,7 +262,7 @@ double P1906MOL_ExtendedDiffusion::unitTest_ODE ()
 	   if (status != GSL_SUCCESS)
 		   break;
 
-	   printf ("(unitTestODE) %.5e %.5e %.5e\n", t, y[0], y[1]);
+	   NS_LOG_DEBUG (t << " " << y[0] << " " << y[1]);
 	}
 
 	gsl_odeiv_evolve_free (e);

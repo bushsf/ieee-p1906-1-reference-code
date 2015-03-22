@@ -85,8 +85,8 @@ public:
   static TypeId GetTypeId (void);
   
   //! the current location of the motor in 3D space
-  //! \todo change this to double x, y, z for traceability
-  gsl_vector * current_location;
+  P1906MOL_MOTOR_Pos current_location;
+  //! the start values are intended for use as ns-3 attributes
   double start_x;
   double start_y;
   double start_z;
@@ -149,6 +149,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const P1906MOL_Motor& m);
+std::istream& operator>>(std::istream& is, P1906MOL_Motor& p);
 
 }
 

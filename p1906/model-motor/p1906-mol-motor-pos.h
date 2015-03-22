@@ -46,6 +46,7 @@ using namespace std;
 #include "ns3/nstime.h"
 #include "ns3/ptr.h"
 
+#include "ns3/attribute-helper.h"
 #include "ns3/double.h"
 #include "ns3/object-vector.h"
 #include "ns3/uinteger.h"
@@ -82,9 +83,13 @@ public:
   P1906MOL_MOTOR_Pos ();
 
   gsl_vector * pos;
-  TracedValue<double_t> pos_x;
-  TracedValue<double_t> pos_y;
-  TracedValue<double_t> pos_z;
+  //! the pos_* values are intended for ns-3 attributes to be used for tracing
+  //TracedValue<double_t> pos_x;
+  //TracedValue<double_t> pos_y;
+  //TracedValue<double_t> pos_z;
+  double_t pos_x;
+  double_t pos_y;
+  double_t pos_z;
   
   /*
    * Methods related to recording position
@@ -93,6 +98,8 @@ public:
   void setPos (double x, double y, double z);  
   //! record the object's position from the vector [x y z] 
   void setPos (gsl_vector * in_pos);
+  //! record the object's position from the given position 
+  void setPos (P1906MOL_MOTOR_Pos& p);
 
   /*
    * Methods related to retrieving the position
@@ -119,7 +126,9 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const P1906MOL_MOTOR_Pos& p);
+std::istream& operator>>(std::istream& is, P1906MOL_MOTOR_Pos& p);
 
+ATTRIBUTE_HELPER_HEADER (P1906MOL_MOTOR_Pos);
 }
 
 #endif /* P1906_MOL_MOTOR_POS */

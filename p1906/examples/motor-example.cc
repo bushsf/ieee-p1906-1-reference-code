@@ -106,6 +106,7 @@
 //!           
 //!</pre>
 
+#include "ns3/log.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
@@ -124,7 +125,6 @@
 #include "ns3/p1906-mol-motor-receiver-communication-interface.h"
 
 using namespace ns3;
-
 
 int main (int argc, char *argv[])
 {	
@@ -154,7 +154,7 @@ int main (int argc, char *argv[])
   cmd.AddValue("tube_persistenceLength", "tube_persistenceLength", tube_persistenceLength);
   cmd.AddValue("segPerTube", "tube_persistenceLength", segPerTube);
   cmd.Parse(argc, argv);
-
+    
   Time::SetResolution(Time::NS);
 
   // Create P1906 Helper
@@ -194,7 +194,7 @@ int main (int argc, char *argv[])
   p1->SetMolecules (nbOfMoleculas);
   s1->SetDiffusionCoefficient (diffusionCoefficient);
   
-  printf ("(motor-example) Device 1 created\n");
+  //NS_LOG_DEBUG ("Device 1 created");
 
   // Create Device 2 and related components/entities
   Ptr<P1906NetDevice> dev2 = CreateObject<P1906NetDevice> ();
@@ -209,7 +209,7 @@ int main (int argc, char *argv[])
   p2->SetMolecules (nbOfMoleculas);
   s2->SetDiffusionCoefficient (diffusionCoefficient);
   
-  printf ("(motor-example) Device 2 created\n");
+  //NS_LOG_DEBUG ("Device 2 created");
 
   //set devices positions
   Ptr<ListPositionAllocator> positionAlloc =
@@ -227,7 +227,7 @@ int main (int argc, char *argv[])
   helper.Connect(n.Get (0), dev1, medium, c1, fi1, p1, s1);
   helper.Connect(n.Get (1), dev2, medium, c2, fi2, p2, s2);
   
-  printf ("(motor-example) Connected devices, nodes, medium, components and entities\n");
+  //NS_LOG_DEBUG ("Connected devices, nodes, medium, components and entities");
 
   // Create a message to send into the network
   int pktSize = 1; //bytes
@@ -239,12 +239,12 @@ int main (int argc, char *argv[])
   
   Ptr<Packet> message = Create<Packet>(buffer, pktSize);
   
-  printf ("(motor-example) Packet created\n");
+  //NS_LOG_DEBUG ("Packet created");
 
   //! c1 is the P1906MOLCommunicationInterface for Node 1
   c1->HandleTransmission (message);
   
-  printf ("(motor-example) c1->HandleTransmission (message)\n");
+  //NS_LOG_DEBUG ("c1->HandleTransmission (message)");
 
   Simulator::Stop (Seconds (0.01));
   Simulator::Run ();
